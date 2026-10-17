@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  CreateProfilePage.xaml
+  Affiché après l'onboarding, une seule fois.
+  Style : reprend visuellement l'écran Inscription des maquettes.
+  Terme retenu : "Créer mon profil" (profil local, pas de compte distant).
+  Aucune donnée ne quitte l'appareil.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Profile.CreateProfilePage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,48,24,40" Spacing="0">
+
+            <!-- Flèche retour -->
+            <Label Text="←" Style="{StaticResource TextH1}"
+                   Margin="0,0,0,32">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackTapped" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <!-- Logo -->
+            <Label Text="Vesti" Style="{StaticResource TextLogo}" Margin="0,0,0,24" />
+
+            <!-- Titre + sous-titre -->
+            <Label Text="Votre dressing&#x0a;commence ici."
+                   Style="{StaticResource TextH1}"
+                   Margin="0,0,0,8" />
+            <Label Text="Créez votre espace et faites place à votre style."
+                   Style="{StaticResource TextBody}"
+                   TextColor="{StaticResource ColorTextSecondary}"
+                   Margin="0,0,0,32" />
+
+            <!-- Prénom -->
+            <Label Text="Prénom" Style="{StaticResource TextCaption}" Margin="0,0,0,4" />
+            <Border StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource ColorBorder}"
+                    BackgroundColor="{StaticResource ColorSurface}"
+                    Padding="14,0"
+                    HeightRequest="48"
+                    Margin="0,0,0,16">
+                <Entry Text="{Binding DisplayName}"
+                       Style="{StaticResource FieldBase}"
+                       Placeholder="Votre prénom"
+                       ReturnType="Next" />
+            </Border>
+
+            <!-- E-mail (facultatif) -->
+            <Label Text="Adresse e-mail" Style="{StaticResource TextCaption}" Margin="0,0,0,4" />
+            <Border StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource ColorBorder}"
+                    BackgroundColor="{StaticResource ColorSurface}"
+                    Padding="14,0"
+                    HeightRequest="48"
+                    Margin="0,0,0,4">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Entry Grid.Column="0"
+                           Text="{Binding Email}"
+                           Style="{StaticResource FieldBase}"
+                           Placeholder="nom@domaine.com"
+                           Keyboard="Email"
+                           ReturnType="Done" />
+                    <!-- Icône enveloppe (Lucide → remplacé plus tard) -->
+                    <Label Grid.Column="1" Text="✉"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           VerticalOptions="Center"
+                           FontSize="16" />
+                </Grid>
+            </Border>
+            <Label Text="Facultatif · informatif uniquement"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorTextSecondary}"
+                   Margin="0,0,0,24" />
+
+            <!-- Message d'erreur -->
+            <Label Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource NotNullConverter}}"
+                   Margin="0,0,0,8" />
+
+            <!-- Bouton principal -->
+            <Button Text="Créer mon profil"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding SubmitCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBoolConverter}}"
+                    Margin="0,0,0,16" />
+
+            <!-- Pied de page légal -->
+            <Label Text="Vos données restent uniquement sur cet appareil."
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorTextSecondary}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Séparateur + pied bas (style maquettes) -->
+            <Label Text="Vos vêtements, vos idées. Un espace personnel."
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorBorder}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,48,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

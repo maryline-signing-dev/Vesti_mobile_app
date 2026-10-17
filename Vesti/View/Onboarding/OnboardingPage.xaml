@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  OnboardingPage.xaml v3 — corrections de compilation :
+  - LetterSpacing → CharacterSpacing (propriété MAUI correcte)
+  - IsVisible retiré de TapGestureRecognizer (non supporté sur les gestures)
+  - Geste splash déplacé sur une zone dédiée via IsVisible sur un Grid overlay
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Onboarding.OnboardingPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <!-- ══════════════════════════════════════════════════════
+             CONTENU
+        ══════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="0">
+
+            <!-- ── ÉTAPE 0 : Splash ──────────────────────────────── -->
+            <VerticalStackLayout
+                IsVisible="{Binding IsSplash}"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Spacing="12"
+                Padding="24,0">
+
+                <Label Text="Vesti"
+                       Style="{StaticResource TextLogo}"
+                       HorizontalOptions="Center"
+                       FontSize="48" />
+
+                <BoxView WidthRequest="32" HeightRequest="2"
+                         Color="{StaticResource ColorPrimary}"
+                         HorizontalOptions="Center" />
+
+                <Label Text="Votre style, en toute simplicité."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+                <Label Text="VOTRE DRESSING. VOTRE RYTHME."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       CharacterSpacing="2"
+                       Margin="0,48,0,0" />
+
+            </VerticalStackLayout>
+
+            <!-- Overlay transparent sur le splash pour capter le tap -->
+            <Grid IsVisible="{Binding IsSplash}"
+                  BackgroundColor="Transparent">
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NextCommand}" />
+                    <SwipeGestureRecognizer Direction="Up" Command="{Binding NextCommand}" />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+            <!-- ── ÉTAPE 1 : Organiser ───────────────────────────── -->
+            <VerticalStackLayout
+                IsVisible="{Binding CurrentStep, Converter={StaticResource EqualToOneConverter}}"
+                Padding="24,48,24,0"
+                Spacing="0">
+
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,0">
+                    <Label Grid.Column="0" Text="Vesti" Style="{StaticResource TextLogo}" />
+                    <Label Grid.Column="1" Text="Passer"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SkipCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        HeightRequest="220"
+                        Margin="0,24,0,28">
+                    <Label Text="🧥" FontSize="72"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
+                <Label Text="01 / ORGANISER"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorPrimary}"
+                       CharacterSpacing="1" />
+                <Label Text="Tout votre dressing,&#x0a;au même endroit."
+                       Style="{StaticResource TextH1}"
+                       Margin="0,8,0,12" />
+                <Label Text="Retrouvez vos vêtements en un regard. Ajoutez vos pièces et faites de la place à l'essentiel."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+            </VerticalStackLayout>
+
+            <!-- ── ÉTAPE 2 : Composer ────────────────────────────── -->
+            <VerticalStackLayout
+                IsVisible="{Binding CurrentStep, Converter={StaticResource EqualToTwoConverter}}"
+                Padding="24,48,24,0"
+                Spacing="0">
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Vesti" Style="{StaticResource TextLogo}" />
+                    <Label Grid.Column="1" Text="Passer"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SkipCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        HeightRequest="220"
+                        Margin="0,24,0,28">
+                    <Label Text="👔&#x0a;👖  👟" FontSize="40"
+                           HorizontalOptions="Center" VerticalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+                </Border>
+
+                <Label Text="02 / COMPOSER"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorPrimary}"
+                       CharacterSpacing="1" />
+                <Label Text="De belles tenues,&#x0a;avec vos pièces."
+                       Style="{StaticResource TextH1}"
+                       Margin="0,8,0,12" />
+                <Label Text="Associez, remplacez, recommencez. Enregistrez les compositions qui vous ressemblent."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+            </VerticalStackLayout>
+
+            <!-- ── ÉTAPE 3 : Planifier ───────────────────────────── -->
+            <VerticalStackLayout
+                IsVisible="{Binding IsLastStep}"
+                Padding="24,48,24,0"
+                Spacing="0">
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Vesti" Style="{StaticResource TextLogo}" />
+                    <Label Grid.Column="1" Text="Passer"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SkipCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        HeightRequest="220"
+                        Margin="0,24,0,28">
+                    <Grid RowDefinitions="Auto,Auto" RowSpacing="8"
+                          VerticalOptions="Center" HorizontalOptions="Center">
+                        <Border Grid.Row="0"
+                                BackgroundColor="{StaticResource ColorSurface}"
+                                StrokeShape="RoundRectangle 8"
+                                Padding="12,6"
+                                HorizontalOptions="Center">
+                            <Label Text="Octobre"
+                                   FontFamily="{StaticResource FontInter}"
+                                   FontSize="{StaticResource TextSizeCaption}"
+                                   TextColor="{StaticResource ColorTextPrimary}" />
+                        </Border>
+                        <Label Grid.Row="1" Text="🗓️  👔  👖  👟" FontSize="28"
+                               HorizontalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <Label Text="03 / PLANIFIER"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorPrimary}"
+                       CharacterSpacing="1" />
+                <Label Text="Votre style,&#x0a;à votre rythme."
+                       Style="{StaticResource TextH1}"
+                       Margin="0,8,0,12" />
+                <Label Text="Préparez une tenue pour vos prochains rendez-vous. Ou gardez-la simplement pour plus tard."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <!-- ══════════════════════════════════════════════════════
+             PIED DE PAGE — indicateurs + bouton (étapes 1/2/3)
+        ══════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="1"
+              Padding="24,0,24,40"
+              IsVisible="{Binding ShowFooter}">
+            <VerticalStackLayout Spacing="20">
+
+                <!-- Indicateurs de progression -->
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                    <BoxView HeightRequest="4"
+                             WidthRequest="{Binding ProgressWidth1}"
+                             Color="{StaticResource ColorPrimary}"
+                             CornerRadius="2" />
+                    <BoxView HeightRequest="4"
+                             WidthRequest="{Binding ProgressWidth2}"
+                             Color="{StaticResource ColorBorder}"
+                             CornerRadius="2" />
+                    <BoxView HeightRequest="4"
+                             WidthRequest="{Binding ProgressWidth3}"
+                             Color="{StaticResource ColorBorder}"
+                             CornerRadius="2" />
+                </HorizontalStackLayout>
+
+                <!-- "Continuer" aux étapes 1 et 2 -->
+                <Button Text="Continuer"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding NextCommand}"
+                        IsVisible="{Binding IsLastStep,
+                            Converter={StaticResource InvertBoolConverter}}" />
+
+                <!-- "Commencer" à l'étape 3 -->
+                <Button Text="Commencer"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding StartCommand}"
+                        IsVisible="{Binding IsLastStep}" />
+
+            </VerticalStackLayout>
+        </Grid>
+
+    </Grid>
+</ContentPage>

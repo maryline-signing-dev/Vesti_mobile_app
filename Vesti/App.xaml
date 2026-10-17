@@ -1,20 +1,27 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Vesti"
              x:Class="Vesti.App">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!--
-                    Ordre important : Tokens d'abord, puis Styles.
-                    Les styles font référence aux tokens ; ils doivent donc
-                    être chargés après.
-                -->
+                <!-- Ordre : Tokens d'abord, Styles ensuite -->
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Convertisseurs disponibles dans tous les XAML -->
+            <converters:InvertBoolConverter  x:Key="InvertBoolConverter" />
+            <converters:NotNullConverter     x:Key="NotNullConverter" />
+            <converters:EqualToZeroConverter x:Key="EqualToZeroConverter" />
+            <converters:EqualToOneConverter  x:Key="EqualToOneConverter" />
+            <converters:EqualToTwoConverter  x:Key="EqualToTwoConverter" />
+
         </ResourceDictionary>
     </Application.Resources>
 
 </Application>
+
+

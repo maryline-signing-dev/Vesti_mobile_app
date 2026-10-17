@@ -1,26 +1,93 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  HomePage.xaml — Écran d'accueil (squelette I0)
-  Sera remplacé par l'écran complet en I1.
+  HomePage.xaml — Accueil
+  I1 : état vide uniquement (IsEmpty = true)
+  I2+ : les compteurs, prochaine tenue et dernières pièces seront décommentés
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Vesti.Views.Home.HomePage"
-             BackgroundColor="{StaticResource ColorBackground}">
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
 
-    <VerticalStackLayout Padding="{StaticResource PagePadding}"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Center">
+    <ScrollView>
+        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="0">
 
-        <Label Text="Vesti"
-               Style="{StaticResource TextLogo}"
-               HorizontalOptions="Center" />
+            <!-- En-tête -->
+            <Label Text="Vesti"
+                   Style="{StaticResource TextLogo}"
+                   Margin="0,16,0,32" />
 
-        <Label Text="Accueil — bientôt disponible"
-               Style="{StaticResource TextCaption}"
-               HorizontalOptions="Center"
-               Margin="0,8,0,0" />
+            <!-- ══ ÉTAT VIDE ══════════════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16"
+                                 Margin="0,48,0,0">
 
-    </VerticalStackLayout>
+                <!-- Pictogramme -->
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 20"
+                        WidthRequest="80" HeightRequest="80"
+                        HorizontalOptions="Center">
+                    <Label Text="👕" FontSize="36"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
+                <Label Text="Bienvenue sur Vesti"
+                       Style="{StaticResource TextH1}"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Organisez votre dressing, créez vos tenues et planifiez votre style."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+                <Button Text="Ajouter ma première pièce"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding AddFirstItemCommand}"
+                        Margin="0,8,0,0" />
+
+                <!-- Lien découvrir la wishlist -->
+                <Label HorizontalOptions="Center" Margin="0,16,0,0">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Découvrir la "
+                                  Style="{StaticResource TextBody}"
+                                  TextColor="{StaticResource ColorTextSecondary}" />
+                            <Span Text="wishlist"
+                                  Style="{StaticResource TextBody}"
+                                  TextColor="{StaticResource ColorPrimary}"
+                                  TextDecorations="Underline" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToWishlistCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </VerticalStackLayout>
+
+            <!-- ══ ÉTAT AVEC DONNÉES (I2+) ═══════════════════════════
+                 Décommenter et câbler quand ClothingService est disponible.
+
+            <VerticalStackLayout IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBoolConverter}}">
+
+                <Label Text="{Binding DisplayName, StringFormat='Bonjour, {0}'}"
+                       Style="{StaticResource TextH1}" />
+                <Label Text="Un peu d'ordre, beaucoup de possibilités."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       Margin="0,4,0,24" />
+
+                ... compteurs, prochaine tenue, dernières pièces ...
+
+            </VerticalStackLayout>
+            ══════════════════════════════════════════════════════ -->
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

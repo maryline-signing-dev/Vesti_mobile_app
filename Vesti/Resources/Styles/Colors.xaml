@@ -1,8 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<!--
-  VestiTokens.xaml — TOKENS OFFICIELS (source : Fondations Vesti 2026)
-  Emplacement dans le projet : Resources/Styles/VestiTokens.xaml
--->
+
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
@@ -31,8 +28,6 @@
          TYPOGRAPHIE
          - Logo    : DM Serif Display (x:Key="FontDMSerif")
          - UI      : Inter            (x:Key="FontInter")
-         Les deux polices doivent être déclarées dans MauiProgram.cs
-         avec ConfigureFonts() (voir fichier MauiProgram.cs ci-joint).
     ══════════════════════════════════════ -->
     <x:String x:Key="FontInter">Inter</x:String>
     <x:String x:Key="FontDMSerif">DMSerifDisplay</x:String>
