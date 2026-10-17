@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  VestiTokens.xaml — TOKENS OFFICIELS (source : Fondations Vesti 2026)
+  Emplacement dans le projet : Resources/Styles/VestiTokens.xaml
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ══════════════════════════════════════
+         COULEURS — Palette terracotta
+    ══════════════════════════════════════ -->
+    <Color x:Key="ColorPrimary">#8C5A4A</Color>
+    <Color x:Key="ColorPrimaryDark">#6B4238</Color>
+    <Color x:Key="ColorPrimaryLight">#E8D8D1</Color>
+    <Color x:Key="ColorBackground">#FAF9F7</Color>
+    <Color x:Key="ColorSurface">#FFFFFF</Color>
+    <Color x:Key="ColorTextPrimary">#252525</Color>
+    <Color x:Key="ColorTextSecondary">#6B6B6B</Color>
+    <Color x:Key="ColorBorder">#E6E2DE</Color>
+    <Color x:Key="ColorSuccess">#557A62</Color>
+    <Color x:Key="ColorWarning">#B18445</Color>
+    <Color x:Key="ColorError">#A65353</Color>
+
+    <!-- Pinceaux prêts à l'emploi -->
+    <SolidColorBrush x:Key="BrushPrimary"    Color="{StaticResource ColorPrimary}" />
+    <SolidColorBrush x:Key="BrushBackground" Color="{StaticResource ColorBackground}" />
+    <SolidColorBrush x:Key="BrushSurface"    Color="{StaticResource ColorSurface}" />
+    <SolidColorBrush x:Key="BrushBorder"     Color="{StaticResource ColorBorder}" />
+
+    <!-- ══════════════════════════════════════
+         TYPOGRAPHIE
+         - Logo    : DM Serif Display (x:Key="FontDMSerif")
+         - UI      : Inter            (x:Key="FontInter")
+         Les deux polices doivent être déclarées dans MauiProgram.cs
+         avec ConfigureFonts() (voir fichier MauiProgram.cs ci-joint).
+    ══════════════════════════════════════ -->
+    <x:String x:Key="FontInter">Inter</x:String>
+    <x:String x:Key="FontDMSerif">DMSerifDisplay</x:String>
+
+    <x:Double x:Key="TextSizeLogo">32</x:Double>
+    <x:Double x:Key="TextSizeH1">24</x:Double>
+    <x:Double x:Key="TextSizeH2">20</x:Double>
+    <x:Double x:Key="TextSizeSectionTitle">16</x:Double>
+    <x:Double x:Key="TextSizeBody">14</x:Double>
+    <x:Double x:Key="TextSizeCaption">12</x:Double>
+    <x:Double x:Key="TextSizeSmall">11</x:Double>
+
+    <!-- ══════════════════════════════════════
+         GRILLE ET ESPACEMENT (grille de 4 px)
+    ══════════════════════════════════════ -->
+    <x:Double x:Key="Space4">4</x:Double>
+    <x:Double x:Key="Space8">8</x:Double>
+    <x:Double x:Key="Space12">12</x:Double>
+    <x:Double x:Key="Space16">16</x:Double>
+    <x:Double x:Key="Space20">20</x:Double>
+    <x:Double x:Key="Space24">24</x:Double>
+    <x:Double x:Key="Space32">32</x:Double>
+    <x:Double x:Key="Space40">40</x:Double>
+    <x:Double x:Key="Space48">48</x:Double>
+    <x:Double x:Key="Space64">64</x:Double>
+
+    <Thickness x:Key="PagePadding">24,16,24,16</Thickness>
+
+    <!-- Rayons de coins -->
+    <x:Double x:Key="RadiusSmall">8</x:Double>
+    <x:Double x:Key="RadiusMedium">12</x:Double>
+    <x:Double x:Key="RadiusLarge">16</x:Double>
+    <x:Double x:Key="RadiusXLarge">20</x:Double>
+
+    <!-- Hauteurs de composants -->
+    <x:Double x:Key="ButtonHeight">48</x:Double>
+    <x:Double x:Key="FieldHeight">48</x:Double>
+
+</ResourceDictionary>

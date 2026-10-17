@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  VestiStyles.xaml — Styles globaux réutilisables
+  Emplacement : Resources/Styles/VestiStyles.xaml
+  Dépend de VestiTokens.xaml (doit être chargé en premier dans App.xaml).
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ══════════════════════════
+         BOUTONS
+    ══════════════════════════ -->
+
+    <!-- Bouton principal : fond terracotta, texte blanc, pleine largeur -->
+    <Style x:Key="BtnPrimary" TargetType="Button">
+        <Setter Property="BackgroundColor"  Value="{StaticResource ColorPrimary}" />
+        <Setter Property="TextColor"        Value="White" />
+        <Setter Property="FontFamily"       Value="{StaticResource FontInter}" />
+        <Setter Property="FontSize"         Value="{StaticResource TextSizeBody}" />
+        <Setter Property="FontAttributes"   Value="Bold" />
+        <Setter Property="HeightRequest"    Value="{StaticResource ButtonHeight}" />
+        <Setter Property="CornerRadius"     Value="12" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <!-- Bouton secondaire : bordure terracotta, fond blanc, texte terracotta -->
+    <Style x:Key="BtnSecondary" TargetType="Button">
+        <Setter Property="BackgroundColor"  Value="{StaticResource ColorSurface}" />
+        <Setter Property="TextColor"        Value="{StaticResource ColorPrimary}" />
+        <Setter Property="FontFamily"       Value="{StaticResource FontInter}" />
+        <Setter Property="FontSize"         Value="{StaticResource TextSizeBody}" />
+        <Setter Property="FontAttributes"   Value="Bold" />
+        <Setter Property="HeightRequest"    Value="{StaticResource ButtonHeight}" />
+        <Setter Property="CornerRadius"     Value="12" />
+        <Setter Property="BorderColor"      Value="{StaticResource ColorBorder}" />
+        <Setter Property="BorderWidth"      Value="1" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+    </Style>
+
+    <!-- ══════════════════════════
+         CHAMPS DE SAISIE
+    ══════════════════════════ -->
+    <Style x:Key="FieldBase" TargetType="Entry">
+        <Setter Property="FontFamily"    Value="{StaticResource FontInter}" />
+        <Setter Property="FontSize"      Value="{StaticResource TextSizeBody}" />
+        <Setter Property="TextColor"     Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="PlaceholderColor" Value="{StaticResource ColorTextSecondary}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorSurface}" />
+        <Setter Property="HeightRequest" Value="{StaticResource FieldHeight}" />
+        <Setter Property="Margin"        Value="0" />
+    </Style>
+
+    <!-- ══════════════════════════
+         TEXTES
+    ══════════════════════════ -->
+
+    <!-- Logo Vesti (DM Serif Display) -->
+    <Style x:Key="TextLogo" TargetType="Label">
+        <Setter Property="FontFamily"  Value="{StaticResource FontDMSerif}" />
+        <Setter Property="FontSize"    Value="{StaticResource TextSizeLogo}" />
+        <Setter Property="TextColor"   Value="{StaticResource ColorTextPrimary}" />
+    </Style>
+
+    <!-- Grand titre de page (DM Serif Display) -->
+    <Style x:Key="TextH1" TargetType="Label">
+        <Setter Property="FontFamily"  Value="{StaticResource FontDMSerif}" />
+        <Setter Property="FontSize"    Value="{StaticResource TextSizeH1}" />
+        <Setter Property="TextColor"   Value="{StaticResource ColorTextPrimary}" />
+    </Style>
+
+    <!-- Titre de section (Inter semibold) -->
+    <Style x:Key="TextSectionTitle" TargetType="Label">
+        <Setter Property="FontFamily"    Value="{StaticResource FontInter}" />
+        <Setter Property="FontSize"      Value="{StaticResource TextSizeSectionTitle}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="TextColor"     Value="{StaticResource ColorTextPrimary}" />
+    </Style>
+
+    <!-- Corps de texte (Inter regular) -->
+    <Style x:Key="TextBody" TargetType="Label">
+        <Setter Property="FontFamily"  Value="{StaticResource FontInter}" />
+        <Setter Property="FontSize"    Value="{StaticResource TextSizeBody}" />
+        <Setter Property="TextColor"   Value="{StaticResource ColorTextPrimary}" />
+        <Setter Property="LineHeight"  Value="1.5" />
+    </Style>
+
+    <!-- Texte secondaire / légende -->
+    <Style x:Key="TextCaption" TargetType="Label">
+        <Setter Property="FontFamily"  Value="{StaticResource FontInter}" />
+        <Setter Property="FontSize"    Value="{StaticResource TextSizeCaption}" />
+        <Setter Property="TextColor"   Value="{StaticResource ColorTextSecondary}" />
+    </Style>
+
+    <!-- ══════════════════════════
+         PAGES
+    ══════════════════════════ -->
+    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor" Value="{StaticResource ColorBackground}" />
+    </Style>
+
+</ResourceDictionary>

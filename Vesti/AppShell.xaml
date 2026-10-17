@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  AppShell.xaml — Navigation principale par onglets (4 onglets)
+  Architecture :
+    Accueil   → Views/Home/HomePage.xaml
+    Dressing  → Views/Wardrobe/WardrobePage.xaml
+    Agenda    → Views/Agenda/AgendaPage.xaml
+    Profil    → Views/Profile/ProfilePage.xaml
+
+  Les routes secondaires (détail pièce, composer, etc.) seront
+  enregistrées dans AppShell.xaml.cs au fur et à mesure des incréments.
+
+  Icônes : Lucide outline — fichiers SVG à placer dans Resources/Images/
+    icon_home.svg, icon_shirt.svg, icon_calendar.svg, icon_user.svg
+  En attendant les SVG définitifs, des icônes MAUI de base sont utilisées.
+-->
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:home="clr-namespace:Vesti.Views.Home"
+       xmlns:wardrobe="clr-namespace:Vesti.Views.Wardrobe"
+       xmlns:agenda="clr-namespace:Vesti.Views.Agenda"
+       xmlns:profile="clr-namespace:Vesti.Views.Profile"
+       x:Class="Vesti.AppShell"
+       Shell.NavBarIsVisible="False"
+       BackgroundColor="{StaticResource ColorBackground}">
+
+    <Shell.Resources>
+        <Style TargetType="TabBar">
+            <Setter Property="Shell.TabBarBackgroundColor"  Value="{StaticResource ColorSurface}" />
+            <Setter Property="Shell.TabBarForegroundColor"  Value="{StaticResource ColorPrimary}" />
+            <Setter Property="Shell.TabBarTitleColor"       Value="{StaticResource ColorPrimary}" />
+            <Setter Property="Shell.TabBarUnselectedColor"  Value="{StaticResource ColorTextSecondary}" />
+        </Style>
+    </Shell.Resources>
+
+    <TabBar>
+
+        <!-- ① Accueil -->
+        <ShellContent Title="Accueil"
+                      Icon="icon_home.png"
+                      ContentTemplate="{DataTemplate home:HomePage}"
+                      Route="home" />
+
+        <!-- ② Dressing -->
+        <ShellContent Title="Dressing"
+                      Icon="icon_shirt.png"
+                      ContentTemplate="{DataTemplate wardrobe:WardrobePage}"
+                      Route="wardrobe" />
+
+        <!-- ③ Agenda -->
+        <ShellContent Title="Agenda"
+                      Icon="icon_calendar.png"
+                      ContentTemplate="{DataTemplate agenda:AgendaPage}"
+                      Route="agenda" />
+
+        <!-- ④ Profil -->
+        <ShellContent Title="Profil"
+                      Icon="icon_user.png"
+                      ContentTemplate="{DataTemplate profile:ProfilePage}"
+                      Route="profile" />
+
+    </TabBar>
+
+</Shell>
