@@ -1,15 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  AgendaPage.xaml
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Vesti.Views.Agenda.AgendaPage"
-             BackgroundColor="{StaticResource ColorBackground}">
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
 
-    <VerticalStackLayout Padding="{StaticResource PagePadding}"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Center">
-        <Label Text="Agenda — bientôt disponible"
-               Style="{StaticResource TextCaption}"
-               HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="Auto,*,Auto">
 
+        <!-- EN-TÊTE -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,20,24,0">
+            <Label Text="Mon agenda"
+                   Style="{StaticResource TextH1}" />
+            <Label Text="Préparez vos journées, à votre rythme."
+                   Style="{StaticResource TextCaption}"
+                   Margin="0,2,0,0" />
+        </VerticalStackLayout>
+
+        <!-- ÉTAT VIDE (affiché jusqu'à I5) -->
+        <VerticalStackLayout Grid.Row="1"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="16"
+                             Padding="24,0">
+
+            <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                    StrokeShape="RoundRectangle 20"
+                    StrokeThickness="0"
+                    WidthRequest="80"
+                    HeightRequest="80"
+                    HorizontalOptions="Center">
+                <Image Source="agenda_18dp.png"
+                       WidthRequest="36"
+                       HeightRequest="36"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <Label Text="Rien de prévu,&#x0a;tout est possible."
+                   Style="{StaticResource TextH1}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <Label Text="Les tenues enregistrées n'apparaissent ici que lorsque vous choisissez de les planifier."
+                   Style="{StaticResource TextBody}"
+                   TextColor="{StaticResource ColorTextSecondary}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Bouton principal — non câblé  -->
+            <Button Text="Planifier une tenue"
+                    Style="{StaticResource BtnPrimary}"
+                    IsEnabled="False"
+                    Opacity="0.5" />
+
+        </VerticalStackLayout>
+
+    </Grid>
 </ContentPage>

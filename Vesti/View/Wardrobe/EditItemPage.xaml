@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  EditItemPage.xaml
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Vesti.Views.Wardrobe.EditItemPage"
@@ -10,30 +13,55 @@
 
             <!-- En-tête -->
             <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
-                <Label Grid.Column="0"
-                       Text="←"
-                       Style="{StaticResource TextH1}"
-                       Padding="0,8,16,8"
-                       VerticalOptions="Center">
-                    <Label.GestureRecognizers>
+                <Image Grid.Column="0"
+                       Source="arrow_left_24dp.png"
+                       WidthRequest="24"
+                       HeightRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding CancelCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
+                    </Image.GestureRecognizers>
+                </Image>
                 <Label Grid.Column="1"
                        Text="Modifier la pièce"
                        Style="{StaticResource TextH1}"
                        VerticalOptions="Center" />
             </Grid>
 
-            <!-- Zone photo (placeholder ; "Changer la photo" arrive en I3) -->
+            <!-- Zone photo avec bouton "Changer la photo" -->
             <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                     StrokeShape="RoundRectangle 16"
                     StrokeThickness="0"
                     HeightRequest="200">
-                <Label Text="👕"
-                       FontSize="48"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center" />
+                <Grid RowDefinitions="*,Auto" RowSpacing="0">
+                    <Image Grid.Row="0"
+                           Source="shirt_placeholder.png"
+                           WidthRequest="64"
+                           HeightRequest="64"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                    <!-- Bouton "Changer la photo" en bas de la zone -->
+                    <Border Grid.Row="1"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            StrokeShape="RoundRectangle 0,0,12,12"
+                            StrokeThickness="0"
+                            Padding="16,10">
+                        <Grid ColumnDefinitions="Auto,*" HorizontalOptions="Center">
+                            <Image Grid.Column="0"
+                                   Source="camera_24dp.png"
+                                   WidthRequest="16"
+                                   HeightRequest="16"
+                                   VerticalOptions="Center"
+                                   Margin="0,0,8,0" />
+                            <Label Grid.Column="1"
+                                   Text="Changer la photo"
+                                   Style="{StaticResource TextCaption}"
+                                   TextColor="{StaticResource ColorTextPrimary}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
             </Border>
 
             <!-- Nom -->
@@ -66,7 +94,6 @@
                                 VerticalOptions="Center" />
                     </Border>
                 </VerticalStackLayout>
-
                 <VerticalStackLayout Grid.Column="1" Spacing="4">
                     <Label Text="Couleur" Style="{StaticResource TextCaption}" />
                     <Border StrokeShape="RoundRectangle 12"
@@ -86,17 +113,23 @@
             </Grid>
 
             <!-- Informations facultatives -->
-            <Label Text="Informations facultatives"
-                   Style="{StaticResource TextSectionTitle}"
-                   Margin="0,8,0,0" />
+            <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                <Label Grid.Column="0"
+                       Text="Informations facultatives"
+                       Style="{StaticResource TextSectionTitle}" />
+                <Label Grid.Column="1"
+                       Text="Saison, style, marque"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       VerticalOptions="Center" />
+            </Grid>
 
             <VerticalStackLayout Spacing="4">
                 <Label Text="Saison" Style="{StaticResource TextCaption}" />
                 <Border StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BrushBorder}"
                         BackgroundColor="{StaticResource ColorSurface}"
-                        Padding="12,0"
-                        HeightRequest="48">
+                        Padding="12,0" HeightRequest="48">
                     <Entry Text="{Binding Season}"
                            Placeholder="Toute l'année"
                            Style="{StaticResource FieldBase}" />
@@ -108,8 +141,7 @@
                 <Border StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BrushBorder}"
                         BackgroundColor="{StaticResource ColorSurface}"
-                        Padding="12,0"
-                        HeightRequest="48">
+                        Padding="12,0" HeightRequest="48">
                     <Entry Text="{Binding Style}"
                            Placeholder="Casual"
                            Style="{StaticResource FieldBase}" />
@@ -121,15 +153,18 @@
                 <Border StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BrushBorder}"
                         BackgroundColor="{StaticResource ColorSurface}"
-                        Padding="12,0"
-                        HeightRequest="48">
+                        Padding="12,0" HeightRequest="48">
                     <Entry Text="{Binding Brand}"
                            Placeholder="Non renseignée"
                            Style="{StaticResource FieldBase}" />
                 </Border>
             </VerticalStackLayout>
 
-            <!-- Message d'erreur de validation -->
+            <Label Text="Vos modifications s'appliqueront aussi aux tenues qui utilisent cette pièce."
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorTextSecondary}" />
+
+            <!-- Erreur -->
             <Label IsVisible="{Binding HasError}"
                    Text="{Binding ErrorMessage}"
                    Style="{StaticResource TextCaption}"

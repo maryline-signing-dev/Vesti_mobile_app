@@ -1,15 +1,178 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ProfilePage.xaml
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Vesti.Views.Profile.ProfilePage"
-             BackgroundColor="{StaticResource ColorBackground}">
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
 
-    <VerticalStackLayout Padding="{StaticResource PagePadding}"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Center">
-        <Label Text="Profil — bientôt disponible"
-               Style="{StaticResource TextCaption}"
-               HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="24,20,24,40" Spacing="0">
+
+            <!-- TITRE -->
+            <Label Text="Mon profil"
+                   Style="{StaticResource TextH1}"
+                   Margin="0,0,0,20" />
+
+            <!-- AVATAR + NOM + EMAIL -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16" Margin="0,0,0,28">
+                <Border Grid.Column="0"
+                        BackgroundColor="{StaticResource ColorPrimary}"
+                        StrokeShape="RoundRectangle 100"
+                        StrokeThickness="0"
+                        WidthRequest="52"
+                        HeightRequest="52">
+                    <Label Text="A"
+                           FontFamily="{StaticResource FontInter}"
+                           FontSize="{StaticResource TextSizeH2}"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                    <Label Text="Mon compte"
+                           Style="{StaticResource TextSectionTitle}" />
+                    <Label Text="Modifier mes informations"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorPrimary}" />
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- MON ESPACE -->
+            <Label Text="Mon espace"
+                   Style="{StaticResource TextSectionTitle}"
+                   Margin="0,0,0,12" />
+
+            <!-- Mes tenues (I4) -->
+            <Border BackgroundColor="{StaticResource ColorSurface}"
+                    Stroke="{StaticResource BrushBorder}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="16,14"
+                    Margin="0,0,0,8"
+                    Opacity="0.5">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Mes tenues"
+                           Style="{StaticResource TextBody}" />
+                    <Label Grid.Column="1"
+                           Text="bientôt"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Mes statistiques (I7) -->
+            <Border BackgroundColor="{StaticResource ColorSurface}"
+                    Stroke="{StaticResource BrushBorder}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="16,14"
+                    Margin="0,0,0,24"
+                    Opacity="0.5">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Mes statistiques"
+                           Style="{StaticResource TextBody}" />
+                    <Image Grid.Column="1"
+                           Source="chart_18dp.png"
+                           WidthRequest="18"
+                           HeightRequest="18"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- PRÉFÉRENCES & COMPTE -->
+            <Label Text="Préférences &amp; compte"
+                   Style="{StaticResource TextSectionTitle}"
+                   Margin="0,0,0,12" />
+
+            <!-- Paramètres -->
+            <Border BackgroundColor="{StaticResource ColorSurface}"
+                    Stroke="{StaticResource BrushBorder}"
+                    StrokeShape="RoundRectangle 12,12,0,0"
+                    Padding="16,14"
+                    Margin="0,0,0,1"
+                    Opacity="0.5">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Paramètres"
+                           Style="{StaticResource TextBody}" />
+                    <Image Grid.Column="1"
+                           Source="settings_18dp.png"
+                           WidthRequest="18" HeightRequest="18"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Notifications -->
+            <Border BackgroundColor="{StaticResource ColorSurface}"
+                    Stroke="{StaticResource BrushBorder}"
+                    StrokeShape="RoundRectangle 0"
+                    Padding="16,14"
+                    Margin="0,0,0,1"
+                    Opacity="0.5">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Notifications"
+                           Style="{StaticResource TextBody}" />
+                    <Image Grid.Column="1"
+                           Source="bell_18dp.png"
+                           WidthRequest="18" HeightRequest="18"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Aide & contact -->
+            <Border BackgroundColor="{StaticResource ColorSurface}"
+                    Stroke="{StaticResource BrushBorder}"
+                    StrokeShape="RoundRectangle 0,0,12,12"
+                    Padding="16,14"
+                    Margin="0,0,0,28"
+                    Opacity="0.5">
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Aide &amp; contact"
+                           Style="{StaticResource TextBody}" />
+                    <Image Grid.Column="1"
+                           Source="help_18dp.png"
+                           WidthRequest="18" HeightRequest="18"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- SE DÉCONNECTER -->
+            <Border BackgroundColor="{StaticResource ColorSurface}"
+                    Stroke="{StaticResource BrushBorder}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="16,14"
+                    Margin="0,0,0,8"
+                    Opacity="0.5">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Image Grid.Column="0"
+                           Source="logout_18dp.png"
+                           WidthRequest="18" HeightRequest="18"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="1"
+                           Text="Se déconnecter"
+                           Style="{StaticResource TextBody}"
+                           TextColor="{StaticResource ColorTextPrimary}"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Version -->
+            <Label Text="Vesti"
+                   Style="{StaticResource TextLogo}"
+                   HorizontalOptions="Center"
+                   Margin="0,24,0,4" />
+            <Label Text="Version 1.0 · Votre style, en toute simplicité."
+                   Style="{StaticResource TextCaption}"
+                   HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 
 </ContentPage>

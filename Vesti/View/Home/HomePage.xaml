@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  HomePage.xaml — Accueil
-  I1 : état vide uniquement (IsEmpty = true)
-  I2+ : les compteurs, prochaine tenue et dernières pièces seront décommentés
+  HomePage.xaml
+  MODIFIÉ PAR RAPPORT À L'EXISTANT :
+  - État "avec données" (HasData) ajouté et câblé sur les propriétés
+    Greeting, ItemCount, ItemCountLabel du HomeViewModel existant
+  - Le bloc commenté de l'ancienne version est remplacé par le vrai contenu
+  - Commandes utilisées : AddFirstItemCommand, GoToWardrobeCommand (déjà dans le VM)
+  - Icône 👕 remplacée par Image Lucide shirt_placeholder.png
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -11,26 +15,38 @@
              Shell.NavBarIsVisible="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="{StaticResource PagePadding}" Spacing="0">
+        <VerticalStackLayout Padding="24,20,24,32" Spacing="0">
 
-            <!-- En-tête -->
+            <!-- ══ EN-TÊTE ════════════════════════════════════════════ -->
+
+            <!-- État vide : logo Vesti -->
             <Label Text="Vesti"
                    Style="{StaticResource TextLogo}"
-                   Margin="0,16,0,32" />
+                   IsVisible="{Binding IsEmpty}"
+                   Margin="0,0,0,32" />
+
+            <!-- État avec données  -->
+            <VerticalStackLayout IsVisible="{Binding HasData}" Margin="0,0,0,24" Spacing="4">
+                <Label Text="{Binding Greeting}"
+                       Style="{StaticResource TextH1}" />
+                <Label Text="Un peu d'ordre, beaucoup de possibilités."
+                       Style="{StaticResource TextCaption}" />
+            </VerticalStackLayout>
 
             <!-- ══ ÉTAT VIDE ══════════════════════════════════════════ -->
             <VerticalStackLayout IsVisible="{Binding IsEmpty}"
-                                 VerticalOptions="Center"
-                                 HorizontalOptions="Center"
                                  Spacing="16"
                                  Margin="0,48,0,0">
 
-                <!-- Pictogramme -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 20"
-                        WidthRequest="80" HeightRequest="80"
+                        StrokeThickness="0"
+                        WidthRequest="80"
+                        HeightRequest="80"
                         HorizontalOptions="Center">
-                    <Label Text="👕" FontSize="36"
+                    <Image Source="shirt_placeholder.png"
+                           WidthRequest="40"
+                           HeightRequest="40"
                            HorizontalOptions="Center"
                            VerticalOptions="Center" />
                 </Border>
@@ -50,15 +66,16 @@
                         Command="{Binding AddFirstItemCommand}"
                         Margin="0,8,0,0" />
 
-                <!-- Lien découvrir la wishlist -->
-                <Label HorizontalOptions="Center" Margin="0,16,0,0">
+                <Label HorizontalOptions="Center" Margin="0,8,0,0">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="Découvrir la "
-                                  Style="{StaticResource TextBody}"
+                                  FontFamily="{StaticResource FontInter}"
+                                  FontSize="{StaticResource TextSizeBody}"
                                   TextColor="{StaticResource ColorTextSecondary}" />
                             <Span Text="wishlist"
-                                  Style="{StaticResource TextBody}"
+                                  FontFamily="{StaticResource FontInter}"
+                                  FontSize="{StaticResource TextSizeBody}"
                                   TextColor="{StaticResource ColorPrimary}"
                                   TextDecorations="Underline" />
                         </FormattedString>
@@ -67,25 +84,113 @@
                         <TapGestureRecognizer Command="{Binding GoToWishlistCommand}" />
                     </Label.GestureRecognizers>
                 </Label>
+            </VerticalStackLayout>
+
+            <!-- ══ ÉTAT AVEC DONNÉES ═════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding HasData}" Spacing="20">
+
+                <!-- Tuiles de statistiques -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+
+                    <!-- Pièces -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Stroke="{StaticResource BrushBorder}"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12,14">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{Binding ItemCount}"
+                                   FontFamily="{StaticResource FontDMSerif}"
+                                   FontSize="24"
+                                   TextColor="{StaticResource ColorTextPrimary}" />
+                            <Label Text="{Binding ItemCountLabel}"
+                                   Style="{StaticResource TextCaption}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Tenues (données à venir en I4 — affiche 0 jusqu'à l'incrément) -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Stroke="{StaticResource BrushBorder}"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12,14">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="—"
+                                   FontFamily="{StaticResource FontDMSerif}"
+                                   FontSize="24"
+                                   TextColor="{StaticResource ColorTextSecondary}" />
+                            <Label Text="tenues"
+                                   Style="{StaticResource TextCaption}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Planifiées (données à venir en I5) -->
+                    <Border Grid.Column="2"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Stroke="{StaticResource BrushBorder}"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12,14">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="—"
+                                   FontFamily="{StaticResource FontDMSerif}"
+                                   FontSize="24"
+                                   TextColor="{StaticResource ColorTextSecondary}" />
+                            <Label Text="planifiées"
+                                   Style="{StaticResource TextCaption}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- Dernières pièces -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Dernières pièces"
+                           Style="{StaticResource TextSectionTitle}" />
+                    <Label Grid.Column="1"
+                           Text="Dressing"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorPrimary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToWardrobeCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <!-- Placeholder "voir le dressing" — les vraies pièces s'affichent en I2+ -->
+                <Border BackgroundColor="{StaticResource ColorSurface}"
+                        Stroke="{StaticResource BrushBorder}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="20"
+                        HorizontalOptions="Fill">
+                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                        <Image Source="wardrobe_18dp.png"
+                               WidthRequest="32" HeightRequest="32"
+                               HorizontalOptions="Center" />
+                        <Label Text="Accédez à votre dressing"
+                               Style="{StaticResource TextCaption}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Boutons d'action -->
+                <Button Text="+ Ajouter une pièce"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding AddFirstItemCommand}" />
+
+                <Button Text="Voir mon dressing"
+                        Style="{StaticResource BtnSecondary}"
+                        Command="{Binding GoToWardrobeCommand}" />
 
             </VerticalStackLayout>
 
-            <!-- ══ ÉTAT AVEC DONNÉES (I2+) ═══════════════════════════
-                 Décommenter et câbler quand ClothingService est disponible.
-
-            <VerticalStackLayout IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBoolConverter}}">
-
-                <Label Text="{Binding DisplayName, StringFormat='Bonjour, {0}'}"
-                       Style="{StaticResource TextH1}" />
-                <Label Text="Un peu d'ordre, beaucoup de possibilités."
-                       Style="{StaticResource TextCaption}"
-                       TextColor="{StaticResource ColorTextSecondary}"
-                       Margin="0,4,0,24" />
-
-                ... compteurs, prochaine tenue, dernières pièces ...
-
-            </VerticalStackLayout>
-            ══════════════════════════════════════════════════════ -->
+            <!-- Erreur de chargement -->
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}"
+                   Margin="0,16,0,0" />
 
         </VerticalStackLayout>
     </ScrollView>

@@ -6,8 +6,6 @@ namespace Vesti.ViewModels.Home;
 
 /// <summary>
 /// ViewModel de l'accueil.
-/// I2 : prénom + nombre réel de pièces. Les tenues, l'agenda et la wishlist
-/// s'ajouteront aux incréments suivants, sans rien afficher de fictif d'ici là.
 /// </summary>
 public class HomeViewModel : BaseViewModel
 {
@@ -19,10 +17,18 @@ public class HomeViewModel : BaseViewModel
         _profileService = profileService;
         _clothingService = clothingService;
 
-        AddItemCommand = new Command(async () =>
+        // Commande utilisée par le bouton principal (état vide ET état avec données)
+        AddFirstItemCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.AddItem));
 
+        // Alias pour cohérence avec WardrobeViewModel
+        AddItemCommand = AddFirstItemCommand;
+
         GoToWardrobeCommand = new Command(async () =>
+            await Shell.Current.GoToAsync(Routes.TabWardrobe));
+
+        // En attendant la wishlist (I6), navigue vers le dressing
+        GoToWishlistCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.TabWardrobe));
     }
 
@@ -55,8 +61,10 @@ public class HomeViewModel : BaseViewModel
     public string ItemCountLabel => _itemCount <= 1 ? "pièce" : "pièces";
 
     // ── Commandes ────────────────────────────────────────────────────────
+    public ICommand AddFirstItemCommand { get; }
     public ICommand AddItemCommand { get; }
     public ICommand GoToWardrobeCommand { get; }
+    public ICommand GoToWishlistCommand { get; }
 
     // ── Chargement ───────────────────────────────────────────────────────
 
