@@ -1,27 +1,26 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converters="clr-namespace:Vesti"
+             xmlns:conv="clr-namespace:Vesti"
              x:Class="Vesti.App">
 
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- Ordre : Tokens d'abord, Styles ensuite -->
-                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Convertisseurs disponibles dans tous les XAML -->
-            <converters:InvertBoolConverter  x:Key="InvertBoolConverter" />
-            <converters:NotNullConverter     x:Key="NotNullConverter" />
-            <converters:EqualToZeroConverter x:Key="EqualToZeroConverter" />
-            <converters:EqualToOneConverter  x:Key="EqualToOneConverter" />
-            <converters:EqualToTwoConverter  x:Key="EqualToTwoConverter" />
-
+            <!-- Convertisseurs globaux -->
+            <conv:InvertBoolConverter             x:Key="InvertBoolConverter" />
+            <conv:NotNullConverter                x:Key="NotNullConverter" />
+            <conv:EqualToZeroConverter            x:Key="EqualToZeroConverter" />
+            <conv:EqualToOneConverter             x:Key="EqualToOneConverter" />
+            <conv:EqualToTwoConverter             x:Key="EqualToTwoConverter" />
+            <conv:FilterChipColorConverter        x:Key="FilterChipColorConverter" />
+            <conv:FilterChipTextColorConverter    x:Key="FilterChipTextColorConverter" />
+            <conv:SearchLabelConverter            x:Key="SearchLabelConverter" />
         </ResourceDictionary>
     </Application.Resources>
 
 </Application>
-
-

@@ -6,12 +6,9 @@ namespace Vesti.ViewModels;
 /// <summary>
 /// Base commune à tous les ViewModels.
 ///
-/// POURQUOI INotifyPropertyChanged ?
-/// Le binding XAML écoute cet événement pour savoir quand rafraîchir
-/// l'interface. Sans lui, modifier une propriété n'aurait aucun effet visuel.
-///
-/// SetProperty() compare l'ancienne et la nouvelle valeur avant de notifier,
-/// ce qui évite des mises à jour inutiles de l'interface.
+/// Les propriétés HasError et IsNotBusy sont calculées ici pour que le XAML
+/// puisse faire IsVisible="{Binding HasError}" sans convertisseur :
+/// moins de ressources à déclarer, moins d'erreurs possibles.
 /// </summary>
 public abstract class BaseViewModel : INotifyPropertyChanged
 {
@@ -29,18 +26,31 @@ public abstract class BaseViewModel : INotifyPropertyChanged
         return true;
     }
 
-    // ── État de chargement ───────────────────────────────────────────────
+    // ── Chargement / opération en cours ──────────────────────────────────
     private bool _isBusy;
     public bool IsBusy
     {
         get => _isBusy;
-        set => SetProperty(ref _isBusy, value);
+        set
+        {
+            if (SetProperty(ref _isBusy, value))
+                OnPropertyChanged(nameof(IsNotBusy));
+        }
     }
 
+    public bool IsNotBusy => !_isBusy;
+
+    // ── Message d'erreur affiché à l'utilisateur ─────────────────────────
     private string? _errorMessage;
     public string? ErrorMessage
     {
         get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
+        set
+        {
+            if (SetProperty(ref _errorMessage, value))
+                OnPropertyChanged(nameof(HasError));
+        }
     }
+
+    public bool HasError => !string.IsNullOrEmpty(_errorMessage);
 }

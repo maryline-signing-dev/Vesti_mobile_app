@@ -15,7 +15,7 @@ public partial class App : Application
         _profileService = profileService;
         _services = services;
 
-        // Écran neutre pendant la lecture asynchrone (pas de deadlock)
+        // Écran neutre pendant la lecture SQLite asynchrone
         MainPage = new ContentPage
         {
             BackgroundColor = Color.FromArgb("#FAF9F7"),
@@ -38,25 +38,25 @@ public partial class App : Application
 
             if (isFirstLaunch)
             {
-                // OnboardingPage a besoin d'une NavigationPage
-                // pour pouvoir faire PushAsync → CreateProfilePage
                 var onboarding = _services.GetRequiredService<OnboardingPage>();
                 MainPage = new NavigationPage(onboarding)
                 {
-                    // Masquer la barre native de NavigationPage
                     BarBackgroundColor = Color.FromArgb("#FAF9F7"),
                 };
                 NavigationPage.SetHasNavigationBar(onboarding, false);
             }
             else
             {
-                MainPage = new AppShell();
+                // AppShell reçoit le service provider pour injecter les pages
+                //MainPage = new AppShell(_services);
+                MainPage = _services.GetRequiredService<AppShell>();
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[App.OnStart] {ex}");
-            MainPage = new AppShell();
+            //MainPage = new AppShell(_services);
+            MainPage = _services.GetRequiredService<AppShell>();
         }
     }
 }

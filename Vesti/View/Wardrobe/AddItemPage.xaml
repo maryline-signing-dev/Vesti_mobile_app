@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Wardrobe.AddItemPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <Grid>
+
+            <!-- ═══ FORMULAIRE ═══════════════════════════════════════ -->
+            <VerticalStackLayout Padding="24,16,24,32"
+                                 Spacing="16"
+                                 IsVisible="{Binding IsNotSaved}">
+
+                <!-- En-tête avec flèche de retour -->
+                <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                    <Label Grid.Column="0"
+                           Text="←"
+                           Style="{StaticResource TextH1}"
+                           Padding="0,8,16,8"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BackCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Column="1"
+                           Text="Ajouter une pièce"
+                           Style="{StaticResource TextH1}"
+                           VerticalOptions="Center" />
+                </Grid>
+
+                <!-- Zone photo (placeholder ; Photo et Importer arrivent en I3) -->
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        HeightRequest="200">
+                    <VerticalStackLayout VerticalOptions="Center" Spacing="8">
+                        <Label Text="📷" FontSize="40" HorizontalOptions="Center" />
+                        <Label Text="La photo sera disponible à la prochaine étape"
+                               Style="{StaticResource TextCaption}"
+                               HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Nom -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Nom de la pièce" Style="{StaticResource TextCaption}" />
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BrushBorder}"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Padding="12,0"
+                            HeightRequest="48">
+                        <Entry Text="{Binding Name}"
+                               Placeholder="Chemise blanche"
+                               Style="{StaticResource FieldBase}" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Catégorie + Couleur -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="4">
+                        <Label Text="Catégorie" Style="{StaticResource TextCaption}" />
+                        <Border StrokeShape="RoundRectangle 12"
+                                Stroke="{StaticResource BrushBorder}"
+                                BackgroundColor="{StaticResource ColorSurface}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding Categories}"
+                                    SelectedItem="{Binding Category}"
+                                    Title="Choisir"
+                                    TitleColor="{StaticResource ColorTextSecondary}"
+                                    TextColor="{StaticResource ColorTextPrimary}"
+                                    FontSize="14"
+                                    VerticalOptions="Center" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                        <Label Text="Couleur" Style="{StaticResource TextCaption}" />
+                        <Border StrokeShape="RoundRectangle 12"
+                                Stroke="{StaticResource BrushBorder}"
+                                BackgroundColor="{StaticResource ColorSurface}"
+                                Padding="12,0"
+                                HeightRequest="48">
+                            <Picker ItemsSource="{Binding Colors}"
+                                    SelectedItem="{Binding Color}"
+                                    Title="Choisir"
+                                    TitleColor="{StaticResource ColorTextSecondary}"
+                                    TextColor="{StaticResource ColorTextPrimary}"
+                                    FontSize="14"
+                                    VerticalOptions="Center" />
+                        </Border>
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Message d'erreur de validation -->
+                <Label IsVisible="{Binding HasError}"
+                       Text="{Binding ErrorMessage}"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorError}" />
+
+                <Button Text="Ajouter à mon dressing"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding IsNotBusy}" />
+
+                <Label Text="Cette pièce sera possédée, pas ajoutée à la wishlist."
+                       Style="{StaticResource TextCaption}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <!-- ═══ CONFIRMATION ═════════════════════════════════════ -->
+            <VerticalStackLayout Padding="24,48,24,32"
+                                 Spacing="16"
+                                 IsVisible="{Binding IsSaved}">
+
+                <Label Text="✓"
+                       FontSize="32"
+                       TextColor="{StaticResource ColorSuccess}"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Pièce ajoutée"
+                       Style="{StaticResource TextH1}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        HeightRequest="160">
+                    <Label Text="👕"
+                           FontSize="48"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
+                <Label Text="{Binding SavedItem.Name}"
+                       Style="{StaticResource TextSectionTitle}"
+                       HorizontalOptions="Center" />
+
+                <Label Text="{Binding SavedItem.Subtitle}"
+                       Style="{StaticResource TextCaption}"
+                       HorizontalOptions="Center" />
+
+                <Label Text="{Binding ConfirmationText}"
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+                <Button Text="Voir mon dressing"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding ViewWardrobeCommand}"
+                        Margin="0,16,0,0" />
+
+                <Button Text="Ajouter une autre pièce"
+                        Style="{StaticResource BtnSecondary}"
+                        Command="{Binding AddAnotherCommand}" />
+            </VerticalStackLayout>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

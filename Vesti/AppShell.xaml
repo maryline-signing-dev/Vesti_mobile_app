@@ -1,58 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  AppShell.xaml — Navigation principale par onglets (4 onglets)
-  Architecture :
-    Accueil   → Views/Home/HomePage.xaml
-    Dressing  → Views/Wardrobe/WardrobePage.xaml
-    Agenda    → Views/Agenda/AgendaPage.xaml
-    Profil    → Views/Profile/ProfilePage.xaml
-
+  AppShell.xaml — 4 onglets.
+  Les ContentTemplate sont intentionnellement absents.
+  Le contenu de chaque onglet est affecté dans AppShell.xaml.cs
+  via le conteneur DI, ce qui garantit l'injection des ViewModels.
 -->
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:home="clr-namespace:Vesti.Views.Home"
-       xmlns:wardrobe="clr-namespace:Vesti.Views.Wardrobe"
-       xmlns:agenda="clr-namespace:Vesti.Views.Agenda"
-       xmlns:profile="clr-namespace:Vesti.Views.Profile"
        x:Class="Vesti.AppShell"
        Shell.NavBarIsVisible="False"
-       BackgroundColor="{StaticResource ColorBackground}">
-
-    <Shell.Resources>
-        <Style TargetType="TabBar">
-            <Setter Property="Shell.TabBarBackgroundColor"  Value="{StaticResource ColorSurface}" />
-            <Setter Property="Shell.TabBarForegroundColor"  Value="{StaticResource ColorPrimary}" />
-            <Setter Property="Shell.TabBarTitleColor"       Value="{StaticResource ColorPrimary}" />
-            <Setter Property="Shell.TabBarUnselectedColor"  Value="{StaticResource ColorTextSecondary}" />
-        </Style>
-    </Shell.Resources>
+       Shell.TabBarBackgroundColor="{StaticResource ColorSurface}"
+       Shell.TabBarForegroundColor="{StaticResource ColorPrimary}"
+       Shell.TabBarTitleColor="{StaticResource ColorPrimary}"
+       Shell.TabBarUnselectedColor="{StaticResource ColorTextSecondary}">
 
     <TabBar>
-
-        <!--  Accueil -->
-        <ShellContent Title="Accueil"
+        <ShellContent x:Name="HomeTab"
+                      Title="Accueil"
                       Icon="home_18_dp.png"
-                      ContentTemplate="{DataTemplate home:HomePage}"
                       Route="home" />
 
-        <!--  Dressing -->
-        <ShellContent Title="Dressing"
+        <ShellContent x:Name="WardrobeTab"
+                      Title="Dressing"
                       Icon="wardrobe_18dp.png"
-                      ContentTemplate="{DataTemplate wardrobe:WardrobePage}"
                       Route="wardrobe" />
 
-        <!--  Agenda -->
-        <ShellContent Title="Agenda"
+        <ShellContent x:Name="AgendaTab"
+                      Title="Agenda"
                       Icon="agenda_18dp.png"
-                      ContentTemplate="{DataTemplate agenda:AgendaPage}"
                       Route="agenda" />
 
-        <!--  Profil -->
-        <ShellContent Title="Profil"
+        <ShellContent x:Name="ProfileTab"
+                      Title="Profil"
                       Icon="profil_18dp.png"
-                      ContentTemplate="{DataTemplate profile:ProfilePage}"
                       Route="profile" />
-
     </TabBar>
 
 </Shell>

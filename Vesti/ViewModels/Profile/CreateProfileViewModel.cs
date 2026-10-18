@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Vesti.Services;
 
 namespace Vesti.ViewModels.Profile;
@@ -13,10 +14,12 @@ namespace Vesti.ViewModels.Profile;
 public class CreateProfileViewModel : BaseViewModel
 {
     private readonly ProfileService _profileService;
+    private readonly IServiceProvider _services;
 
-    public CreateProfileViewModel(ProfileService profileService)
+    public CreateProfileViewModel(ProfileService profileService, IServiceProvider services)
     {
         _profileService = profileService;
+        _services = services;
         SubmitCommand = new Command(async () => await SubmitAsync(), () => !IsBusy);
     }
 
@@ -55,7 +58,7 @@ public class CreateProfileViewModel : BaseViewModel
             }
 
             // Profil créé : on remplace toute la navigation par le Shell principal
-            Application.Current!.MainPage = new AppShell();
+            Application.Current!.MainPage = _services.GetRequiredService<AppShell>();
         }
         catch (Exception ex)
         {

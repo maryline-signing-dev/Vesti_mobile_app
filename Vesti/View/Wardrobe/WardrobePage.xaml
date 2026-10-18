@@ -1,15 +1,219 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Vesti.Models"
              x:Class="Vesti.Views.Wardrobe.WardrobePage"
-             BackgroundColor="{StaticResource ColorBackground}">
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
 
-    <VerticalStackLayout Padding="{StaticResource PagePadding}"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Center">
-        <Label Text="Dressing — bientôt disponible"
-               Style="{StaticResource TextCaption}"
-               HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
 
+        <!-- ═══ EN-TÊTE + RECHERCHE ═══════════════════════════════════ -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,20,24,0">
+
+            <Label Text="Mon Dressing" Style="{StaticResource TextH1}" />
+            <Label Text="Vos pièces, au même endroit"
+                   Style="{StaticResource TextCaption}"
+                   Margin="0,2,0,16" />
+
+            <Border StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BrushBorder}"
+                    BackgroundColor="{StaticResource ColorSurface}"
+                    Padding="12,0"
+                    HeightRequest="44">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                    <Label Grid.Column="0"
+                           Text="🔍"
+                           VerticalOptions="Center" />
+                    <Entry Grid.Column="1"
+                           Text="{Binding SearchText}"
+                           Placeholder="Rechercher une pièce"
+                           Style="{StaticResource FieldBase}"
+                           HeightRequest="44" />
+                    <Label Grid.Column="2"
+                           Text="✕"
+                           VerticalOptions="Center"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           IsVisible="{Binding IsSearchActive}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClearSearchCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+
+        <!-- ═══ PUCES DE FILTRE ═══════════════════════════════════════ -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Filters}"
+                        SelectedItem="{Binding SelectedFilter}"
+                        SelectionMode="Single"
+                        HeightRequest="48"
+                        Margin="24,12,0,0"
+                        HorizontalScrollBarVisibility="Never">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border StrokeShape="RoundRectangle 18"
+                            Stroke="{StaticResource BrushBorder}"
+                            Padding="14,0"
+                            HeightRequest="36"
+                            VerticalOptions="Center">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor"
+                                                    Value="{StaticResource ColorSurface}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor"
+                                                    Value="{StaticResource ColorPrimaryLight}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                        <Label Text="{Binding .}"
+                               Style="{StaticResource TextCaption}"
+                               TextColor="{StaticResource ColorTextPrimary}"
+                               VerticalOptions="Center" />
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- ═══ TITRE DE LA LISTE ═════════════════════════════════════ -->
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,Auto"
+              Padding="24,12,24,0"
+              IsVisible="{Binding HasItems}">
+            <Label Grid.Column="0"
+                   Text="{Binding ListTitle}"
+                   Style="{StaticResource TextSectionTitle}" />
+            <Label Grid.Column="1"
+                   Text="Effacer"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorPrimary}"
+                   VerticalOptions="Center"
+                   IsVisible="{Binding IsSearchActive}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ClearSearchCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+
+        <!-- ═══ ZONE CENTRALE : un seul de ces blocs est visible ═══════ -->
+        <Grid Grid.Row="3">
+
+            <!-- État vide : aucune pièce -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16"
+                                 Padding="24,0">
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="80"
+                        HeightRequest="80"
+                        HorizontalOptions="Center">
+                    <Label Text="👕"
+                           FontSize="36"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+                <Label Text="Votre dressing est encore vide"
+                       Style="{StaticResource TextSectionTitle}"
+                       HorizontalOptions="Center" />
+                <Label Text="Ajoutez votre première pièce pour commencer à créer vos tenues."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Button Text="+ Ajouter une pièce"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding AddItemCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Aucun résultat pour la recherche ou le filtre -->
+            <Label IsVisible="{Binding IsNoResult}"
+                   Text="Aucune pièce ne correspond à votre recherche."
+                   Style="{StaticResource TextBody}"
+                   TextColor="{StaticResource ColorTextSecondary}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Start"
+                   Margin="24,32,24,0" />
+
+            <!-- Grille des pièces -->
+            <CollectionView ItemsSource="{Binding Items}"
+                            SelectedItem="{Binding SelectedItem}"
+                            SelectionMode="Single"
+                            IsVisible="{Binding HasResults}"
+                            Margin="24,12,24,0">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="2"
+                                     HorizontalItemSpacing="12"
+                                     VerticalItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ClothingItem">
+                        <Border BackgroundColor="{StaticResource ColorSurface}"
+                                Stroke="{StaticResource BrushBorder}"
+                                StrokeShape="RoundRectangle 12">
+                            <VerticalStackLayout>
+                                <!-- Zone photo (placeholder ; la vraie photo arrive en I3) -->
+                                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                        StrokeShape="RoundRectangle 12,12,0,0"
+                                        StrokeThickness="0"
+                                        HeightRequest="130">
+                                    <Label Text="👕"
+                                           FontSize="36"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                                <VerticalStackLayout Padding="10,8,10,10" Spacing="2">
+                                    <Label Text="{Binding Name}"
+                                           Style="{StaticResource TextBody}"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Subtitle}"
+                                           Style="{StaticResource TextCaption}"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Erreur de chargement -->
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start"
+                   Margin="24,12,24,0" />
+
+        </Grid>
+
+        <!-- ═══ BOUTON D'AJOUT ════════════════════════════════════════ -->
+        <VerticalStackLayout Grid.Row="4"
+                             Padding="24,12,24,24"
+                             IsVisible="{Binding HasItems}">
+            <Button Text="+ Ajouter une pièce"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding AddItemCommand}" />
+        </VerticalStackLayout>
+
+    </Grid>
 </ContentPage>

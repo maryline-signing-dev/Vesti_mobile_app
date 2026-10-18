@@ -6,13 +6,13 @@ namespace Vesti.ViewModels.Onboarding;
 
 /// <summary>
 /// Gère les 4 étapes d'onboarding :
-///   0 — Splash (logo seul, pas d'action)
-///   1 — Organiser
-///   2 — Composer
-///   3 — Planifier
+/// 0 — Splash
+/// 1 — Organiser
+/// 2 — Composer
+/// 3 — Planifier
 ///
-/// À l'étape 3, "Commencer" navigue vers CreateProfilePage
-/// (création du profil local). Il n'y a aucun formulaire ici.
+/// À la dernière étape, l'utilisateur accède à CreateProfilePage.
+/// La création du profil est gérée par CreateProfileViewModel.
 /// </summary>
 public class OnboardingViewModel : BaseViewModel
 {
@@ -27,59 +27,102 @@ public class OnboardingViewModel : BaseViewModel
         StartCommand = new Command(async () => await OnStartAsync());
     }
 
-    // ── Étapes ──────────────────────────────────────────────────────────
-    private int _currentStep = 0;
+    // ── Étapes ──────────────────────────────────────────────────────
+
+    private int _currentStep;
+
     public int CurrentStep
     {
         get => _currentStep;
         set
         {
-            SetProperty(ref _currentStep, value);
-            OnPropertyChanged(nameof(IsSplash));
-            OnPropertyChanged(nameof(IsLastStep));
-            OnPropertyChanged(nameof(ShowSkip));
-            OnPropertyChanged(nameof(ShowFooter));
-            OnPropertyChanged(nameof(ProgressWidth1));
-            OnPropertyChanged(nameof(ProgressWidth2));
-            OnPropertyChanged(nameof(ProgressWidth3));
+            if (SetProperty(ref _currentStep, value))
+            {
+                OnPropertyChanged(nameof(IsSplash));
+                OnPropertyChanged(nameof(IsLastStep));
+                OnPropertyChanged(nameof(ShowSkip));
+                OnPropertyChanged(nameof(ShowFooter));
+                OnPropertyChanged(nameof(ProgressWidth1));
+                OnPropertyChanged(nameof(ProgressWidth2));
+                OnPropertyChanged(nameof(ProgressWidth3));
+            }
         }
     }
 
-    // Étape 0 = splash seul, pas de barre, pas de bouton
     public bool IsSplash => CurrentStep == 0;
-    // Étape 3 = "Commencer" à la place de "Continuer"
+
     public bool IsLastStep => CurrentStep == 3;
-    // "Passer" visible aux étapes 1, 2, 3 (pas sur le splash)
+
     public bool ShowSkip => CurrentStep >= 1;
-    // Pied de page visible aux étapes 1, 2, 3
+
     public bool ShowFooter => CurrentStep >= 1;
 
-    // Indicateurs de progression (étapes 1/2/3 uniquement)
+    // ── Indicateurs de progression ──────────────────────────────────
+
     public double ProgressWidth1 => CurrentStep == 1 ? 24 : 8;
+
     public double ProgressWidth2 => CurrentStep == 2 ? 24 : 8;
+
     public double ProgressWidth3 => CurrentStep == 3 ? 24 : 8;
 
-    // ── Commandes ────────────────────────────────────────────────────────
+    // ── Commandes ───────────────────────────────────────────────────
+
     public ICommand NextCommand { get; }
+
     public ICommand SkipCommand { get; }
+
     public ICommand StartCommand { get; }
+
+    // ── Navigation entre les étapes ─────────────────────────────────
 
     private void OnNext()
     {
-        if (CurrentStep < 3) CurrentStep++;
+        if (CurrentStep < 3)
+        {
+            CurrentStep++;
+        }
     }
 
     private void OnSkip()
     {
-        // "Passer" saute directement à la dernière étape
         CurrentStep = 3;
     }
 
+    // ── Accès à la création du profil ────────────────────────────────
+
     private async Task OnStartAsync()
     {
-        // Navigation vers la création du profil local
-        // (AppShell n'existe pas encore : navigation directe par MainPage)
-        var profilePage = _services.GetRequiredService<CreateProfilePage>();
-        await Application.Current!.MainPage!.Navigation.PushAsync(profilePage);
+        if (IsBusy)
+            return;
+
+        IsBusy = true;
+
+        try
+        {
+            var profilePage =
+                _services.GetRequiredService<CreateProfilePage>();
+
+            var navigation = Application.Current?.MainPage?.Navigation;
+
+            if (navigation is null)
+            {
+                throw new InvalidOperationException(
+                    "La navigation de l'application n'est pas disponible.");
+            }
+
+            await navigation.PushAsync(profilePage);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage =
+                "Impossible d'ouvrir la création du profil. Réessayez.";
+
+            System.Diagnostics.Debug.WriteLine(
+                $"[OnboardingViewModel.OnStartAsync] {ex}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

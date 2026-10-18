@@ -1,49 +1,81 @@
 ﻿using System.Windows.Input;
+using Vesti.Infrastructure;
 using Vesti.Services;
 
 namespace Vesti.ViewModels.Home;
 
 /// <summary>
 /// ViewModel de l'accueil.
-/// En I1 : affiche le nom de l'utilisateur et l'état vide.
-/// En I2+ : les compteurs et les sections seront ajoutés ici.
+/// I2 : prénom + nombre réel de pièces. Les tenues, l'agenda et la wishlist
+/// s'ajouteront aux incréments suivants, sans rien afficher de fictif d'ici là.
 /// </summary>
 public class HomeViewModel : BaseViewModel
 {
     private readonly ProfileService _profileService;
+    private readonly ClothingService _clothingService;
 
-    public HomeViewModel(ProfileService profileService)
+    public HomeViewModel(ProfileService profileService, ClothingService clothingService)
     {
         _profileService = profileService;
+        _clothingService = clothingService;
 
-        AddFirstItemCommand = new Command(async () =>
-            await Shell.Current.GoToAsync("wardrobe/add"));
+        AddItemCommand = new Command(async () =>
+            await Shell.Current.GoToAsync(Routes.AddItem));
+
+        GoToWardrobeCommand = new Command(async () =>
+            await Shell.Current.GoToAsync(Routes.TabWardrobe));
     }
 
     // ── Données affichées ────────────────────────────────────────────────
-    private string _displayName = string.Empty;
-    public string DisplayName
+
+    private string _greeting = "Bonjour";
+    public string Greeting
     {
-        get => _displayName;
-        set => SetProperty(ref _displayName, value);
+        get => _greeting;
+        private set => SetProperty(ref _greeting, value);
     }
 
-    /// <summary>
-    /// Vrai tant que l'utilisateur n'a aucune pièce.
-    /// Sera mis à jour en I2 via ClothingService.
-    /// </summary>
-    public bool IsEmpty => true; // provisoire — remplacé en I2
+    private int _itemCount;
+    public int ItemCount
+    {
+        get => _itemCount;
+        private set
+        {
+            if (SetProperty(ref _itemCount, value))
+            {
+                OnPropertyChanged(nameof(IsEmpty));
+                OnPropertyChanged(nameof(HasData));
+                OnPropertyChanged(nameof(ItemCountLabel));
+            }
+        }
+    }
+
+    public bool IsEmpty => _itemCount == 0;
+    public bool HasData => _itemCount > 0;
+    public string ItemCountLabel => _itemCount <= 1 ? "pièce" : "pièces";
 
     // ── Commandes ────────────────────────────────────────────────────────
-    public ICommand AddFirstItemCommand { get; }
+    public ICommand AddItemCommand { get; }
+    public ICommand GoToWardrobeCommand { get; }
 
-    // ── Cycle de vie ─────────────────────────────────────────────────────
-    /// <summary>
-    /// Appelé depuis HomePage.OnAppearing() pour rafraîchir les données.
-    /// </summary>
+    // ── Chargement ───────────────────────────────────────────────────────
+
     public async Task LoadAsync()
     {
-        var profile = await _profileService.GetProfileAsync();
-        DisplayName = profile?.DisplayName ?? string.Empty;
+        try
+        {
+            var profile = await _profileService.GetProfileAsync();
+            Greeting = string.IsNullOrWhiteSpace(profile?.DisplayName)
+                ? "Bonjour"
+                : $"Bonjour, {profile.DisplayName}";
+
+            ItemCount = await _clothingService.CountAsync();
+            ErrorMessage = null;
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Impossible de charger l'accueil.";
+            System.Diagnostics.Debug.WriteLine($"[HomeViewModel] {ex}");
+        }
     }
 }
