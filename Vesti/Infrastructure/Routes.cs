@@ -18,7 +18,7 @@ public static class Routes
     public const string TabWardrobe = "//wardrobe";
 
     // Pages empilées au-dessus des onglets (enregistrées dans AppShell.xaml.cs)
-    public const string AddItem = "additem";
-    public const string ItemDetail = "itemdetail";
-    public const string EditItem = "edititem";
+    public const string AddItem = "add";
+    public const string ItemDetail = "detail";
+    public const string EditItem = "edit";
 }

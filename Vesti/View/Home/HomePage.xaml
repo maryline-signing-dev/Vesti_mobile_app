@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
   HomePage.xaml
-  MODIFIÉ PAR RAPPORT À L'EXISTANT :
-  - État "avec données" (HasData) ajouté et câblé sur les propriétés
-    Greeting, ItemCount, ItemCountLabel du HomeViewModel existant
-  - Le bloc commenté de l'ancienne version est remplacé par le vrai contenu
-  - Commandes utilisées : AddFirstItemCommand, GoToWardrobeCommand (déjà dans le VM)
-  - Icône 👕 remplacée par Image Lucide shirt_placeholder.png
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
