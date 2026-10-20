@@ -29,6 +29,7 @@ namespace Vesti.Infrastructure;
 ///               (base de données, repositories, services métier).
 ///   Transient : une nouvelle instance à chaque demande
 ///               (ViewModels et pages : un écran = un état neuf).
+/// - Ajout de IImageStore / ImageStore (Singleton).
 /// </summary>
 public static class ServiceCollectionExtensions
 {
@@ -37,34 +38,35 @@ public static class ServiceCollectionExtensions
         // ── Base de données ───────────────────────────────────────────
         services.AddSingleton<VestiDatabase>();
 
-        // ── Repositories (accès SQL) ──────────────────────────────────
+        // ── Repositories ──────────────────────────────────────────────
         services.AddSingleton<ProfileRepository>();
         services.AddSingleton<SettingsRepository>();
-        services.AddSingleton<ClothingRepository>();            // I2
+        services.AddSingleton<ClothingRepository>();
 
         // ── Services métier ───────────────────────────────────────────
         services.AddSingleton<ProfileService>();
-        services.AddSingleton<ClothingService>();               // I2
+        services.AddSingleton<IImageStore, ImageStore>();       // I3
+        services.AddSingleton<ClothingService>();
 
         // ── ViewModels ────────────────────────────────────────────────
         services.AddTransient<OnboardingViewModel>();
         services.AddTransient<CreateProfileViewModel>();
         services.AddTransient<HomeViewModel>();
-        services.AddTransient<WardrobeViewModel>();             // I2
-        services.AddTransient<AddItemViewModel>();              // I2
-        services.AddTransient<ItemDetailViewModel>();           // I2
-        services.AddTransient<EditItemViewModel>();             // I2
+        services.AddTransient<WardrobeViewModel>();
+        services.AddTransient<AddItemViewModel>();
+        services.AddTransient<ItemDetailViewModel>();
+        services.AddTransient<EditItemViewModel>();
 
         // ── Pages ─────────────────────────────────────────────────────
         services.AddTransient<OnboardingPage>();
         services.AddTransient<CreateProfilePage>();
         services.AddTransient<HomePage>();
-        services.AddTransient<WardrobePage>();                  // I2
-        services.AddTransient<AddItemPage>();                   // I2
-        services.AddTransient<ItemDetailPage>();                // I2
-        services.AddTransient<EditItemPage>();                  // I2
-        services.AddTransient<AgendaPage>();                    // squelette I0
-        services.AddTransient<ProfilePage>();                   // squelette I0
+        services.AddTransient<WardrobePage>();
+        services.AddTransient<AddItemPage>();
+        services.AddTransient<ItemDetailPage>();
+        services.AddTransient<EditItemPage>();
+        services.AddTransient<AgendaPage>();
+        services.AddTransient<ProfilePage>();
 
         return services;
     }

@@ -40,6 +40,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<ClothingRepository>();
 
         // ── Services ──────────────────────────────────────────────────
+        builder.Services.AddSingleton<IImageStore, ImageStore>();
         builder.Services.AddSingleton<ProfileService>();
         builder.Services.AddSingleton<ClothingService>();
 

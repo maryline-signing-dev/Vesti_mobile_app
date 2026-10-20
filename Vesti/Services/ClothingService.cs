@@ -4,31 +4,31 @@ using Vesti.Repositories;
 namespace Vesti.Services;
 
 /// <summary>
-/// Résultat d'une création de pièce : soit la pièce enregistrée,
-/// soit un message d'erreur destiné à l'utilisateur.
+/// Logique métier du dressing.
+/// - Résultat d'une création de pièce : soit la pièce enregistrée,
+/// - soit un message d'erreur destiné à l'utilisateur.
+/// - Reçoit IImageStore en paramètre (injection de dépendances).
+/// - DeleteAsync supprime maintenant le fichier image associé AVANT
+///   de supprimer l'enregistrement en base.
+/// - UpdateAsync : si une nouvelle photo remplace l'ancienne,
+/// -  validation, nettoyage des saisies,
+/// recherche + filtre combinés. Les ViewModels appellent ce service,
 /// </summary>
 public record AddItemResult(ClothingItem? Item, string? Error);
 
-/// <summary>
-/// Logique métier du dressing : validation, nettoyage des saisies,
-/// recherche + filtre combinés. Les ViewModels appellent ce service,
-/// jamais le repository.
-/// </summary>
 public class ClothingService
 {
     private readonly ClothingRepository _repository;
+    private readonly IImageStore _imageStore;
 
-    public ClothingService(ClothingRepository repository)
+    public ClothingService(ClothingRepository repository, IImageStore imageStore)
     {
         _repository = repository;
+        _imageStore = imageStore;
     }
 
-    // ── Lecture ──────────────────────────────────────────────────────────
+    // ── Lecture (inchangé) ───────────────────────────────────────────────
 
-    /// <summary>
-    /// Pièces correspondant à la recherche et à la catégorie.
-    /// La catégorie "Tout" (ou vide) signifie : pas de filtre.
-    /// </summary>
     public async Task<List<ClothingItem>> GetItemsAsync(string? term, string? category)
     {
         var categoryFilter =
@@ -50,6 +50,7 @@ public class ClothingService
 
     // ── Écriture ─────────────────────────────────────────────────────────
 
+
     public async Task<AddItemResult> AddAsync(ClothingItem item)
     {
         Normalize(item);
@@ -62,30 +63,50 @@ public class ClothingService
         return new AddItemResult(item, null);
     }
 
-    /// <summary>Retourne null en cas de succès, sinon le message d'erreur.</summary>
+
+
+
+    /// <summary>
+    /// Met à jour une pièce.
+    /// si l'ImagePath a changé, l'ancien fichier est supprimé.
+    /// </summary>
     public async Task<string?> UpdateAsync(ClothingItem item)
     {
         Normalize(item);
 
         var error = ValidateItem(item);
-        if (error is not null)
-            return error;
+        if (error is not null) return error;
+
+        // Récupérer l'ancienne image pour la supprimer si elle change
+        var existing = await _repository.GetByIdAsync(item.Id);
+        var oldPath = existing?.ImagePath;
+        var newPath = item.ImagePath;
 
         await _repository.UpdateAsync(item);
+
+        // Supprimer l'ancien fichier seulement s'il est différent et non null
+        if (oldPath is not null && oldPath != newPath)
+            await _imageStore.DeleteAsync(oldPath);
+
         return null;
     }
 
     /// <summary>
-    /// Supprime une pièce.
-    /// I3 : supprimera aussi le fichier photo associé.
-    /// I4 : retirera aussi la pièce des tenues qui l'utilisent.
+    /// I3 : supprime d'abord le fichier photo, puis l'enregistrement.
+    /// L'ordre est important : si la suppression du fichier échoue,
+    /// on ne supprime pas la fiche (cohérence).
     /// </summary>
     public async Task DeleteAsync(int id)
-        => await _repository.DeleteAsync(id);
+    {
+        var item = await _repository.GetByIdAsync(id);
+        if (item is not null)
+            await _imageStore.DeleteAsync(item.ImagePath);
 
-    // ── Règles internes ──────────────────────────────────────────────────
+        await _repository.DeleteAsync(id);
+    }
 
-    /// <summary>Supprime les espaces superflus ; une chaîne vide devient null.</summary>
+    // ── Règles internes (inchangées) ─────────────────────────────────────
+
     private static void Normalize(ClothingItem item)
     {
         item.Name = item.Name?.Trim() ?? string.Empty;

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  EditItemPage.xaml
+  EditItemPage.xaml 
+  - Zone photo : affiche la vraie image si HasPhoto
+  - Bouton "Changer la photo" câblé sur PickPhotoCommand
+  - Bouton "Prendre une photo" câblé sur CapturePhotoCommand
+  - Prend en compte la logique (champs, SaveCommand, CancelCommand) 
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -15,8 +19,7 @@
             <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
                 <Image Grid.Column="0"
                        Source="arrow_left_24dp.png"
-                       WidthRequest="24"
-                       HeightRequest="24"
+                       WidthRequest="24" HeightRequest="24"
                        VerticalOptions="Center"
                        Margin="0,0,12,0">
                     <Image.GestureRecognizers>
@@ -29,38 +32,77 @@
                        VerticalOptions="Center" />
             </Grid>
 
-            <!-- Zone photo avec bouton "Changer la photo" -->
-            <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
-                    StrokeShape="RoundRectangle 16"
+            <!-- Zone photo -->
+            <Border StrokeShape="RoundRectangle 16"
                     StrokeThickness="0"
-                    HeightRequest="200">
-                <Grid RowDefinitions="*,Auto" RowSpacing="0">
-                    <Image Grid.Row="0"
-                           Source="shirt_placeholder.png"
-                           WidthRequest="64"
-                           HeightRequest="64"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
-                    <!-- Bouton "Changer la photo" en bas de la zone -->
-                    <Border Grid.Row="1"
-                            BackgroundColor="{StaticResource ColorSurface}"
-                            StrokeShape="RoundRectangle 0,0,12,12"
-                            StrokeThickness="0"
-                            Padding="16,10">
-                        <Grid ColumnDefinitions="Auto,*" HorizontalOptions="Center">
-                            <Image Grid.Column="0"
-                                   Source="camera_24dp.png"
-                                   WidthRequest="16"
-                                   HeightRequest="16"
-                                   VerticalOptions="Center"
-                                   Margin="0,0,8,0" />
-                            <Label Grid.Column="1"
-                                   Text="Changer la photo"
-                                   Style="{StaticResource TextCaption}"
-                                   TextColor="{StaticResource ColorTextPrimary}"
-                                   VerticalOptions="Center" />
-                        </Grid>
-                    </Border>
+                    HeightRequest="200"
+                    BackgroundColor="{StaticResource ColorPrimaryLight}">
+                <Grid RowDefinitions="*,Auto">
+
+                    <!-- Image ou placeholder -->
+                    <Grid Grid.Row="0">
+                        <Image Source="{Binding FullImagePath}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding HasPhoto}" />
+                        <Image Source="shirt_placeholder.png"
+                               WidthRequest="64" HeightRequest="64"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding HasPhoto,
+                                   Converter={StaticResource InvertBoolConverter}}" />
+                    </Grid>
+
+                    <!-- Barre de boutons en bas de la zone photo -->
+                    <Grid Grid.Row="1"
+                          ColumnDefinitions="*,*"
+                          ColumnSpacing="0"
+                          BackgroundColor="#CCFFFFFF">
+
+                        <!-- Prendre une photo -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="Transparent"
+                                StrokeThickness="0"
+                                Padding="12,10">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"
+                                  HorizontalOptions="Center">
+                                <Image Grid.Column="0"
+                                       Source="camera_24dp.png"
+                                       WidthRequest="16" HeightRequest="16"
+                                       VerticalOptions="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Prendre une photo"
+                                       Style="{StaticResource TextCaption}"
+                                       TextColor="{StaticResource ColorTextPrimary}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CapturePhotoCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <!-- Changer la photo (galerie) -->
+                        <Border Grid.Column="1"
+                                BackgroundColor="Transparent"
+                                StrokeThickness="0"
+                                Padding="12,10">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"
+                                  HorizontalOptions="Center">
+                                <Image Grid.Column="0"
+                                       Source="image_24dp.png"
+                                       WidthRequest="16" HeightRequest="16"
+                                       VerticalOptions="Center" />
+                                <Label Grid.Column="1"
+                                       Text="Changer la photo"
+                                       Style="{StaticResource TextCaption}"
+                                       TextColor="{StaticResource ColorTextPrimary}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PickPhotoCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                    </Grid>
                 </Grid>
             </Border>
 
@@ -70,8 +112,7 @@
                 <Border StrokeShape="RoundRectangle 12"
                         Stroke="{StaticResource BrushBorder}"
                         BackgroundColor="{StaticResource ColorSurface}"
-                        Padding="12,0"
-                        HeightRequest="48">
+                        Padding="12,0" HeightRequest="48">
                     <Entry Text="{Binding Name}" Style="{StaticResource FieldBase}" />
                 </Border>
             </VerticalStackLayout>
@@ -83,15 +124,13 @@
                     <Border StrokeShape="RoundRectangle 12"
                             Stroke="{StaticResource BrushBorder}"
                             BackgroundColor="{StaticResource ColorSurface}"
-                            Padding="12,0"
-                            HeightRequest="48">
+                            Padding="12,0" HeightRequest="48">
                         <Picker ItemsSource="{Binding Categories}"
                                 SelectedItem="{Binding Category}"
                                 Title="Choisir"
                                 TitleColor="{StaticResource ColorTextSecondary}"
                                 TextColor="{StaticResource ColorTextPrimary}"
-                                FontSize="14"
-                                VerticalOptions="Center" />
+                                FontSize="14" VerticalOptions="Center" />
                     </Border>
                 </VerticalStackLayout>
                 <VerticalStackLayout Grid.Column="1" Spacing="4">
@@ -99,26 +138,22 @@
                     <Border StrokeShape="RoundRectangle 12"
                             Stroke="{StaticResource BrushBorder}"
                             BackgroundColor="{StaticResource ColorSurface}"
-                            Padding="12,0"
-                            HeightRequest="48">
+                            Padding="12,0" HeightRequest="48">
                         <Picker ItemsSource="{Binding Colors}"
                                 SelectedItem="{Binding Color}"
                                 Title="Choisir"
                                 TitleColor="{StaticResource ColorTextSecondary}"
                                 TextColor="{StaticResource ColorTextPrimary}"
-                                FontSize="14"
-                                VerticalOptions="Center" />
+                                FontSize="14" VerticalOptions="Center" />
                     </Border>
                 </VerticalStackLayout>
             </Grid>
 
             <!-- Informations facultatives -->
             <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
-                <Label Grid.Column="0"
-                       Text="Informations facultatives"
+                <Label Grid.Column="0" Text="Informations facultatives"
                        Style="{StaticResource TextSectionTitle}" />
-                <Label Grid.Column="1"
-                       Text="Saison, style, marque"
+                <Label Grid.Column="1" Text="Saison, style, marque"
                        Style="{StaticResource TextCaption}"
                        TextColor="{StaticResource ColorTextSecondary}"
                        VerticalOptions="Center" />
@@ -126,36 +161,30 @@
 
             <VerticalStackLayout Spacing="4">
                 <Label Text="Saison" Style="{StaticResource TextCaption}" />
-                <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{StaticResource BrushBorder}"
+                <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource BrushBorder}"
                         BackgroundColor="{StaticResource ColorSurface}"
                         Padding="12,0" HeightRequest="48">
-                    <Entry Text="{Binding Season}"
-                           Placeholder="Toute l'année"
+                    <Entry Text="{Binding Season}" Placeholder="Toute l'année"
                            Style="{StaticResource FieldBase}" />
                 </Border>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="4">
                 <Label Text="Style" Style="{StaticResource TextCaption}" />
-                <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{StaticResource BrushBorder}"
+                <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource BrushBorder}"
                         BackgroundColor="{StaticResource ColorSurface}"
                         Padding="12,0" HeightRequest="48">
-                    <Entry Text="{Binding Style}"
-                           Placeholder="Casual"
+                    <Entry Text="{Binding Style}" Placeholder="Casual"
                            Style="{StaticResource FieldBase}" />
                 </Border>
             </VerticalStackLayout>
 
             <VerticalStackLayout Spacing="4">
                 <Label Text="Marque" Style="{StaticResource TextCaption}" />
-                <Border StrokeShape="RoundRectangle 12"
-                        Stroke="{StaticResource BrushBorder}"
+                <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource BrushBorder}"
                         BackgroundColor="{StaticResource ColorSurface}"
                         Padding="12,0" HeightRequest="48">
-                    <Entry Text="{Binding Brand}"
-                           Placeholder="Non renseignée"
+                    <Entry Text="{Binding Brand}" Placeholder="Non renseignée"
                            Style="{StaticResource FieldBase}" />
                 </Border>
             </VerticalStackLayout>
@@ -164,7 +193,6 @@
                    Style="{StaticResource TextCaption}"
                    TextColor="{StaticResource ColorTextSecondary}" />
 
-            <!-- Erreur -->
             <Label IsVisible="{Binding HasError}"
                    Text="{Binding ErrorMessage}"
                    Style="{StaticResource TextCaption}"

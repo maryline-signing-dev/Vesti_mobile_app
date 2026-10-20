@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  file_paths.xml
+  Décrit les chemins que le FileProvider Android est autorisé à partager
+  avec l'application Appareil photo lors d'une CapturePhotoAsync.
+  Sans ce fichier, la prise de photo plante sur Android 7+.
+-->
+<paths>
+	<!-- Dossier de cache interne de l'application -->
+	<cache-path name="cache" path="." />
+	<!-- Dossier de fichiers internes de l'application -->
+	<files-path name="files" path="." />
+	<!-- Stockage externe de l'application (si présent) -->
+	<external-files-path name="external_files" path="." />
+</paths>

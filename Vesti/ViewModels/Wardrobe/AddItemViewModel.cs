@@ -8,24 +8,33 @@ namespace Vesti.ViewModels.Wardrobe;
 /// <summary>
 /// ViewModel de "Ajouter une pièce".
 /// La page a deux états : le formulaire (IsNotSaved) puis la confirmation (IsSaved).
-/// I3 ajoutera ici le choix de la photo.
+/// - Reçoit IImageStore par injection.
+/// - Expose PickPhotoCommand (galerie), CapturePhotoCommand (caméra).
+/// - Expose ImagePath (chemin relatif) et HasPhoto pour la vue.
+/// - SaveAsync transmet l'ImagePath à la pièce avant de l'enregistrer.
+/// - Reset() remet aussi l'image à null.
+/// Tout le reste est inchangé.
 /// </summary>
 public class AddItemViewModel : BaseViewModel
 {
     private readonly ClothingService _clothingService;
+    private readonly IImageStore _imageStore;
 
-    public AddItemViewModel(ClothingService clothingService)
+    public AddItemViewModel(ClothingService clothingService, IImageStore imageStore)
     {
         _clothingService = clothingService;
+        _imageStore = imageStore;
 
         SaveCommand = new Command(async () => await SaveAsync());
         BackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
         ViewWardrobeCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.TabWardrobe));
         AddAnotherCommand = new Command(Reset);
+        PickPhotoCommand = new Command(async () => await PickPhotoAsync());
+        CapturePhotoCommand = new Command(async () => await CapturePhotoAsync());
     }
 
-    // ── Listes des sélecteurs ────────────────────────────────────────────
+    // ── Listes ───────────────────────────────────────────────────────────
     public IList<string> Categories => ClothingOptions.Categories;
     public IList<string> Colors => ClothingOptions.Colors;
 
@@ -51,6 +60,26 @@ public class AddItemViewModel : BaseViewModel
         get => _color;
         set => SetProperty(ref _color, value);
     }
+
+    // ── Photo ─────────────────────────────────────────────────────────────
+
+    /// <summary>Chemin RELATIF de l'image choisie (null si aucune).</summary>
+    private string? _imagePath;
+    public string? ImagePath
+    {
+        get => _imagePath;
+        private set
+        {
+            if (SetProperty(ref _imagePath, value))
+                OnPropertyChanged(nameof(HasPhoto));
+        }
+    }
+
+    /// <summary>Chemin ABSOLU pour affichage dans la vue (ImageSource).</summary>
+    public string? FullImagePath => _imageStore.GetFullPath(_imagePath);
+
+    /// <summary>Vrai si une photo a été choisie.</summary>
+    public bool HasPhoto => _imagePath is not null;
 
     // ── État de la page ──────────────────────────────────────────────────
 
@@ -86,13 +115,48 @@ public class AddItemViewModel : BaseViewModel
     public ICommand BackCommand { get; }
     public ICommand ViewWardrobeCommand { get; }
     public ICommand AddAnotherCommand { get; }
+    public ICommand PickPhotoCommand { get; }
+    public ICommand CapturePhotoCommand { get; }
 
-    // ── Logique ──────────────────────────────────────────────────────────
+    // ── Gestion de la photo ───────────────────────────────────────────────
+
+    private async Task PickPhotoAsync()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        try
+        {
+            var path = await _imageStore.PickFromGalleryAsync();
+            if (path is not null)
+            {
+                ImagePath = path;
+                OnPropertyChanged(nameof(FullImagePath));
+            }
+        }
+        finally { IsBusy = false; }
+    }
+
+    private async Task CapturePhotoAsync()
+    {
+        if (IsBusy) return;
+        IsBusy = true;
+        try
+        {
+            var path = await _imageStore.CaptureFromCameraAsync();
+            if (path is not null)
+            {
+                ImagePath = path;
+                OnPropertyChanged(nameof(FullImagePath));
+            }
+        }
+        finally { IsBusy = false; }
+    }
+
+    // ── Sauvegarde ────────────────────────────────────────────────────────
 
     private async Task SaveAsync()
     {
         if (IsBusy) return;
-
         IsBusy = true;
         ErrorMessage = null;
 
@@ -102,7 +166,8 @@ public class AddItemViewModel : BaseViewModel
             {
                 Name = Name,
                 Category = Category ?? string.Empty,
-                Color = Color
+                Color = Color,
+                ImagePath = _imagePath      // I3 : photo transmise
             };
 
             var result = await _clothingService.AddAsync(item);
@@ -132,15 +197,16 @@ public class AddItemViewModel : BaseViewModel
         }
     }
 
-    /// <summary>Retour au formulaire vide ("Ajouter une autre pièce").</summary>
     private void Reset()
     {
         Name = string.Empty;
         Category = null;
         Color = null;
+        ImagePath = null;
         ErrorMessage = null;
         SavedItem = null;
         ConfirmationText = string.Empty;
         IsSaved = false;
+        OnPropertyChanged(nameof(FullImagePath));
     }
 }

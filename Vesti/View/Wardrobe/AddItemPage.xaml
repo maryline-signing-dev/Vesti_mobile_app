@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  AddItemPage.xaml
+  AddItemPage.xaml :
+  - Zone photo : affiche la vraie image si HasPhoto, sinon le placeholder
+  - Boutons "Photo" et "Importer" câblés sur CapturePhotoCommand et PickPhotoCommand
+  - Écran de confirmation : affiche la vraie photo si disponible
+  -Prend en compte la logique (IsSaved, IsNotSaved, SaveCommand, etc.) 
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -20,8 +24,7 @@
                 <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
                     <Image Grid.Column="0"
                            Source="arrow_left_24dp.png"
-                           WidthRequest="24"
-                           HeightRequest="24"
+                           WidthRequest="24" HeightRequest="24"
                            VerticalOptions="Center"
                            Margin="0,0,12,0">
                         <Image.GestureRecognizers>
@@ -34,63 +37,98 @@
                            VerticalOptions="Center" />
                 </Grid>
 
-                <!-- Zone photo — conforme maquette : Photo + Importer -->
-                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
-                        StrokeShape="RoundRectangle 16"
+                <!-- ── Zone photo ──────────────────────────────────── -->
+                <Border StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
-                        HeightRequest="200">
-                    <VerticalStackLayout VerticalOptions="Center" Spacing="16">
+                        HeightRequest="200"
+                        BackgroundColor="{StaticResource ColorPrimaryLight}">
+                    <Grid>
 
-                        <!-- Placeholder icône shirt -->
-                        <Image Source="shirt_placeholder.png"
-                               WidthRequest="56"
-                               HeightRequest="56"
-                               HorizontalOptions="Center" />
+                        <!-- Vraie photo (visible si HasPhoto) -->
+                        <Image Source="{Binding FullImagePath}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding HasPhoto}" />
 
-                        <!-- Boutons Photo et Importer -->
-                        <Grid ColumnDefinitions="*,*"
-                              ColumnSpacing="12"
-                              Padding="16,0">
-                            <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource ColorSurface}"
-                                    StrokeShape="RoundRectangle 10"
-                                    StrokeThickness="0"
-                                    Padding="12,10">
-                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                                    <Image Grid.Column="0"
-                                           Source="camera_24dp.png"
-                                           WidthRequest="18"
-                                           HeightRequest="18"
-                                           VerticalOptions="Center" />
-                                    <Label Grid.Column="1"
-                                           Text="Photo"
-                                           Style="{StaticResource TextCaption}"
-                                           TextColor="{StaticResource ColorTextPrimary}"
-                                           VerticalOptions="Center" />
-                                </Grid>
-                            </Border>
+                        <!-- Placeholder + boutons (visible si pas de photo) -->
+                        <VerticalStackLayout VerticalOptions="Center"
+                                             Spacing="16"
+                                             IsVisible="{Binding HasPhoto,
+                                                 Converter={StaticResource InvertBoolConverter}}">
 
-                            <Border Grid.Column="1"
-                                    BackgroundColor="{StaticResource ColorSurface}"
-                                    StrokeShape="RoundRectangle 10"
-                                    StrokeThickness="0"
-                                    Padding="12,10">
-                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                                    <Image Grid.Column="0"
-                                           Source="image_24dp.png"
-                                           WidthRequest="18"
-                                           HeightRequest="18"
-                                           VerticalOptions="Center" />
-                                    <Label Grid.Column="1"
-                                           Text="Importer"
-                                           Style="{StaticResource TextCaption}"
-                                           TextColor="{StaticResource ColorTextPrimary}"
-                                           VerticalOptions="Center" />
-                                </Grid>
-                            </Border>
-                        </Grid>
+                            <Image Source="shirt_placeholder.png"
+                                   WidthRequest="56" HeightRequest="56"
+                                   HorizontalOptions="Center" />
 
-                    </VerticalStackLayout>
+                            <Grid ColumnDefinitions="*,*"
+                                  ColumnSpacing="12"
+                                  Padding="16,0">
+
+                                <!-- Bouton Photo (caméra) -->
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{StaticResource ColorSurface}"
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0"
+                                        Padding="12,10">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                        <Image Grid.Column="0"
+                                               Source="camera_24dp.png"
+                                               WidthRequest="18" HeightRequest="18"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="Photo"
+                                               Style="{StaticResource TextCaption}"
+                                               TextColor="{StaticResource ColorTextPrimary}"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding CapturePhotoCommand}" />
+                                    </Border.GestureRecognizers>
+                                </Border>
+
+                                <!-- Bouton Importer (galerie) -->
+                                <Border Grid.Column="1"
+                                        BackgroundColor="{StaticResource ColorSurface}"
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0"
+                                        Padding="12,10">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                        <Image Grid.Column="0"
+                                               Source="image_24dp.png"
+                                               WidthRequest="18" HeightRequest="18"
+                                               VerticalOptions="Center" />
+                                        <Label Grid.Column="1"
+                                               Text="Importer"
+                                               Style="{StaticResource TextCaption}"
+                                               TextColor="{StaticResource ColorTextPrimary}"
+                                               VerticalOptions="Center" />
+                                    </Grid>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding PickPhotoCommand}" />
+                                    </Border.GestureRecognizers>
+                                </Border>
+
+                            </Grid>
+                        </VerticalStackLayout>
+
+                        <!-- Bouton "Changer" superposé si photo déjà choisie -->
+                        <Border BackgroundColor="#CC000000"
+                                StrokeShape="RoundRectangle 10"
+                                StrokeThickness="0"
+                                Padding="12,6"
+                                HorizontalOptions="End"
+                                VerticalOptions="End"
+                                Margin="12"
+                                IsVisible="{Binding HasPhoto}">
+                            <Label Text="Changer"
+                                   Style="{StaticResource TextCaption}"
+                                   TextColor="White">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding PickPhotoCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Border>
+
+                    </Grid>
                 </Border>
 
                 <!-- Nom -->
@@ -99,8 +137,7 @@
                     <Border StrokeShape="RoundRectangle 12"
                             Stroke="{StaticResource BrushBorder}"
                             BackgroundColor="{StaticResource ColorSurface}"
-                            Padding="12,0"
-                            HeightRequest="48">
+                            Padding="12,0" HeightRequest="48">
                         <Entry Text="{Binding Name}"
                                Placeholder="Chemise blanche"
                                Style="{StaticResource FieldBase}" />
@@ -114,15 +151,13 @@
                         <Border StrokeShape="RoundRectangle 12"
                                 Stroke="{StaticResource BrushBorder}"
                                 BackgroundColor="{StaticResource ColorSurface}"
-                                Padding="12,0"
-                                HeightRequest="48">
+                                Padding="12,0" HeightRequest="48">
                             <Picker ItemsSource="{Binding Categories}"
                                     SelectedItem="{Binding Category}"
                                     Title="Choisir"
                                     TitleColor="{StaticResource ColorTextSecondary}"
                                     TextColor="{StaticResource ColorTextPrimary}"
-                                    FontSize="14"
-                                    VerticalOptions="Center" />
+                                    FontSize="14" VerticalOptions="Center" />
                         </Border>
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1" Spacing="4">
@@ -130,20 +165,17 @@
                         <Border StrokeShape="RoundRectangle 12"
                                 Stroke="{StaticResource BrushBorder}"
                                 BackgroundColor="{StaticResource ColorSurface}"
-                                Padding="12,0"
-                                HeightRequest="48">
+                                Padding="12,0" HeightRequest="48">
                             <Picker ItemsSource="{Binding Colors}"
                                     SelectedItem="{Binding Color}"
                                     Title="Choisir"
                                     TitleColor="{StaticResource ColorTextSecondary}"
                                     TextColor="{StaticResource ColorTextPrimary}"
-                                    FontSize="14"
-                                    VerticalOptions="Center" />
+                                    FontSize="14" VerticalOptions="Center" />
                         </Border>
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- Erreur -->
                 <Label IsVisible="{Binding HasError}"
                        Text="{Binding ErrorMessage}"
                        Style="{StaticResource TextCaption}"
@@ -158,6 +190,7 @@
                        Style="{StaticResource TextCaption}"
                        HorizontalOptions="Center"
                        HorizontalTextAlignment="Center" />
+
             </VerticalStackLayout>
 
             <!-- ═══ CONFIRMATION ═════════════════════════════════════ -->
@@ -165,16 +198,13 @@
                                  Spacing="16"
                                  IsVisible="{Binding IsSaved}">
 
-                <!-- Icône check Lucide -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 100"
                         StrokeThickness="0"
-                        WidthRequest="56"
-                        HeightRequest="56"
+                        WidthRequest="56" HeightRequest="56"
                         HorizontalOptions="Center">
                     <Image Source="check_24dp.png"
-                           WidthRequest="28"
-                           HeightRequest="28"
+                           WidthRequest="28" HeightRequest="28"
                            HorizontalOptions="Center"
                            VerticalOptions="Center" />
                 </Border>
@@ -184,16 +214,27 @@
                        HorizontalOptions="Center"
                        HorizontalTextAlignment="Center" />
 
-                <!-- Photo de confirmation -->
-                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
-                        StrokeShape="RoundRectangle 16"
+                <!-- Photo réelle ou placeholder -->
+                <Border StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
-                        HeightRequest="160">
-                    <Image Source="shirt_placeholder.png"
-                           WidthRequest="64"
-                           HeightRequest="64"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                        HeightRequest="160"
+                        BackgroundColor="{StaticResource ColorPrimaryLight}">
+                    <Grid>
+                        <!-- Vraie photo -->
+                        <Image Source="{Binding SavedItem.ImagePath,
+                                   Converter={StaticResource RelativePathToFullConverter}}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding SavedItem.ImagePath,
+                                   Converter={StaticResource NotNullConverter}}" />
+                        <!-- Placeholder si pas de photo -->
+                        <Image Source="shirt_placeholder.png"
+                               WidthRequest="64" HeightRequest="64"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding SavedItem.ImagePath,
+                                   Converter={StaticResource NotNullConverter},
+                                   ConverterParameter=invert}" />
+                    </Grid>
                 </Border>
 
                 <Label Text="{Binding SavedItem.Name}"
@@ -218,6 +259,7 @@
                 <Button Text="Ajouter une autre pièce"
                         Style="{StaticResource BtnSecondary}"
                         Command="{Binding AddAnotherCommand}" />
+
             </VerticalStackLayout>
 
         </Grid>
