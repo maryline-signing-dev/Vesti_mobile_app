@@ -16,13 +16,23 @@
         <VerticalStackLayout Padding="24,48,24,40" Spacing="0">
 
             <!-- Flèche retour -->
-            <Label Text="←" Style="{StaticResource TextH1}"
-                   Margin="0,0,0,32">
-                
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnBackTapped" />
-                </Label.GestureRecognizers>
-            </Label>
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                <Image Grid.Column="0"
+                       Source="arrow_left_24dp.png"
+                       WidthRequest="20" HeightRequest="20"
+                       VerticalOptions="Start" />
+ 
+                <Label Grid.Column="1"
+                       Text="Back" 
+                       Margin="0,0,0,0"
+                       FontFamily="{StaticResource FontInter}"
+                       FontSize="{StaticResource TextSizeBody}"
+                       TextColor="{StaticResource ColorTextSecondary}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
 
             <!-- Logo -->
             <Label Text="Vesti" Style="{StaticResource TextLogo}" Margin="0,0,0,24" />
@@ -66,12 +76,13 @@
                            Keyboard="Email"
                            ReturnType="Done" />
                     <!-- Icône enveloppe (Lucide) -->
-                    <Label Grid.Column="1" Text="✉"
-                           TextColor="{StaticResource ColorTextSecondary}"
-                           VerticalOptions="Center"
-                           FontSize="16" />
+                    <Image Grid.Column="1"
+                           Source="arrow_left_24dp.png"
+                           WidthRequest="20" HeightRequest="20"
+                           VerticalOptions="Center" />
                 </Grid>
             </Border>
+                
             <Label Text="Informatif uniquement"
                    Style="{StaticResource TextCaption}"
                    TextColor="{StaticResource ColorTextSecondary}"

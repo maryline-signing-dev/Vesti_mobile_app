@@ -78,11 +78,11 @@
                         StrokeThickness="0"
                         HeightRequest="220"
                         Margin="0,24,0,28">
-                    <Image Source="shirt_placeholder.png"
-                           WidthRequest="80"
-                           HeightRequest="80"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                    <Image Source="organiser_placeholder.jfif"
+                           WidthRequest="220"
+                           HeightRequest="200"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill" />
                 </Border>
 
                 <Label Text="01 / ORGANISER"
@@ -115,7 +115,7 @@
                     </Label>
                 </Grid>
 
-                <!-- Trois icônes shirt alignées horizontalement — remplace 👔👖👟 -->
+                <!-- Trois icônes shirt alignées horizontalement -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
@@ -123,13 +123,13 @@
                         Margin="0,24,0,28">
                     <HorizontalStackLayout HorizontalOptions="Center"
                                            VerticalOptions="Center"
-                                           Spacing="16">
-                        <Image Source="shirt_placeholder.png"
-                               WidthRequest="60" HeightRequest="60" />
-                        <Image Source="shoes_placeholder.png"
-                               WidthRequest="60" HeightRequest="60" />
-                        <Image Source="shirt_placeholder.png"
-                               WidthRequest="60" HeightRequest="60" />
+                                           Spacing="12">
+                        <Image Source="t_shirt_placeholder.jfif"
+                               WidthRequest="85" HeightRequest="200" />
+                        <Image Source="casual_tennis_sneakers_placeholder.jfif"
+                               WidthRequest="85" HeightRequest="200" />
+                        <Image Source="pant_placeholder.jfif"
+                               WidthRequest="85" HeightRequest="200" />
                     </HorizontalStackLayout>
                 </Border>
 
@@ -163,7 +163,7 @@
                     </Label>
                 </Grid>
 
-                <!-- Mini-calendrier avec icône — remplace 🗓️👔👖👟 -->
+                <!-- Mini-calendrier avec icône -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
@@ -181,24 +181,24 @@
                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
                                 <Image Grid.Column="0"
                                        Source="agenda_18dp.png"
-                                       WidthRequest="18" HeightRequest="18"
+                                       WidthRequest="20" HeightRequest="20"
                                        VerticalOptions="Center" />
                                 <Label Grid.Column="1"
                                        Text="Octobre"
-                                       FontFamily="{StaticResource FontInter}"
-                                       FontSize="{StaticResource TextSizeCaption}"
+                                       FontFamily="{StaticResource FontDMSerif}"
+                                       FontSize="{StaticResource TextSizeH2}"
                                        TextColor="{StaticResource ColorTextPrimary}"
                                        VerticalOptions="Center" />
                             </Grid>
                         </Border>
                         <!-- Icônes de tenues -->
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
-                            <Image Source="shirt_placeholder.png"
-                                   WidthRequest="48" HeightRequest="48" />
-                            <Image Source="shirt_placeholder.png"
-                                   WidthRequest="48" HeightRequest="48" />
-                            <Image Source="shirt_placeholder.png"
-                                   WidthRequest="48" HeightRequest="48" />
+                            <Image Source="t_shirt_placeholder.jfif"
+                               WidthRequest="80" HeightRequest="150" />
+                            <Image Source="casual_tennis_sneakers_placeholder.jfif"
+                               WidthRequest="80" HeightRequest="150" />
+                            <Image Source="pant_placeholder.jfif"
+                                    WidthRequest="80" HeightRequest="150"/>
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
                 </Border>
