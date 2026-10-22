@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  OutfitDetailPage.xaml — "Tenue enregistrée"
+  Conforme à la maquette "Composer : Enregistrée".
+  Affiche le collage de pièces, le nom, l'occasion, la liste des pièces.
+  Boutons : "Ajouter à l'agenda" (I5) et "Modifier la tenue".
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Vesti.Models"
+             x:Class="Vesti.Views.Outfits.OutfitDetailPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+            <!-- En-tête -->
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0"
+                       Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1"
+                       Text="Tenue enregistrée"
+                       Style="{StaticResource TextH1}"
+                       VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Erreur -->
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextBody}"
+                   TextColor="{StaticResource ColorError}" />
+
+            <!-- Contenu -->
+            <VerticalStackLayout Spacing="16" IsVisible="{Binding HasOutfit}">
+
+                <!-- Collage de pièces -->
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        HeightRequest="160">
+                    <CollectionView ItemsSource="{Binding Outfit.Items}"
+                                    HeightRequest="160">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal"
+                                               ItemSpacing="8" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ClothingItem">
+                                <Border BackgroundColor="{StaticResource ColorSurface}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 12"
+                                        WidthRequest="120"
+                                        HeightRequest="140"
+                                        Margin="8,10,0,10">
+                                    <Image Source="shirt_placeholder.png"
+                                           WidthRequest="48" HeightRequest="48"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Border>
+
+                <!-- Nom et occasion -->
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding Outfit.DisplayName}"
+                           Style="{StaticResource TextH1}" />
+                    <HorizontalStackLayout Spacing="8">
+                        <Border StrokeShape="RoundRectangle 8"
+                                Stroke="{StaticResource BrushBorder}"
+                                Padding="12,4"
+                                IsVisible="{Binding HasOccasion}">
+                            <Label Text="{Binding OccasionText}"
+                                   Style="{StaticResource TextCaption}" />
+                        </Border>
+                        <Label Text="{Binding Outfit.Items.Count, StringFormat='{0} pièces'}"
+                               Style="{StaticResource TextCaption}"
+                               TextColor="{StaticResource ColorTextSecondary}"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Liste des pièces -->
+                <CollectionView ItemsSource="{Binding Outfit.Items}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ClothingItem">
+                            <Label Text="{Binding Name}"
+                                   Style="{StaticResource TextBody}"
+                                   TextColor="{StaticResource ColorTextSecondary}"
+                                   Margin="0,2,0,2" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Message agenda -->
+                <Label Text="Pas encore planifiée. Gardez cette tenue pour plus tard ou choisissez une date."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+
+                <!-- Bouton Ajouter à l'agenda (I5) -->
+                <Border BackgroundColor="{StaticResource ColorSurface}"
+                        Stroke="{StaticResource BrushBorder}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="16,14"
+                        Opacity="0.6">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Image Grid.Column="0"
+                               Source="agenda_18dp.png"
+                               WidthRequest="18" HeightRequest="18"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="Ajouter à l'agenda"
+                               Style="{StaticResource TextBody}"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddToAgendaCommand}" />
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Bouton Modifier -->
+                <Border BackgroundColor="{StaticResource ColorSurface}"
+                        Stroke="{StaticResource BrushBorder}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="16,14">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Image Grid.Column="0"
+                               Source="pencil_18dp.png"
+                               WidthRequest="18" HeightRequest="18"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="1"
+                               Text="Modifier la tenue"
+                               Style="{StaticResource TextBody}"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                    </Grid>
+                    <!-- Modifier câblé en I4 uniquement si la logique d'édition est ajoutée -->
+                    <!-- Pour l'instant, non câblé : ajouté en post-I4 -->
+                </Border>
+
+                <!-- Supprimer -->
+                <Button Text="Supprimer la tenue"
+                        Style="{StaticResource BtnSecondary}"
+                        TextColor="{StaticResource ColorError}"
+                        Command="{Binding DeleteCommand}"
+                        IsEnabled="{Binding IsNotBusy}"
+                        Margin="0,8,0,0" />
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

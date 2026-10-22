@@ -31,4 +31,14 @@ public static class ClothingOptions
     /// <summary>Puces de filtre : "Tout" puis chaque catégorie.</summary>
     public static readonly string[] FilterChips =
         new[] { AllFilter }.Concat(Categories).ToArray();
+
+    /// <summary>
+    /// Occasions disponibles pour une tenue.
+    /// Conformes aux maquettes (Composer : Occasion).
+    /// </summary>
+    public static readonly string[] Occasions =
+    {
+        "Cours", "Travail", "Sortie", "Soirée",
+        "Cérémonie", "Sport", "Quotidien", "Voyage", "Autre"
+    };
 }

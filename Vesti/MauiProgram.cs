@@ -7,11 +7,14 @@ using Vesti.ViewModels.Home;
 using Vesti.ViewModels.Onboarding;
 using Vesti.ViewModels.Profile;
 using Vesti.ViewModels.Wardrobe;
+using Vesti.ViewModels.Outfits;
 using Vesti.Views.Agenda;
 using Vesti.Views.Home;
 using Vesti.Views.Onboarding;
+using Vesti.Views.Outfits;
 using Vesti.Views.Profile;
 using Vesti.Views.Wardrobe;
+using Vesti.Views.Outfits;
 
 namespace Vesti;
 
@@ -38,11 +41,13 @@ public static class MauiProgram
         builder.Services.AddSingleton<ProfileRepository>();
         builder.Services.AddSingleton<SettingsRepository>();
         builder.Services.AddSingleton<ClothingRepository>();
+        builder.Services.AddSingleton<OutfitRepository>();
 
         // ── Services ──────────────────────────────────────────────────
         builder.Services.AddSingleton<IImageStore, ImageStore>();
         builder.Services.AddSingleton<ProfileService>();
         builder.Services.AddSingleton<ClothingService>();
+        builder.Services.AddSingleton<OutfitService>();
 
         // ── ViewModels ────────────────────────────────────────────────
         builder.Services.AddTransient<OnboardingViewModel>();
@@ -52,6 +57,13 @@ public static class MauiProgram
         builder.Services.AddTransient<AddItemViewModel>();
         builder.Services.AddTransient<ItemDetailViewModel>();
         builder.Services.AddTransient<EditItemViewModel>();
+        builder.Services.AddTransient<ComposeCompositionViewModel>();
+        builder.Services.AddTransient<ComposeOccasionViewModel>();
+        builder.Services.AddTransient<ComposeSelectionViewModel>();
+        builder.Services.AddTransient<OutfitListViewModel>();
+        builder.Services.AddTransient<OutfitDetailViewModel>();
+        builder.Services.AddTransient<ComposeState>();
+
 
         // ── Navigation principale ────────────────────────────────────────
         builder.Services.AddSingleton<AppShell>();
@@ -64,6 +76,12 @@ public static class MauiProgram
         builder.Services.AddTransient<AddItemPage>();
         builder.Services.AddTransient<ItemDetailPage>();
         builder.Services.AddTransient<EditItemPage>();
+        builder.Services.AddTransient<ComposeCompositionPage>();
+        builder.Services.AddTransient<ComposeOccasionPage>();
+        builder.Services.AddTransient<ComposeSelectionPage>();
+        builder.Services.AddTransient<OutfitListPage>();
+        builder.Services.AddTransient<OutfitDetailPage>();
+
 
         // Pages squelettes des onglets non encore développés
         builder.Services.AddTransient<AgendaPage>();

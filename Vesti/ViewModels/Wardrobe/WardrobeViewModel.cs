@@ -2,6 +2,7 @@ using System.Windows.Input;
 using Vesti.Infrastructure;
 using Vesti.Models;
 using Vesti.Services;
+using Vesti.ViewModels.Outfits;
 
 namespace Vesti.ViewModels.Wardrobe;
 
@@ -15,6 +16,9 @@ namespace Vesti.ViewModels.Wardrobe;
 ///   HasItems   : au moins une pièce                → grille + recherche + filtres
 ///
 /// Le XAML lie directement ces booléens : aucun convertisseur nécessaire.
+/// 
+/// -  ComposeCommand  navigue vers ComposeSelectionPage.
+/// -  OutfitsCommand  navigue vers OutfitListPage.
 /// </summary>
 public class WardrobeViewModel : BaseViewModel
 {
@@ -32,6 +36,15 @@ public class WardrobeViewModel : BaseViewModel
         AddItemCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.AddItem));
 
+        ComposeCommand = new Command(async () =>
+        {
+            ComposeState.Current.Reset();
+            await Shell.Current.GoToAsync(Routes.ComposeSelection);
+        });
+
+        OutfitsCommand = new Command(async () =>
+            await Shell.Current.GoToAsync(Routes.OutfitList));
+
         ClearSearchCommand = new Command(() => SearchText = string.Empty);
     }
 
@@ -44,21 +57,19 @@ public class WardrobeViewModel : BaseViewModel
         private set => SetProperty(ref _items, value);
     }
 
-    /// <summary>Puces de filtre : "Tout", puis les catégories.</summary>
+    /// Puces de filtre : "Tout", puis les catégories
     public IList<string> Filters => ClothingOptions.FilterChips;
 
     // ── États d'écran ────────────────────────────────────────────────────
 
     private int _totalCount;
-
     public bool IsEmpty => _totalCount == 0;
     public bool HasItems => _totalCount > 0;
     public bool IsNoResult => HasItems && Items.Count == 0;
     public bool HasResults => Items.Count > 0;
-
     public bool IsSearchActive => !string.IsNullOrEmpty(SearchText);
 
-    /// <summary>Titre au-dessus de la grille.</summary>
+    /// Titre au-dessus de la grille.
     public string ListTitle
     {
         get
@@ -132,6 +143,8 @@ public class WardrobeViewModel : BaseViewModel
     // ── Commandes ────────────────────────────────────────────────────────
 
     public ICommand AddItemCommand { get; }
+    public ICommand ComposeCommand { get; }
+    public ICommand OutfitsCommand { get; }
     public ICommand ClearSearchCommand { get; }
 
     // ── Chargement ───────────────────────────────────────────────────────

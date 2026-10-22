@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ComposeSelectionPage.xaml — Étape 1 : sélection des pièces
+  Conforme à la maquette "Composer : Sélection".
+  Une coche apparaît sur chaque pièce sélectionnée.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Vesti.ViewModels.Outfits"
+             x:Class="Vesti.Views.Outfits.ComposeSelectionPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- EN-TÊTE -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="24,20,24,0">
+            <Image Grid.Column="0"
+                   Source="arrow_left_24dp.png"
+                   WidthRequest="24" HeightRequest="24"
+                   VerticalOptions="Center"
+                   Margin="0,0,12,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BackCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                <Label Text="Composer une tenue"
+                       Style="{StaticResource TextH1}" />
+                <Label Text="Sélectionnez les pièces à associer."
+                       Style="{StaticResource TextCaption}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- FILTRES CATÉGORIES -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding FilterChips}"
+                        SelectedItem="{Binding SelectedFilter}"
+                        SelectionMode="Single"
+                        HeightRequest="48"
+                        Margin="24,12,0,0"
+                        HorizontalScrollBarVisibility="Never">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border StrokeShape="RoundRectangle 18"
+                            Stroke="{StaticResource BrushBorder}"
+                            Padding="14,0" HeightRequest="36"
+                            VerticalOptions="Center">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor"
+                                                    Value="{StaticResource ColorSurface}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor"
+                                                    Value="{StaticResource ColorPrimaryLight}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                        <Label Text="{Binding .}"
+                               Style="{StaticResource TextCaption}"
+                               TextColor="{StaticResource ColorTextPrimary}"
+                               VerticalOptions="Center" />
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- GRILLE DES PIÈCES SÉLECTIONNABLES -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding SelectableItems}"
+                        Margin="24,12,24,0">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2"
+                                 HorizontalItemSpacing="12"
+                                 VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:SelectableClothingItem">
+                    <Border BackgroundColor="{StaticResource ColorSurface}"
+                            Stroke="{StaticResource BrushBorder}"
+                            StrokeShape="RoundRectangle 12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                    Path=BindingContext.ToggleItemCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+
+                        <Grid>
+                            <VerticalStackLayout>
+                                <!-- Zone photo -->
+                                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                        StrokeShape="RoundRectangle 12,12,0,0"
+                                        StrokeThickness="0"
+                                        HeightRequest="130">
+                                    <Image Source="shirt_placeholder.png"
+                                           WidthRequest="48" HeightRequest="48"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                                <!-- Nom + subtitle -->
+                                <VerticalStackLayout Padding="10,8,10,10" Spacing="2">
+                                    <Label Text="{Binding Item.Name}"
+                                           Style="{StaticResource TextBody}"
+                                           FontAttributes="Bold"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Item.Subtitle}"
+                                           Style="{StaticResource TextCaption}"
+                                           LineBreakMode="TailTruncation" />
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+
+                            <!-- Coche de sélection (coin supérieur droit) -->
+                            <Border BackgroundColor="{StaticResource ColorPrimary}"
+                                    StrokeShape="RoundRectangle 100"
+                                    StrokeThickness="0"
+                                    WidthRequest="24" HeightRequest="24"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Start"
+                                    Margin="0,8,8,0"
+                                    IsVisible="{Binding IsSelected}">
+                                <Image Source="check_24dp.png"
+                                       WidthRequest="14" HeightRequest="14"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- PIED : compteur + bouton -->
+        <VerticalStackLayout Grid.Row="3" Padding="24,12,24,24" Spacing="12">
+
+            <Grid ColumnDefinitions="*,Auto"
+                  IsVisible="{Binding HasSelection}">
+                <Label Grid.Column="0"
+                       Text="{Binding SelectionLabel}"
+                       Style="{StaticResource TextBody}"
+                       VerticalOptions="Center" />
+                <Label Grid.Column="1"
+                       Text="Tout retirer"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorPrimary}"
+                       VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ClearAllCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+
+            <Button Text="Voir la composition"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding NextCommand}"
+                    IsEnabled="{Binding HasSelection}" />
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Vesti.Views.Agenda;
 using Vesti.Views.Home;
+using Vesti.Views.Outfits;
 using Vesti.Views.Profile;
 using Vesti.Views.Wardrobe;
+using Vesti.Infrastructure;
 
 namespace Vesti;
 
@@ -19,12 +21,18 @@ public partial class AppShell : Shell
         AgendaTab.Content = services.GetRequiredService<AgendaPage>();
         ProfileTab.Content = services.GetRequiredService<ProfilePage>();
 
-        // Routes secondaires — Dressing (I2)
-        Routing.RegisterRoute("wardrobe/add", typeof(AddItemPage));
-        Routing.RegisterRoute("wardrobe/detail", typeof(ItemDetailPage));
-        Routing.RegisterRoute("wardrobe/edit", typeof(EditItemPage));
+        // Routes secondaires — Dressing 
+        Routing.RegisterRoute(Routes.AddItem, typeof(AddItemPage));
+        Routing.RegisterRoute(Routes.ItemDetail, typeof(ItemDetailPage));
+        Routing.RegisterRoute(Routes.EditItem, typeof(EditItemPage));
 
-        // I4 : Routing.RegisterRoute("wardrobe/compose", typeof(ComposePage));
-        // I5 : Routing.RegisterRoute("agenda/plan",      typeof(PlanOutfitPage));
+
+        // Tenues 
+        Routing.RegisterRoute(Routes.OutfitList, typeof(OutfitListPage));
+        Routing.RegisterRoute(Routes.ComposeSelection, typeof(ComposeSelectionPage));
+        Routing.RegisterRoute(Routes.ComposeComposition, typeof(ComposeCompositionPage));
+        Routing.RegisterRoute(Routes.ComposeOccasion, typeof(ComposeOccasionPage));
+        Routing.RegisterRoute(Routes.OutfitDetail, typeof(OutfitDetailPage));
+
     }
 }

@@ -20,18 +20,11 @@
                 <Image Grid.Column="0"
                        Source="arrow_left_24dp.png"
                        WidthRequest="20" HeightRequest="20"
-                       VerticalOptions="Start" />
- 
-                <Label Grid.Column="1"
-                       Text="Back" 
-                       Margin="0,0,0,0"
-                       FontFamily="{StaticResource FontInter}"
-                       FontSize="{StaticResource TextSizeBody}"
-                       TextColor="{StaticResource ColorTextSecondary}">
-                    <Label.GestureRecognizers>
+                       VerticalOptions="Start" >
+                    <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnBackTapped" />
-                    </Label.GestureRecognizers>
-                </Label>
+                    </Image.GestureRecognizers>
+                </Image>
             </Grid>
 
             <!-- Logo -->
@@ -77,7 +70,7 @@
                            ReturnType="Done" />
                     <!-- Icône enveloppe (Lucide) -->
                     <Image Grid.Column="1"
-                           Source="arrow_left_24dp.png"
+                           Source="mail_18dp.png"
                            WidthRequest="20" HeightRequest="20"
                            VerticalOptions="Center" />
                 </Grid>

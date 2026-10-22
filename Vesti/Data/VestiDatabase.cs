@@ -28,13 +28,13 @@ public class VestiDatabase
     /// </summary>
     public async Task InitialiseAsync()
     {
-        // I1
         await _db.CreateTableAsync<LocalProfile>();
         await _db.CreateTableAsync<AppSetting>();
 
-        // I2
         await _db.CreateTableAsync<ClothingItem>();
 
-        // Les tables des incréments suivants s'ajoutent ici.
+        await _db.CreateTableAsync<Outfit>();
+        await _db.CreateTableAsync<OutfitItem>();
+     
     }
 }

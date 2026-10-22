@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ComposeCompositionPage.xaml — Étape 2 : Votre composition
+  Affiche l'aperçu des pièces, permet de retirer une pièce,
+  et de nommer la tenue.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Vesti.Models"
+             x:Class="Vesti.Views.Outfits.ComposeCompositionPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- EN-TÊTE -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="24,20,24,0">
+            <Image Grid.Column="0"
+                   Source="arrow_left_24dp.png"
+                   WidthRequest="24" HeightRequest="24"
+                   VerticalOptions="Center"
+                   Margin="0,0,12,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BackCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Grid.Column="1"
+                   Text="Votre composition"
+                   Style="{StaticResource TextH1}"
+                   VerticalOptions="Center" />
+        </Grid>
+
+        <!-- CONTENU -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,16,24,0" Spacing="20">
+
+                <!-- Aperçu collage horizontal des pièces -->
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        HeightRequest="140">
+                    <CollectionView ItemsSource="{Binding Items}"
+                                    HeightRequest="140">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal"
+                                               ItemSpacing="8" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ClothingItem">
+                                <Border BackgroundColor="{StaticResource ColorSurface}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 12"
+                                        WidthRequest="110"
+                                        HeightRequest="120"
+                                        Margin="0,8,0,8">
+                                    <Image Source="shirt_placeholder.png"
+                                           WidthRequest="48" HeightRequest="48"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Border>
+
+                <!-- Nom de la tenue -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Nom de la tenue"
+                           Style="{StaticResource TextCaption}" />
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BrushBorder}"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Padding="12,0" HeightRequest="48">
+                        <Entry Text="{Binding Name}"
+                               Placeholder="Tenue Casual"
+                               Style="{StaticResource FieldBase}" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Liste des pièces avec bouton retirer -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="{Binding ItemCountLabel, StringFormat='Les {0}'}"
+                           Style="{StaticResource TextSectionTitle}" />
+                    <Label Grid.Column="1"
+                           Text="Ajouter"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorPrimary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BackCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <CollectionView ItemsSource="{Binding Items}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ClothingItem">
+                            <Border BackgroundColor="{StaticResource ColorSurface}"
+                                    Stroke="{StaticResource BrushBorder}"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="12,10"
+                                    Margin="0,0,0,8">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                            StrokeShape="RoundRectangle 8"
+                                            StrokeThickness="0"
+                                            WidthRequest="44" HeightRequest="44">
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="24" HeightRequest="24"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1"
+                                                         VerticalOptions="Center"
+                                                         Spacing="2">
+                                        <Label Text="{Binding Name}"
+                                               Style="{StaticResource TextBody}"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding Subtitle}"
+                                               Style="{StaticResource TextCaption}" />
+                                    </VerticalStackLayout>
+                                    <Image Grid.Column="2"
+                                           Source="x_18dp.png"
+                                           WidthRequest="18" HeightRequest="18"
+                                           VerticalOptions="Center">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                    Path=BindingContext.RemoveItemCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label Text="Retirez une pièce avec × ou remplacez-la. Votre tenue peut être enregistrée sans agenda."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+
+                <Label IsVisible="{Binding HasError}"
+                       Text="{Binding ErrorMessage}"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorError}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- BOUTON CONTINUER -->
+        <VerticalStackLayout Grid.Row="2" Padding="24,12,24,24">
+            <Button Text="Continuer"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding NextCommand}" />
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

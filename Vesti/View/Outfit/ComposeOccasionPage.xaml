@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ComposeOccasionPage.xaml — Étape 3 : Pour quelle occasion ?
+  L'utilisateur peut sélectionner une puce d'occasion ou passer.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Outfits.ComposeOccasionPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- EN-TÊTE -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="24,20,24,0">
+            <Image Grid.Column="0"
+                   Source="arrow_left_24dp.png"
+                   WidthRequest="24" HeightRequest="24"
+                   VerticalOptions="Center"
+                   Margin="0,0,12,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BackCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Grid.Column="1"
+                   Text="Pour quelle occasion ?"
+                   Style="{StaticResource TextH1}"
+                   VerticalOptions="Center" />
+        </Grid>
+
+        <!-- CONTENU -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,16,24,0" Spacing="20">
+
+                <Label Text="Un repère pour retrouver votre tenue. Vous pouvez aussi passer cette étape."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+
+                <!-- Puces d'occasion -->
+                <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start">
+                    <FlexLayout.GestureRecognizers>
+                        <!-- Geste global désactivé ; chaque puce a le sien -->
+                    </FlexLayout.GestureRecognizers>
+                    <BindableLayout.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Travail</x:String>
+                            <x:String>Cours</x:String>
+                            <x:String>Sortie</x:String>
+                            <x:String>Soirée</x:String>
+                            <x:String>Cérémonie</x:String>
+                            <x:String>Sport</x:String>
+                            <x:String>Quotidien</x:String>
+                            <x:String>Voyage</x:String>
+                            <x:String>Autre</x:String>
+                        </x:Array>
+                    </BindableLayout.ItemsSource>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,8,8"
+                                    StrokeShape="RoundRectangle 18"
+                                    Padding="16,8">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="OccasionStates">
+                                            <!-- L'état actif est géré par le code-behind -->
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                            Path=BindingContext.SelectOccasionCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="{Binding .}"
+                                       Style="{StaticResource TextCaption}"
+                                       TextColor="{StaticResource ColorTextPrimary}" />
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+
+                <Label IsVisible="{Binding HasError}"
+                       Text="{Binding ErrorMessage}"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorError}" />
+
+                <Label Text="Aucune date n'est nécessaire pour enregistrer."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- BOUTONS -->
+        <VerticalStackLayout Grid.Row="2" Padding="24,12,24,24" Spacing="12">
+            <Button Text="Enregistrer la tenue"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}" />
+            <Button Text="Passer et enregistrer sans occasion"
+                    Style="{StaticResource BtnSecondary}"
+                    Command="{Binding SkipSaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}" />
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

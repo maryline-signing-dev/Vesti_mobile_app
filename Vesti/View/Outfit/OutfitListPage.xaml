@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  OutfitListPage.xaml — "Mes tenues"
+  Accessible depuis WardrobePage et la barre de navigation.
+  États : vide / liste de tenues.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Vesti.Models"
+             x:Class="Vesti.Views.Outfits.OutfitListPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- EN-TÊTE -->
+        <VerticalStackLayout Grid.Row="0" Padding="24,20,24,0">
+            <Label Text="Mes tenues" Style="{StaticResource TextH1}" />
+            <Label Text="Vos compositions enregistrées"
+                   Style="{StaticResource TextCaption}"
+                   Margin="0,2,0,0" />
+        </VerticalStackLayout>
+
+        <!-- ZONE CENTRALE -->
+        <Grid Grid.Row="1">
+
+            <!-- État vide -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16"
+                                 Padding="24,0">
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="80" HeightRequest="80"
+                        HorizontalOptions="Center">
+                    <Image Source="layers_48dp.png"
+                           WidthRequest="40" HeightRequest="40"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+                <Label Text="Votre première tenue&#x0a;vous attend"
+                       Style="{StaticResource TextH1}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Associez plusieurs pièces de votre dressing et enregistrez vos idées, avec ou sans occasion."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Button Text="Composer ma première tenue"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding ComposeCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Liste des tenues -->
+            <CollectionView ItemsSource="{Binding Outfits}"
+                            IsVisible="{Binding HasOutfits}"
+                            Margin="24,16,24,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Outfit">
+                        <Border BackgroundColor="{StaticResource ColorSurface}"
+                                Stroke="{StaticResource BrushBorder}"
+                                StrokeShape="RoundRectangle 12"
+                                Margin="0,0,0,12">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                        Path=BindingContext.SelectOutfitCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid RowDefinitions="Auto,Auto">
+
+                                <!-- Collage de photos des pièces -->
+                                <Grid Grid.Row="0"
+                                      HeightRequest="140"
+                                      ColumnDefinitions="*,*,*">
+                                    <!-- Les 3 premières pièces affichées -->
+                                    <Border Grid.Column="0"
+                                            BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 12,0,0,0">
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="36" HeightRequest="36"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                            StrokeThickness="0">
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="36" HeightRequest="36"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                    <Border Grid.Column="2"
+                                            BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 0,12,0,0">
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="36" HeightRequest="36"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                </Grid>
+
+                                <!-- Nom + sous-titre -->
+                                <VerticalStackLayout Grid.Row="1"
+                                                     Padding="16,12,16,14"
+                                                     Spacing="2">
+                                    <Label Text="{Binding DisplayName}"
+                                           Style="{StaticResource TextBody}"
+                                           FontAttributes="Bold" />
+                                    <Label Text="{Binding Subtitle}"
+                                           Style="{StaticResource TextCaption}"
+                                           TextColor="{StaticResource ColorTextSecondary}" />
+                                </VerticalStackLayout>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Erreur -->
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start"
+                   Margin="24,16,24,0" />
+        </Grid>
+
+        <!-- BOUTON COMPOSER -->
+        <VerticalStackLayout Grid.Row="2"
+                             Padding="24,12,24,24"
+                             IsVisible="{Binding HasOutfits}">
+            <Button Style="{StaticResource BtnPrimary}"
+                    Command="{Binding ComposeCommand}">
+                <Button.ImageSource>
+                    <FontImageSource Glyph="+" FontFamily="{StaticResource FontInter}" />
+                </Button.ImageSource>
+                <Button.Text>Composer une tenue</Button.Text>
+            </Button>
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

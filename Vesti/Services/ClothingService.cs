@@ -19,6 +19,7 @@ public record AddItemResult(ClothingItem? Item, string? Error);
 public class ClothingService
 {
     private readonly ClothingRepository _repository;
+    private readonly OutfitService _outfitService;
     private readonly IImageStore _imageStore;
 
     public ClothingService(ClothingRepository repository, IImageStore imageStore)
@@ -27,14 +28,13 @@ public class ClothingService
         _imageStore = imageStore;
     }
 
-    // ── Lecture (inchangé) ───────────────────────────────────────────────
+    // ── Lecture  ───────────────────────────────────────────────
 
     public async Task<List<ClothingItem>> GetItemsAsync(string? term, string? category)
     {
         var categoryFilter =
             string.IsNullOrWhiteSpace(category) || category == ClothingOptions.AllFilter
-                ? null
-                : category;
+                ? null : category;
 
         return await _repository.QueryAsync(term, categoryFilter);
     }
@@ -64,48 +64,29 @@ public class ClothingService
     }
 
 
-
-
-    /// <summary>
     /// Met à jour une pièce.
-    /// si l'ImagePath a changé, l'ancien fichier est supprimé.
-    /// </summary>
+
     public async Task<string?> UpdateAsync(ClothingItem item)
     {
         Normalize(item);
-
         var error = ValidateItem(item);
         if (error is not null) return error;
-
-        // Récupérer l'ancienne image pour la supprimer si elle change
-        var existing = await _repository.GetByIdAsync(item.Id);
-        var oldPath = existing?.ImagePath;
-        var newPath = item.ImagePath;
-
         await _repository.UpdateAsync(item);
-
-        // Supprimer l'ancien fichier seulement s'il est différent et non null
-        if (oldPath is not null && oldPath != newPath)
-            await _imageStore.DeleteAsync(oldPath);
-
         return null;
     }
 
     /// <summary>
-    /// I3 : supprime d'abord le fichier photo, puis l'enregistrement.
-    /// L'ordre est important : si la suppression du fichier échoue,
-    /// on ne supprime pas la fiche (cohérence).
+    /// On retire la pièce de toutes ses tenues AVANT de la supprimer.
+    /// Les tenues devenues vides sont supprimées automatiquement.
     /// </summary>
     public async Task DeleteAsync(int id)
     {
-        var item = await _repository.GetByIdAsync(id);
-        if (item is not null)
-            await _imageStore.DeleteAsync(item.ImagePath);
-
+        await _outfitService.OnClothingItemDeletedAsync(id);
         await _repository.DeleteAsync(id);
     }
 
-    // ── Règles internes (inchangées) ─────────────────────────────────────
+
+    // ── Règles internes  ─────────────────────────────────────
 
     private static void Normalize(ClothingItem item)
     {

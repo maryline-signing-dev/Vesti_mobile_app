@@ -73,6 +73,9 @@
 	  <Compile Update="View\Home\HomePage.xaml.cs">
 	    <DependentUpon>HomePage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\Outfit\OutfitListPage.xaml.cs">
+	    <DependentUpon>OutfitListPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\Profile\CreateProfilePage.xaml.cs">
 	    <DependentUpon>CreateProfilePage.xaml</DependentUpon>
 	  </Compile>
@@ -80,6 +83,21 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="View\Home\HomePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Outfit\ComposeCompositionPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Outfit\ComposeOccasionPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Outfit\ComposeSelectionPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Outfit\OutfitDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Outfit\OutfitListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\Profile\CreateProfilePage.xaml">
