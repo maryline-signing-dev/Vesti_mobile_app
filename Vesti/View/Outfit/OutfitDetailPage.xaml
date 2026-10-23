@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  OutfitDetailPage.xaml — "Tenue enregistrée"
-  Conforme à la maquette "Composer : Enregistrée".
-  Affiche le collage de pièces, le nom, l'occasion, la liste des pièces.
-  Boutons : "Ajouter à l'agenda" (I5) et "Modifier la tenue".
+  OutfitDetailPage.xaml
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -32,13 +29,16 @@
                        VerticalOptions="Center" />
             </Grid>
 
-            <!-- Erreur -->
+            <!-- Bouton "Mes tenues" — accès direct à la liste -->
+            <Button Text="Mes tenues"
+                    Style="{StaticResource BtnSecondary}"
+                    Command="{Binding GoToOutfitListCommand}" />
+
             <Label IsVisible="{Binding HasError}"
                    Text="{Binding ErrorMessage}"
                    Style="{StaticResource TextBody}"
                    TextColor="{StaticResource ColorError}" />
 
-            <!-- Contenu -->
             <VerticalStackLayout Spacing="16" IsVisible="{Binding HasOutfit}">
 
                 <!-- Collage de pièces -->
@@ -49,8 +49,7 @@
                     <CollectionView ItemsSource="{Binding Outfit.Items}"
                                     HeightRequest="160">
                         <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal"
-                                               ItemSpacing="8" />
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:ClothingItem">
@@ -60,10 +59,19 @@
                                         WidthRequest="120"
                                         HeightRequest="140"
                                         Margin="8,10,0,10">
-                                    <Image Source="shirt_placeholder.png"
-                                           WidthRequest="48" HeightRequest="48"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                    <Grid>
+                                        <Image Source="{Binding ImagePath,
+                                                   Converter={StaticResource RelativePathToFullConverter}}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource NotNullConverter}}" />
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="48" HeightRequest="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource IsNullConverter}}" />
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -101,24 +109,21 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <!-- Message agenda -->
                 <Label Text="Pas encore planifiée. Gardez cette tenue pour plus tard ou choisissez une date."
                        Style="{StaticResource TextCaption}"
                        TextColor="{StaticResource ColorTextSecondary}" />
 
-                <!-- Bouton Ajouter à l'agenda (I5) -->
+                <!-- Ajouter à l'agenda (I5) -->
                 <Border BackgroundColor="{StaticResource ColorSurface}"
                         Stroke="{StaticResource BrushBorder}"
                         StrokeShape="RoundRectangle 12"
                         Padding="16,14"
                         Opacity="0.6">
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Image Grid.Column="0"
-                               Source="agenda_18dp.png"
+                        <Image Grid.Column="0" Source="agenda_18dp.png"
                                WidthRequest="18" HeightRequest="18"
                                VerticalOptions="Center" />
-                        <Label Grid.Column="1"
-                               Text="Ajouter à l'agenda"
+                        <Label Grid.Column="1" Text="Ajouter à l'agenda"
                                Style="{StaticResource TextBody}"
                                FontAttributes="Bold"
                                VerticalOptions="Center" />
@@ -126,26 +131,6 @@
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddToAgendaCommand}" />
                     </Border.GestureRecognizers>
-                </Border>
-
-                <!-- Bouton Modifier -->
-                <Border BackgroundColor="{StaticResource ColorSurface}"
-                        Stroke="{StaticResource BrushBorder}"
-                        StrokeShape="RoundRectangle 12"
-                        Padding="16,14">
-                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Image Grid.Column="0"
-                               Source="pencil_18dp.png"
-                               WidthRequest="18" HeightRequest="18"
-                               VerticalOptions="Center" />
-                        <Label Grid.Column="1"
-                               Text="Modifier la tenue"
-                               Style="{StaticResource TextBody}"
-                               FontAttributes="Bold"
-                               VerticalOptions="Center" />
-                    </Grid>
-                    <!-- Modifier câblé en I4 uniquement si la logique d'édition est ajoutée -->
-                    <!-- Pour l'instant, non câblé : ajouté en post-I4 -->
                 </Border>
 
                 <!-- Supprimer -->

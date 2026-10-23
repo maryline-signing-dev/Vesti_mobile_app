@@ -20,6 +20,21 @@ public class NotNullConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+/// <summary>
+/// Inverse de NotNullConverter, mais pour des valeurs
+/// non booléennes (string?, objet?). InvertBoolConverter ne peut PAS être
+/// utilisé sur une valeur string — il retourne toujours false car il teste
+/// "value is bool". Ce convertisseur comble ce manque.
+/// Usage : IsVisible="{Binding SomeNullableString, Converter={StaticResource IsNullConverter}}"
+/// </summary>
+public class IsNullConverter : IValueConverter
+{
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => value is string s ? string.IsNullOrEmpty(s) : value is null;
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}
+
 /// <summary>Vrai si l'entier vaut 0.</summary>
 public class EqualToZeroConverter : IValueConverter
 {
@@ -79,5 +94,20 @@ public class SearchLabelConverter : IValueConverter
     public object Convert(object? value, Type t, object? p, CultureInfo c)
         => value is bool b && b ? "Résultats" : "Toutes mes pièces";
     public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}
+
+public class RelativePathToFullConverter : IValueConverter
+{
+    public object? Convert(object? value, Type t, object? p, CultureInfo c)
+    {
+        if (value is not string relativePath || string.IsNullOrWhiteSpace(relativePath))
+            return null;
+
+        var fullPath = Path.Combine(FileSystem.AppDataDirectory, relativePath);
+        return File.Exists(fullPath) ? fullPath : null;
+    }
+
+    public object? ConvertBack(object? value, Type t, object? p, CultureInfo c)
         => throw new NotImplementedException();
 }

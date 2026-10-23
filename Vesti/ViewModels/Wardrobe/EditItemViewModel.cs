@@ -53,14 +53,31 @@ public class EditItemViewModel : BaseViewModel
     private string? _category;
     public string? Category { get => _category; set => SetProperty(ref _category, value); }
 
-    private string? _color;
-    public string? Color { get => _color; set => SetProperty(ref _color, value); }
+    private string? _selectedColor;
+    public string? SelectedColor
+    {
+        get => _selectedColor;
+        set
+        {
+            if (SetProperty(ref _selectedColor, value))
+                OnPropertyChanged(nameof(EffectiveColor));
+        }
+    }
 
-    private string _season = string.Empty;
-    public string Season { get => _season; set => SetProperty(ref _season, value ?? string.Empty); }
+    /// <summary>Couleur libre — prime sur SelectedColor si renseignée.</summary>
+    private string _customColor = string.Empty;
+    public string CustomColor
+    {
+        get => _customColor;
+        set
+        {
+            if (SetProperty(ref _customColor, value ?? string.Empty))
+                OnPropertyChanged(nameof(EffectiveColor));
+        }
+    }
 
-    private string _style = string.Empty;
-    public string Style { get => _style; set => SetProperty(ref _style, value ?? string.Empty); }
+    public string? EffectiveColor
+    => string.IsNullOrWhiteSpace(_customColor) ? _selectedColor : _customColor.Trim();
 
     private string _brand = string.Empty;
     public string Brand { get => _brand; set => SetProperty(ref _brand, value ?? string.Empty); }
@@ -101,9 +118,20 @@ public class EditItemViewModel : BaseViewModel
 
             Name = _original.Name;
             Category = _original.Category;
-            Color = _original.Color;
-            Season = _original.Season ?? string.Empty;
-            Style = _original.Style ?? string.Empty;
+            // Si la couleur existante appartient à la liste prédéfinie,
+            // on la place dans SelectedColor. Sinon, elle est une couleur
+            // libre et on la place dans CustomColor pour ne pas la perdre.
+            if (!string.IsNullOrWhiteSpace(_original.Color)
+                && ClothingOptions.Colors.Contains(_original.Color))
+            {
+                SelectedColor = _original.Color;
+                CustomColor = string.Empty;
+            }
+            else
+            {
+                SelectedColor = null;
+                CustomColor = _original.Color ?? string.Empty;
+            }
             Brand = _original.Brand ?? string.Empty;
             ImagePath = _original.ImagePath;    // charger la photo existante
         }
@@ -152,11 +180,9 @@ public class EditItemViewModel : BaseViewModel
         {
             _original.Name = Name;
             _original.Category = Category ?? string.Empty;
-            _original.Color = Color;
-            _original.Season = Season;
-            _original.Style = Style;
+            _original.Color = EffectiveColor;
             _original.Brand = Brand;
-            _original.ImagePath = _imagePath;   // I3 : photo mise à jour
+            _original.ImagePath = _imagePath;   //  photo mise à jour
 
             var error = await _clothingService.UpdateAsync(_original);
             if (error is not null) { ErrorMessage = error; return; }

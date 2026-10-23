@@ -54,12 +54,37 @@ public class AddItemViewModel : BaseViewModel
         set => SetProperty(ref _category, value);
     }
 
-    private string? _color;
-    public string? Color
+    /// <summary>Couleur choisie dans la liste prédéfinie (Picker).</summary>
+    private string? _selectedColor;
+    public string? SelectedColor
     {
-        get => _color;
-        set => SetProperty(ref _color, value);
+        get => _selectedColor;
+        set
+        {
+            if (SetProperty(ref _selectedColor, value))
+                OnPropertyChanged(nameof(EffectiveColor));
+        }
     }
+
+    /// <summary>Couleur libre tapée par l'utilisateur — prime sur SelectedColor.</summary>
+    private string _customColor = string.Empty;
+    public string CustomColor
+    {
+        get => _customColor;
+        set
+        {
+            if (SetProperty(ref _customColor, value ?? string.Empty))
+                OnPropertyChanged(nameof(EffectiveColor));
+        }
+    }
+
+    /// <summary>
+    /// Couleur réellement enregistrée : la saisie libre prime si non vide,
+    /// sinon la sélection du Picker.
+    /// </summary>
+    public string? EffectiveColor
+        => string.IsNullOrWhiteSpace(_customColor) ? _selectedColor : _customColor.Trim();
+
 
     // ── Photo ─────────────────────────────────────────────────────────────
 
@@ -102,6 +127,9 @@ public class AddItemViewModel : BaseViewModel
         get => _savedItem;
         private set => SetProperty(ref _savedItem, value);
     }
+
+    public string? SavedItemFullImagePath
+         => _imageStore.GetFullPath(_savedItem?.ImagePath);
 
     private string _confirmationText = string.Empty;
     public string ConfirmationText
@@ -166,7 +194,7 @@ public class AddItemViewModel : BaseViewModel
             {
                 Name = Name,
                 Category = Category ?? string.Empty,
-                Color = Color,
+                Color = EffectiveColor,
                 ImagePath = _imagePath      // I3 : photo transmise
             };
 
@@ -201,7 +229,8 @@ public class AddItemViewModel : BaseViewModel
     {
         Name = string.Empty;
         Category = null;
-        Color = null;
+        SelectedColor = null;
+        CustomColor = string.Empty;
         ImagePath = null;
         ErrorMessage = null;
         SavedItem = null;

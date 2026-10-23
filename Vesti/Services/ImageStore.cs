@@ -3,7 +3,7 @@
 namespace Vesti.Services;
 
 /// <summary>
-/// Implémentation du service de photos pour .NET MAUI Android.
+/// Implémentation du service de photos pour 
 ///
 /// FLUX COMPLET pour une photo :
 ///   1. L'utilisateur choisit une source (galerie ou caméra).
@@ -47,9 +47,9 @@ public class ImageStore : IImageStore
 
             return await ProcessFileResultAsync(result);
         }
-        catch (PermissionException)
+        catch (PermissionException ex)
         {
-            // L'utilisateur a refusé la permission : on retourne null proprement.
+            System.Diagnostics.Debug.WriteLine($"[ImageStore.PickFromGallery] Permission refusée : {ex.Message}");
             return null;
         }
         catch (Exception ex)
@@ -63,19 +63,52 @@ public class ImageStore : IImageStore
     {
         try
         {
-            if (!MediaPicker.Default.IsCaptureSupported)
-                return null;
+            // Étape 1 : vérifier / demander la permission caméra 
+            var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
 
+            if (status != PermissionStatus.Granted)
+                status = await Permissions.RequestAsync<Permissions.Camera>();
+
+            if (status != PermissionStatus.Granted)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "[ImageStore.CaptureFromCamera] Permission caméra refusée par l'utilisateur.");
+                return null;
+            }
+
+            // Étape 2 : vérifier que le matériel supporte la capture
+            if (!MediaPicker.Default.IsCaptureSupported)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "[ImageStore.CaptureFromCamera] IsCaptureSupported = false (pas de caméra détectée).");
+                return null;
+            }
+
+            // Étape 3 : lancer la capture
             var result = await MediaPicker.Default.CapturePhotoAsync();
+
+            if (result is null)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "[ImageStore.CaptureFromCamera] CapturePhotoAsync a retourné null (annulé par l'utilisateur).");
+                return null;
+            }
+
             return await ProcessFileResultAsync(result);
         }
-        catch (PermissionException)
+        catch (PermissionException ex)
         {
+            System.Diagnostics.Debug.WriteLine($"[ImageStore.CaptureFromCamera] PermissionException : {ex.Message}");
+            return null;
+        }
+        catch (FeatureNotSupportedException ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ImageStore.CaptureFromCamera] Fonctionnalité non supportée : {ex.Message}");
             return null;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"[ImageStore.CaptureFromCamera] {ex}");
+            System.Diagnostics.Debug.WriteLine($"[ImageStore.CaptureFromCamera] Erreur inattendue : {ex}");
             return null;
         }
     }

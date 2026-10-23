@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  AddItemPage.xaml :
-  - Zone photo : affiche la vraie image si HasPhoto, sinon le placeholder
-  - Boutons "Photo" et "Importer" câblés sur CapturePhotoCommand et PickPhotoCommand
-  - Écran de confirmation : affiche la vraie photo si disponible
-  -Prend en compte la logique (IsSaved, IsNotSaved, SaveCommand, etc.) 
+  AddItemPage.xaml
+  CORRIGÉ :
+  - Zone photo : Aspect="AspectFill" + ClipToBounds="True" pour que la photo
+    remplisse exactement le conteneur sans débordement ni déformation
+  - Confirmation : affiche la VRAIE photo (SavedItemFullImagePath) si
+    disponible, sinon l'icône Lucide shirt_placeholder.png (jamais d'emoji)
+  - Couleur : Picker (liste) + Entry (couleur libre) — la saisie libre
+    prime si renseignée (EffectiveColor dans le ViewModel)
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -37,45 +40,39 @@
                            VerticalOptions="Center" />
                 </Grid>
 
-                <!-- ── Zone photo ──────────────────────────────────── -->
+                <!-- ── Zone photo : AspectFill, recadrée au conteneur ── -->
                 <Border StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
                         HeightRequest="200"
                         BackgroundColor="{StaticResource ColorPrimaryLight}">
                     <Grid>
 
-                        <!-- Vraie photo (visible si HasPhoto) -->
+                        <!-- Vraie photo : remplit tout le conteneur, recadrée -->
                         <Image Source="{Binding FullImagePath}"
                                Aspect="AspectFill"
                                IsVisible="{Binding HasPhoto}" />
 
-                        <!-- Placeholder + boutons (visible si pas de photo) -->
+                        <!-- Placeholder + boutons (pas de photo) -->
                         <VerticalStackLayout VerticalOptions="Center"
                                              Spacing="16"
                                              IsVisible="{Binding HasPhoto,
                                                  Converter={StaticResource InvertBoolConverter}}">
-
                             <Image Source="shirt_placeholder.png"
                                    WidthRequest="56" HeightRequest="56"
                                    HorizontalOptions="Center" />
-
-                            <Grid ColumnDefinitions="*,*"
-                                  ColumnSpacing="12"
-                                  Padding="16,0">
-
-                                <!-- Bouton Photo (caméra) -->
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Padding="16,0">
                                 <Border Grid.Column="0"
                                         BackgroundColor="{StaticResource ColorSurface}"
                                         StrokeShape="RoundRectangle 10"
                                         StrokeThickness="0"
                                         Padding="12,10">
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                        <!-- Icône sur fond blanc (ColorSurface) → icône foncée -->
                                         <Image Grid.Column="0"
                                                Source="camera_24dp.png"
                                                WidthRequest="18" HeightRequest="18"
                                                VerticalOptions="Center" />
-                                        <Label Grid.Column="1"
-                                               Text="Photo"
+                                        <Label Grid.Column="1" Text="Photo"
                                                Style="{StaticResource TextCaption}"
                                                TextColor="{StaticResource ColorTextPrimary}"
                                                VerticalOptions="Center" />
@@ -84,8 +81,6 @@
                                         <TapGestureRecognizer Command="{Binding CapturePhotoCommand}" />
                                     </Border.GestureRecognizers>
                                 </Border>
-
-                                <!-- Bouton Importer (galerie) -->
                                 <Border Grid.Column="1"
                                         BackgroundColor="{StaticResource ColorSurface}"
                                         StrokeShape="RoundRectangle 10"
@@ -96,8 +91,7 @@
                                                Source="image_24dp.png"
                                                WidthRequest="18" HeightRequest="18"
                                                VerticalOptions="Center" />
-                                        <Label Grid.Column="1"
-                                               Text="Importer"
+                                        <Label Grid.Column="1" Text="Importer"
                                                Style="{StaticResource TextCaption}"
                                                TextColor="{StaticResource ColorTextPrimary}"
                                                VerticalOptions="Center" />
@@ -106,11 +100,10 @@
                                         <TapGestureRecognizer Command="{Binding PickPhotoCommand}" />
                                     </Border.GestureRecognizers>
                                 </Border>
-
                             </Grid>
                         </VerticalStackLayout>
 
-                        <!-- Bouton "Changer" superposé si photo déjà choisie -->
+                        <!-- Bouton "Changer" — fond sombre semi-transparent → icône/texte blancs -->
                         <Border BackgroundColor="#CC000000"
                                 StrokeShape="RoundRectangle 10"
                                 StrokeThickness="0"
@@ -144,37 +137,49 @@
                     </Border>
                 </VerticalStackLayout>
 
-                <!-- Catégorie + Couleur -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                    <VerticalStackLayout Grid.Column="0" Spacing="4">
-                        <Label Text="Catégorie" Style="{StaticResource TextCaption}" />
-                        <Border StrokeShape="RoundRectangle 12"
-                                Stroke="{StaticResource BrushBorder}"
-                                BackgroundColor="{StaticResource ColorSurface}"
-                                Padding="12,0" HeightRequest="48">
-                            <Picker ItemsSource="{Binding Categories}"
-                                    SelectedItem="{Binding Category}"
-                                    Title="Choisir"
-                                    TitleColor="{StaticResource ColorTextSecondary}"
-                                    TextColor="{StaticResource ColorTextPrimary}"
-                                    FontSize="14" VerticalOptions="Center" />
-                        </Border>
-                    </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1" Spacing="4">
-                        <Label Text="Couleur" Style="{StaticResource TextCaption}" />
-                        <Border StrokeShape="RoundRectangle 12"
-                                Stroke="{StaticResource BrushBorder}"
-                                BackgroundColor="{StaticResource ColorSurface}"
-                                Padding="12,0" HeightRequest="48">
-                            <Picker ItemsSource="{Binding Colors}"
-                                    SelectedItem="{Binding Color}"
-                                    Title="Choisir"
-                                    TitleColor="{StaticResource ColorTextSecondary}"
-                                    TextColor="{StaticResource ColorTextPrimary}"
-                                    FontSize="14" VerticalOptions="Center" />
-                        </Border>
-                    </VerticalStackLayout>
-                </Grid>
+                <!-- Catégorie -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Catégorie" Style="{StaticResource TextCaption}" />
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BrushBorder}"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Padding="12,0" HeightRequest="48">
+                        <Picker ItemsSource="{Binding Categories}"
+                                SelectedItem="{Binding Category}"
+                                Title="Choisir"
+                                TitleColor="{StaticResource ColorTextSecondary}"
+                                TextColor="{StaticResource ColorTextPrimary}"
+                                FontSize="14" VerticalOptions="Center" />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Couleur : liste + saisie libre -->
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Couleur" Style="{StaticResource TextCaption}" />
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BrushBorder}"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Padding="12,0" HeightRequest="48">
+                        <Picker ItemsSource="{Binding Colors}"
+                                SelectedItem="{Binding SelectedColor}"
+                                Title="Choisir dans la liste"
+                                TitleColor="{StaticResource ColorTextSecondary}"
+                                TextColor="{StaticResource ColorTextPrimary}"
+                                FontSize="14" VerticalOptions="Center" />
+                    </Border>
+                    <Label Text="Ou saisissez une couleur personnalisée"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           Margin="0,4,0,0" />
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BrushBorder}"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Padding="12,0" HeightRequest="48">
+                        <Entry Text="{Binding CustomColor}"
+                               Placeholder="Ex : Terracotta, Kaki..."
+                               Style="{StaticResource FieldBase}" />
+                    </Border>
+                </VerticalStackLayout>
 
                 <Label IsVisible="{Binding HasError}"
                        Text="{Binding ErrorMessage}"
@@ -198,6 +203,7 @@
                                  Spacing="16"
                                  IsVisible="{Binding IsSaved}">
 
+                <!-- Icône check — fond terracotta clair → icône foncée cohérente -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 100"
                         StrokeThickness="0"
@@ -214,26 +220,22 @@
                        HorizontalOptions="Center"
                        HorizontalTextAlignment="Center" />
 
-                <!-- Photo réelle ou placeholder -->
+                <!-- Vraie photo de la pièce ajoutée, recadrée AspectFill -->
                 <Border StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
                         HeightRequest="160"
                         BackgroundColor="{StaticResource ColorPrimaryLight}">
                     <Grid>
-                        <!-- Vraie photo -->
-                        <Image Source="{Binding SavedItem.ImagePath,
-                                   Converter={StaticResource RelativePathToFullConverter}}"
+                        <Image Source="{Binding SavedItemFullImagePath}"
                                Aspect="AspectFill"
-                               IsVisible="{Binding SavedItem.ImagePath,
+                               IsVisible="{Binding SavedItemFullImagePath,
                                    Converter={StaticResource NotNullConverter}}" />
-                        <!-- Placeholder si pas de photo -->
                         <Image Source="shirt_placeholder.png"
                                WidthRequest="64" HeightRequest="64"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"
-                               IsVisible="{Binding SavedItem.ImagePath,
-                                   Converter={StaticResource NotNullConverter},
-                                   ConverterParameter=invert}" />
+                               IsVisible="{Binding SavedItemFullImagePath,
+                                   Converter={StaticResource IsNullConverter}}" />
                     </Grid>
                 </Border>
 

@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-  OnboardingPage.xaml
--->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Vesti.Views.Onboarding.OnboardingPage"
@@ -14,40 +11,28 @@
         <Grid Grid.Row="0">
 
             <!-- ── ÉTAPE 0 : Splash ──────────────────────────────── -->
-            <VerticalStackLayout
-                IsVisible="{Binding IsSplash}"
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                Spacing="12"
-                Padding="24,0">
-
-                <Label Text="Vesti"
-                       Style="{StaticResource TextLogo}"
-                       HorizontalOptions="Center"
-                       FontSize="48" />
-
+            <VerticalStackLayout IsVisible="{Binding IsSplash}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="12" Padding="24,0">
+                <Label Text="Vesti" Style="{StaticResource TextLogo}"
+                       HorizontalOptions="Center" FontSize="48" />
                 <BoxView WidthRequest="32" HeightRequest="2"
                          Color="{StaticResource ColorPrimary}"
                          HorizontalOptions="Center" />
-
                 <Label Text="Votre style, en toute simplicité."
                        Style="{StaticResource TextBody}"
                        TextColor="{StaticResource ColorTextSecondary}"
                        HorizontalOptions="Center"
                        HorizontalTextAlignment="Center" />
-
                 <Label Text="VOTRE DRESSING. VOTRE RYTHME."
                        Style="{StaticResource TextCaption}"
                        TextColor="{StaticResource ColorTextSecondary}"
                        HorizontalOptions="Center"
-                       CharacterSpacing="2"
-                       Margin="0,48,0,0" />
-
+                       CharacterSpacing="2" Margin="0,48,0,0" />
             </VerticalStackLayout>
 
-            <!-- Overlay transparent sur le splash pour capter le tap -->
-            <Grid IsVisible="{Binding IsSplash}"
-                  BackgroundColor="Transparent">
+            <Grid IsVisible="{Binding IsSplash}" BackgroundColor="Transparent">
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NextCommand}" />
                     <SwipeGestureRecognizer Direction="Up" Command="{Binding NextCommand}" />
@@ -57,9 +42,9 @@
             <!-- ── ÉTAPE 1 : Organiser ───────────────────────────── -->
             <VerticalStackLayout
                 IsVisible="{Binding CurrentStep, Converter={StaticResource EqualToOneConverter}}"
-                Padding="24,48,24,0"
-                Spacing="0">
+                Padding="24,48,24,0" Spacing="0">
 
+                <!-- Logo + Passer -->
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0" Text="Vesti" Style="{StaticResource TextLogo}" />
                     <Label Grid.Column="1" Text="Passer"
@@ -72,7 +57,6 @@
                     </Label>
                 </Grid>
 
-                <!-- Image Lucide "shirt" -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
@@ -100,8 +84,7 @@
             <!-- ── ÉTAPE 2 : Composer ────────────────────────────── -->
             <VerticalStackLayout
                 IsVisible="{Binding CurrentStep, Converter={StaticResource EqualToTwoConverter}}"
-                Padding="24,48,24,0"
-                Spacing="0">
+                Padding="24,48,24,0" Spacing="0">
 
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0" Text="Vesti" Style="{StaticResource TextLogo}" />
@@ -115,7 +98,6 @@
                     </Label>
                 </Grid>
 
-                <!-- Trois icônes shirt alignées horizontalement -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
@@ -151,19 +133,11 @@
                 Padding="24,48,24,0"
                 Spacing="0">
 
-                <Grid ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0" Text="Vesti" Style="{StaticResource TextLogo}" />
-                    <Label Grid.Column="1" Text="Passer"
-                           Style="{StaticResource TextCaption}"
-                           TextColor="{StaticResource ColorTextSecondary}"
-                           VerticalOptions="Center">
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SkipCommand}" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                </Grid>
-
-                <!-- Mini-calendrier avec icône -->
+                <Label Text="Vesti" 
+                       Style="{StaticResource TextLogo}"
+                       Margin="0,0,0,0" />
+                
+                <!-- Mini-calendrier  -->
                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
@@ -191,7 +165,7 @@
                                        VerticalOptions="Center" />
                             </Grid>
                         </Border>
-                        <!-- Icônes de tenues -->
+                      
                         <HorizontalStackLayout HorizontalOptions="Center" Spacing="12">
                             <Image Source="t_shirt_placeholder.jfif"
                                WidthRequest="80" HeightRequest="150" />

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
+using Vesti.Infrastructure;
 using Vesti.Models;
 using Vesti.Services;
-using Vesti.Infrastructure;
 
 namespace Vesti.ViewModels.Outfits;
 
@@ -19,6 +19,12 @@ public class OutfitDetailViewModel : BaseViewModel
         DeleteCommand = new Command(async () => await DeleteAsync());
         AddToAgendaCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.TabAgenda));
+
+        GoToOutfitListCommand = new Command(async () =>
+        {
+            await Shell.Current.GoToAsync(Routes.TabWardrobe);
+            await Shell.Current.GoToAsync(Routes.OutfitList);
+        });
     }
 
     public string OutfitIdText
@@ -55,6 +61,7 @@ public class OutfitDetailViewModel : BaseViewModel
     public ICommand BackCommand { get; }
     public ICommand DeleteCommand { get; }
     public ICommand AddToAgendaCommand { get; }
+    public ICommand GoToOutfitListCommand { get; }
 
     public async Task LoadAsync()
     {

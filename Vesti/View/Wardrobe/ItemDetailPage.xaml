@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ItemDetailPage.xaml 
-  - Zone photo : affiche la vraie photo (FullImagePath) si disponible,
-    sinon le placeholder shirt_placeholder.png
-  - Prend en compte  la logique (HasItem, HasColor, etc.) 
+  ItemDetailPage.xaml
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -39,17 +36,15 @@
 
             <VerticalStackLayout Spacing="16" IsVisible="{Binding HasItem}">
 
-                <!-- Zone photo : vraie image ou placeholder -->
+                <!-- Zone photo : AspectFill remplit le conteneur sans déformer -->
                 <Border StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
                         HeightRequest="260"
                         BackgroundColor="{StaticResource ColorPrimaryLight}">
                     <Grid>
-                        <!-- Vraie photo -->
                         <Image Source="{Binding FullImagePath}"
                                Aspect="AspectFill"
                                IsVisible="{Binding HasPhoto}" />
-                        <!-- Placeholder -->
                         <Image Source="shirt_placeholder.png"
                                WidthRequest="80" HeightRequest="80"
                                HorizontalOptions="Center"
@@ -59,7 +54,7 @@
                     </Grid>
                 </Border>
 
-                <!-- Étiquettes -->
+                <!-- Étiquettes catégorie + couleur -->
                 <HorizontalStackLayout Spacing="8">
                     <Border StrokeShape="RoundRectangle 8"
                             Stroke="{StaticResource BrushBorder}"
@@ -85,25 +80,11 @@
 
                 <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
 
-                <Grid ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0" Text="Saison" Style="{StaticResource TextBody}" />
-                    <Label Grid.Column="1" Text="{Binding SeasonText}"
-                           Style="{StaticResource TextBody}"
-                           TextColor="{StaticResource ColorTextSecondary}" />
-                </Grid>
-                <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
-
-                <Grid ColumnDefinitions="*,Auto">
-                    <Label Grid.Column="0" Text="Style" Style="{StaticResource TextBody}" />
-                    <Label Grid.Column="1" Text="{Binding StyleText}"
-                           Style="{StaticResource TextBody}"
-                           TextColor="{StaticResource ColorTextSecondary}" />
-                </Grid>
-                <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
-
+                <!-- Marque uniquement : Saison et Style retirés -->
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0" Text="Marque" Style="{StaticResource TextBody}" />
-                    <Label Grid.Column="1" Text="{Binding BrandText}"
+                    <Label Grid.Column="1"
+                           Text="{Binding BrandText}"
                            Style="{StaticResource TextBody}"
                            TextColor="{StaticResource ColorTextSecondary}" />
                 </Grid>
@@ -129,7 +110,12 @@
                     </Border.GestureRecognizers>
                 </Border>
 
-                <!-- Supprimer -->
+                <Button Text="Composer avec cette pièce"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding EditCommand}"
+                        Opacity="0.5"
+                        IsEnabled="False" />
+
                 <Button Text="Supprimer la pièce"
                         Style="{StaticResource BtnSecondary}"
                         TextColor="{StaticResource ColorError}"

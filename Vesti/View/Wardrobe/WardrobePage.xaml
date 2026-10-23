@@ -184,16 +184,24 @@
                                 Stroke="{StaticResource BrushBorder}"
                                 StrokeShape="RoundRectangle 12">
                             <VerticalStackLayout>
-                                <!-- Zone photo : fond crème + icône shirt -->
+                                <!-- Zone photo : vraie image si disponible -->
                                 <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                                         StrokeShape="RoundRectangle 12,12,0,0"
                                         StrokeThickness="0"
                                         HeightRequest="130">
-                                    <Image Source="shirt_placeholder.png"
-                                           WidthRequest="48"
-                                           HeightRequest="48"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                    <Grid>
+                                        <Image Source="{Binding ImagePath,
+                                                   Converter={StaticResource RelativePathToFullConverter}}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource NotNullConverter}}" />
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="48" HeightRequest="48"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource IsNullConverter}}" />
+                                    </Grid>
                                 </Border>
                                 <VerticalStackLayout Padding="10,8,10,10" Spacing="2">
                                     <Label Text="{Binding Name}"

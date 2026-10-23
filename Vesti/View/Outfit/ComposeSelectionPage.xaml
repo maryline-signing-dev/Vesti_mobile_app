@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ComposeSelectionPage.xaml — Étape 1 : sélection des pièces
-  Conforme à la maquette "Composer : Sélection".
-  Une coche apparaît sur chaque pièce sélectionnée.
+  ComposeSelectionPage.xaml 
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -122,7 +120,12 @@
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
 
-                            <!-- Coche de sélection (coin supérieur droit) -->
+                            <!-- Coche de sélection (coin supérieur droit)
+                                 CORRIGÉ : fond ColorPrimary (terracotta foncé) nécessite
+                                 une icône CLAIRE pour rester visible. check_24dp.png est
+                                 exporté en foncé (#252525) pour les fonds clairs — ici on
+                                 utilise check_24dp_white.png (variante blanche à exporter,
+                                 voir README_Fixes.md). -->
                             <Border BackgroundColor="{StaticResource ColorPrimary}"
                                     StrokeShape="RoundRectangle 100"
                                     StrokeThickness="0"
@@ -131,7 +134,7 @@
                                     VerticalOptions="Start"
                                     Margin="0,8,8,0"
                                     IsVisible="{Binding IsSelected}">
-                                <Image Source="check_24dp.png"
+                                <Image Source="check_24dp_white.png"
                                        WidthRequest="14" HeightRequest="14"
                                        HorizontalOptions="Center"
                                        VerticalOptions="Center" />
