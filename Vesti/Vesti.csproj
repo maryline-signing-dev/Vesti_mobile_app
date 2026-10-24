@@ -82,6 +82,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="View\Agenda\PlanOutfitPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Agenda\ScheduleDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\Home\HomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

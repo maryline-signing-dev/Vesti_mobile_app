@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  PlanOutfitPage.xaml 
+  Sert à la fois pour créer une nouvelle planification (outfitId reçu)
+  et pour en modifier une existante (scheduleId reçu).
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
+             x:Class="Vesti.Views.Agenda.PlanOutfitPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+            <!-- En-tête -->
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0"
+                       Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CancelCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1"
+                       Text="Planifier une tenue"
+                       Style="{StaticResource TextH1}"
+                       VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Carte de la tenue -->
+            <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0"
+                    HeightRequest="140"
+                    IsVisible="{Binding HasOutfit}">
+                <Grid>
+                    <Image Source="shirt_placeholder.png"
+                           WidthRequest="48" HeightRequest="48"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding HasOutfit}">
+                <Label Grid.Column="0"
+                       Text="{Binding Outfit.DisplayName}"
+                       Style="{StaticResource TextSectionTitle}" />
+                <Label Grid.Column="1"
+                       Text="Changer"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorPrimary}"
+                       VerticalOptions="Center"
+                       IsVisible="{Binding IsEditMode,
+                           Converter={StaticResource InvertBoolConverter}}" />
+            </Grid>
+
+            <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
+
+            <!-- Date -->
+            <Label Text="Date" Style="{StaticResource TextCaption}" />
+            <Border StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BrushBorder}"
+                    BackgroundColor="{StaticResource ColorSurface}"
+                    Padding="12,0" HeightRequest="48">
+                <Grid ColumnDefinitions="*,Auto">
+                    <DatePicker Grid.Column="0"
+                                Date="{Binding SelectedDate}"
+                                Format="d MMMM yyyy"
+                                FontFamily="{StaticResource FontInter}"
+                                FontSize="14"
+                                TextColor="{StaticResource ColorTextPrimary}"
+                                VerticalOptions="Center"
+                                MinimumDate="{x:Static sys:DateTime.Today}" />
+                    <Image Grid.Column="1"
+                           Source="agenda_18dp.png"
+                           WidthRequest="18" HeightRequest="18"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Heure (facultative) -->
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" Text="Heure · facultative" Style="{StaticResource TextCaption}" />
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding HasTime}"
+                        OnColor="{StaticResource ColorPrimary}"
+                        Scale="0.8" />
+            </Grid>
+            <Border StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BrushBorder}"
+                    BackgroundColor="{StaticResource ColorSurface}"
+                    Padding="12,0" HeightRequest="48"
+                    IsVisible="{Binding HasTime}">
+                <TimePicker Time="{Binding SelectedTime}"
+                            Format="HH:mm"
+                            FontFamily="{StaticResource FontInter}"
+                            FontSize="14"
+                            TextColor="{StaticResource ColorTextPrimary}"
+                            VerticalOptions="Center" />
+            </Border>
+            <Label Text="Sans heure, la tenue sera prévue pour la journée."
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorTextSecondary}"
+                   IsVisible="{Binding HasTime,
+                       Converter={StaticResource InvertBoolConverter}}" />
+
+            <!-- Occasion (facultative) -->
+            <Label Text="Occasion · facultatif" Style="{StaticResource TextCaption}" Margin="0,8,0,0" />
+            <FlexLayout Wrap="Wrap" Direction="Row" JustifyContent="Start"
+                        BindableLayout.ItemsSource="{Binding Occasions}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,8,8"
+                                StrokeShape="RoundRectangle 18"
+                                Padding="16,8"
+                                BackgroundColor="{StaticResource ColorSurface}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                        Path=BindingContext.SelectOccasionCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="{Binding .}"
+                                   Style="{StaticResource TextCaption}"
+                                   TextColor="{StaticResource ColorTextPrimary}" />
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+
+            <!-- Rappel — fonctionnalité non encore disponible -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                <Label Grid.Column="0" Text="Rappel" Style="{StaticResource TextCaption}" />
+                <Label Grid.Column="1" Text="Bientôt disponible"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+            </Grid>
+
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}" />
+
+            <Button Text="Ajouter à l'agenda"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    Margin="0,8,0,0" />
+
+            <Button Text="Annuler"
+                    Style="{StaticResource BtnSecondary}"
+                    Command="{Binding CancelCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

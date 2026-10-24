@@ -27,7 +27,7 @@ public class HomeViewModel : BaseViewModel
         GoToWardrobeCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.TabWardrobe));
 
-        // En attendant la wishlist (I6), navigue vers le dressing
+        // En attendant la wishlist  navigue vers le dressing
         GoToWishlistCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.TabWardrobe));
     }

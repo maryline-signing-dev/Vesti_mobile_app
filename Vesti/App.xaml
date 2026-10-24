@@ -7,8 +7,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <conv:InvertBoolConverter             x:Key="InvertBoolConverter" />
@@ -21,6 +21,9 @@
             <conv:FilterChipTextColorConverter    x:Key="FilterChipTextColorConverter" />
             <conv:SearchLabelConverter            x:Key="SearchLabelConverter" />
             <conv:RelativePathToFullConverter     x:Key="RelativePathToFullConverter" />
+            <conv:SelectedDayColorConverter       x:Key="SelectedDayColorConverter" />
+            <conv:SelectedDayTextColorConverter   x:Key="SelectedDayTextColorConverter" />
+            <conv:CurrentMonthOpacityConverter    x:Key="CurrentMonthOpacityConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

@@ -2,6 +2,7 @@
 using Vesti.Data;
 using Vesti.Repositories;
 using Vesti.Services;
+using Vesti.ViewModels.Agenda;
 using Vesti.ViewModels.Home;
 using Vesti.ViewModels.Onboarding;
 using Vesti.ViewModels.Outfits;
@@ -20,20 +21,8 @@ namespace Vesti.Infrastructure;
 /// Enregistre TOUS les services de l'application dans le conteneur
 /// d'injection de dépendances (DI).
 ///
-/// Dans MauiProgram.cs, une seule ligne suffit :
-///     builder.Services.AddVestiServices();
-///
 /// Chaque incrément ajoute ses lignes ICI, jamais dans MauiProgram.cs.
 /// MauiProgram.cs garde ainsi ses polices et son initialisation intactes.
-///
-/// DURÉES DE VIE :
-///   Singleton : une seule instance pour toute l'application
-///               (base de données, repositories, services métier).
-///   Transient : une nouvelle instance à chaque demande
-///               (ViewModels et pages : un écran = un état neuf).
-/// - Ajout OutfitRepository, OutfitService.
-/// - Ajout ViewModels et pages du parcours Composer.
-/// - ClothingService reçoit maintenant OutfitService 
 /// </summary>
 public static class ServiceCollectionExtensions
 {
@@ -47,12 +36,14 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<SettingsRepository>();
         services.AddSingleton<ClothingRepository>();
         services.AddSingleton<OutfitRepository>();
+        services.AddSingleton<OutfitScheduleRepository>();
 
         // ── Services métier ───────────────────────────────────────────
         services.AddSingleton<ProfileService>();
-        services.AddSingleton<IImageStore, ImageStore>();       // I3
+        services.AddSingleton<IImageStore, ImageStore>();       
         services.AddSingleton<OutfitService>();
         services.AddSingleton<ClothingService>();
+        services.AddSingleton<ScheduleService>();
 
         // ── ViewModels ────────────────────────────────────────────────
         services.AddTransient<OnboardingViewModel>();
@@ -62,11 +53,14 @@ public static class ServiceCollectionExtensions
         services.AddTransient<AddItemViewModel>();
         services.AddTransient<ItemDetailViewModel>();
         services.AddTransient<EditItemViewModel>();
-        services.AddTransient<OutfitListViewModel>();           // I4
-        services.AddTransient<ComposeSelectionViewModel>();     // I4
-        services.AddTransient<ComposeCompositionViewModel>();   // I4
-        services.AddTransient<ComposeOccasionViewModel>();      // I4
+        services.AddTransient<OutfitListViewModel>();           
+        services.AddTransient<ComposeSelectionViewModel>();     
+        services.AddTransient<ComposeCompositionViewModel>();   
+        services.AddTransient<ComposeOccasionViewModel>();      
         services.AddTransient<OutfitDetailViewModel>();
+        services.AddTransient<AgendaViewModel>();               
+        services.AddTransient<PlanOutfitViewModel>();           
+        services.AddTransient<ScheduleDetailViewModel>();
 
         // ── Pages ─────────────────────────────────────────────────────
         services.AddTransient<OnboardingPage>();
@@ -76,12 +70,14 @@ public static class ServiceCollectionExtensions
         services.AddTransient<AddItemPage>();
         services.AddTransient<ItemDetailPage>();
         services.AddTransient<EditItemPage>();
-        services.AddTransient<OutfitListPage>();                // I4
-        services.AddTransient<ComposeSelectionPage>();          // I4
-        services.AddTransient<ComposeCompositionPage>();        // I4
-        services.AddTransient<ComposeOccasionPage>();           // I4
-        services.AddTransient<OutfitDetailPage>();              // I4
+        services.AddTransient<OutfitListPage>();                
+        services.AddTransient<ComposeSelectionPage>();          
+        services.AddTransient<ComposeCompositionPage>();        
+        services.AddTransient<ComposeOccasionPage>();           
+        services.AddTransient<OutfitDetailPage>();              
         services.AddTransient<AgendaPage>();
+        services.AddTransient<PlanOutfitPage>();                
+        services.AddTransient<ScheduleDetailPage>();
         services.AddTransient<ProfilePage>();
 
         return services;

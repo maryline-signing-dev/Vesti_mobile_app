@@ -13,12 +13,18 @@ public record SaveOutfitResult(Outfit? Outfit, string? Error);
 ///   - Charger les pièces d'une tenue (propriété Outfit.Items).
 ///   - Règle de suppression d'une pièce : retirer ses liaisons,
 ///     supprimer les tenues devenues vides.
+///  - DeleteOutfitAsync supprime aussi les planifications de la tenue
+///   (via un délégué injecté pour éviter une dépendance circulaire directe
+///   avec ScheduleService, qui dépend déjà de OutfitService).
 /// </summary>
 public class OutfitService
 {
     private readonly OutfitRepository _outfitRepository;
     private readonly ClothingRepository _clothingRepository;
 
+    // Callback optionnel, câblé après la création des deux services pour
+    // éviter une dépendance circulaire OutfitService ↔ ScheduleService.
+    public Func<int, Task>? OnOutfitDeleted { get; set; }
     public OutfitService(OutfitRepository outfitRepository,
                          ClothingRepository clothingRepository)
     {
@@ -127,14 +133,22 @@ public class OutfitService
 
     // ── Suppression ───────────────────────────────────────────────────────
 
-    public async Task DeleteOutfitAsync(int outfitId)
-        => await _outfitRepository.DeleteAsync(outfitId);
-
     /// <summary>
-    /// Appelé quand une pièce est supprimée du dressing (I4).
+    /// supprime d'abord les planifications de la tenue 
+    /// (via le callback optionnel OnOutfitDeleted), puis les liaisons, 
+    /// puis la tenue elle-même.
+    /// 
     /// Retire la pièce de toutes ses tenues.
     /// Supprime les tenues qui deviennent vides.
     /// </summary>
+    public async Task DeleteOutfitAsync(int outfitId)
+    {
+        if (OnOutfitDeleted is not null)
+            await OnOutfitDeleted(outfitId);
+
+        await _outfitRepository.DeleteAsync(outfitId);
+    }
+
     public async Task OnClothingItemDeletedAsync(int clothingItemId)
     {
         var affectedOutfitIds = await _outfitRepository
@@ -143,7 +157,7 @@ public class OutfitService
         foreach (var outfitId in affectedOutfitIds)
         {
             if (await _outfitRepository.IsOutfitEmptyAsync(outfitId))
-                await _outfitRepository.DeleteAsync(outfitId);
+                await DeleteOutfitAsync(outfitId);
         }
     }
 }

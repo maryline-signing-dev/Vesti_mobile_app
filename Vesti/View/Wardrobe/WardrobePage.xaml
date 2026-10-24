@@ -113,10 +113,10 @@
                    Text="Mes tenues"
                    Style="{StaticResource TextCaption}"
                    TextColor="{StaticResource ColorPrimary}"
-                   VerticalOptions="Center"
+                   VerticalOptions="End"
                    IsVisible="{Binding IsSearchActive}">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OutfitsCommand}" />
+                    <TapGestureRecognizer Command="{Binding GoToOutfistListCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </Grid>

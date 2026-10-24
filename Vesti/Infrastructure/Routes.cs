@@ -27,4 +27,8 @@ public static class Routes
     public const string ComposeComposition = "composecomposition";
     public const string ComposeOccasion = "composeoccasion";
     public const string OutfitDetail = "outfitdetail";
+
+    // Agenda 
+    public const string PlanOutfit = "planoutfit";
+    public const string ScheduleDetail = "scheduledetail";
 }

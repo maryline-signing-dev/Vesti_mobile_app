@@ -17,8 +17,10 @@ public class OutfitDetailViewModel : BaseViewModel
 
         BackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
         DeleteCommand = new Command(async () => await DeleteAsync());
+
+        // I5 : navigue vers le formulaire de planification réel
         AddToAgendaCommand = new Command(async () =>
-            await Shell.Current.GoToAsync(Routes.TabAgenda));
+            await Shell.Current.GoToAsync($"{Routes.PlanOutfit}?outfitId={_outfitId}"));
 
         GoToOutfitListCommand = new Command(async () =>
         {
@@ -84,7 +86,7 @@ public class OutfitDetailViewModel : BaseViewModel
 
         var confirmed = await Shell.Current.DisplayAlert(
             "Supprimer la tenue",
-            $"Supprimer « {Outfit.DisplayName} » ? Les pièces ne seront pas supprimées.",
+            $"Supprimer « {Outfit.DisplayName} » ? Les pièces ne seront pas supprimées. Les planifications de cette tenue seront aussi retirées de l'agenda.",
             "Supprimer", "Annuler");
 
         if (!confirmed) return;

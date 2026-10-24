@@ -2,6 +2,7 @@
 using Vesti.Models;
 using Vesti.Services;
 using Vesti.Infrastructure;
+using Vesti.ViewModels.Agenda;
 
 namespace Vesti.ViewModels.Outfits;
 
@@ -33,6 +34,7 @@ public class OutfitListViewModel : BaseViewModel
 
     public bool IsEmpty => Outfits.Count == 0;
     public bool HasOutfits => Outfits.Count > 0;
+    public bool IsPlanningMode => AgendaPlanState.IsSelectingForSchedule;
 
     public ICommand ComposeCommand { get; }
     public ICommand SelectOutfitCommand { get; }
@@ -58,5 +60,14 @@ public class OutfitListViewModel : BaseViewModel
     }
 
     private async Task OpenOutfitAsync(Outfit outfit)
-        => await Shell.Current.GoToAsync($"{Routes.OutfitDetail}?id={outfit.Id}");
+    {
+        if (AgendaPlanState.IsSelectingForSchedule)
+        {
+            AgendaPlanState.IsSelectingForSchedule = false;
+            await Shell.Current.GoToAsync($"{Routes.PlanOutfit}?outfitId={outfit.Id}");
+            return;
+        }
+
+        await Shell.Current.GoToAsync($"{Routes.OutfitDetail}?id={outfit.Id}");
+    }
 }

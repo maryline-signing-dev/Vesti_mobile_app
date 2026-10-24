@@ -111,3 +111,32 @@ public class RelativePathToFullConverter : IValueConverter
     public object? ConvertBack(object? value, Type t, object? p, CultureInfo c)
         => throw new NotImplementedException();
 }
+
+// convertisseurs du calendrier ─────────────────────────────────────
+
+/// <summary>Fond de la case du jour sélectionné (terracotta) ou transparent.</summary>
+public class SelectedDayColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => value is bool b && b ? Color.FromArgb("#8C5A4A") : Colors.Transparent;
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}
+
+/// <summary>Texte blanc si le jour est sélectionné, sinon couleur de texte normale.</summary>
+public class SelectedDayTextColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => value is bool b && b ? Colors.White : Color.FromArgb("#252525");
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}
+
+/// <summary>Opacité réduite pour les jours hors du mois affiché.</summary>
+public class CurrentMonthOpacityConverter : IValueConverter
+{
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => value is bool b && b ? 1.0 : 0.35;
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}

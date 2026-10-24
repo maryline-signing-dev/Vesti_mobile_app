@@ -102,7 +102,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <!-- Tenues (données à venir en I4 — affiche 0 jusqu'à l'incrément) -->
+                    <!-- Tenues  -->
                     <Border Grid.Column="1"
                             BackgroundColor="{StaticResource ColorSurface}"
                             Stroke="{StaticResource BrushBorder}"

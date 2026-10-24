@@ -30,11 +30,10 @@ public class VestiDatabase
     {
         await _db.CreateTableAsync<LocalProfile>();
         await _db.CreateTableAsync<AppSetting>();
-
         await _db.CreateTableAsync<ClothingItem>();
-
         await _db.CreateTableAsync<Outfit>();
         await _db.CreateTableAsync<OutfitItem>();
-     
+        await _db.CreateTableAsync<OutfitSchedule>();
+
     }
 }

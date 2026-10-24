@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ScheduleDetailPage.xaml
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Agenda.ScheduleDetailPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+            <!-- En-tête -->
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0"
+                       Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1"
+                       Text="Votre rendez-vous"
+                       Style="{StaticResource TextH1}"
+                       VerticalOptions="Center" />
+            </Grid>
+
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextBody}"
+                   TextColor="{StaticResource ColorError}" />
+
+            <VerticalStackLayout Spacing="16" IsVisible="{Binding HasSchedule}">
+
+                <!-- Photo de la tenue -->
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        HeightRequest="160">
+                    <Grid>
+                        <Image Source="{Binding Schedule.ThumbnailImagePath,
+                                   Converter={StaticResource RelativePathToFullConverter}}"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding Schedule.ThumbnailImagePath,
+                                   Converter={StaticResource NotNullConverter}}" />
+                        <Image Source="shirt_placeholder.png"
+                               WidthRequest="56" HeightRequest="56"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding Schedule.ThumbnailImagePath,
+                                   Converter={StaticResource IsNullConverter}}" />
+                    </Grid>
+                </Border>
+
+                <Label Text="{Binding Schedule.Outfit.DisplayName}"
+                       Style="{StaticResource TextH1}" />
+
+                <HorizontalStackLayout Spacing="8">
+                    <Border StrokeShape="RoundRectangle 8"
+                            Stroke="{StaticResource BrushBorder}"
+                            Padding="12,4"
+                            IsVisible="{Binding HasOccasion}">
+                        <Label Text="{Binding Schedule.Occasion}"
+                               Style="{StaticResource TextCaption}" />
+                    </Border>
+                    <Label Text="{Binding Schedule.Outfit.Items.Count, StringFormat='{0} pièces'}"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Date" Style="{StaticResource TextBody}" />
+                    <Label Grid.Column="1" Text="{Binding DateLabel}"
+                           Style="{StaticResource TextBody}"
+                           TextColor="{StaticResource ColorTextSecondary}" />
+                </Grid>
+                <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Heure" Style="{StaticResource TextBody}" />
+                    <Label Grid.Column="1" Text="{Binding Schedule.TimeLabel}"
+                           Style="{StaticResource TextBody}"
+                           TextColor="{StaticResource ColorTextSecondary}" />
+                </Grid>
+                <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
+
+                <!-- Pièces de la tenue -->
+                <Label Text="{Binding Schedule.Outfit.Name}"
+                       Style="{StaticResource TextSectionTitle}"
+                       Margin="0,8,0,0"
+                       IsVisible="False" />
+
+                <Button Text="Modifier la planification"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding EditCommand}"
+                        Margin="0,8,0,0" />
+
+                <Button Text="Retirer de l'agenda"
+                        Style="{StaticResource BtnSecondary}"
+                        Command="{Binding RemoveCommand}"
+                        IsEnabled="{Binding IsNotBusy}" />
+
+                <Label Text="La tenue restera enregistrée dans Mes tenues."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

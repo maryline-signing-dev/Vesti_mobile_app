@@ -1,62 +1,242 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  AgendaPage.xaml
+  AgendaPage.xaml 
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Vesti.ViewModels.Agenda"
+             xmlns:models="clr-namespace:Vesti.Models"
              x:Class="Vesti.Views.Agenda.AgendaPage"
              BackgroundColor="{StaticResource ColorBackground}"
              Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*">
 
         <!-- EN-TÊTE -->
-        <VerticalStackLayout Grid.Row="0" Padding="24,20,24,0">
-            <Label Text="Mon agenda"
-                   Style="{StaticResource TextH1}" />
-            <Label Text="Préparez vos journées, à votre rythme."
-                   Style="{StaticResource TextCaption}"
-                   Margin="0,2,0,0" />
-        </VerticalStackLayout>
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="24,20,24,0">
+            <VerticalStackLayout Grid.Column="0">
+                <Label Text="Mon agenda" Style="{StaticResource TextH1}" />
+                <Label Text="Préparez vos journées, à votre rythme."
+                       Style="{StaticResource TextCaption}"
+                       Margin="0,2,0,0"
+                       IsVisible="{Binding IsEmpty}" />
+            </VerticalStackLayout>
+            <!-- "+" visible uniquement quand il y a déjà des données
+                 (sur l'état vide, le gros bouton "Planifier une tenue" suffit) -->
+            <Image Grid.Column="1"
+                   Source="plus_24dp.png"
+                   WidthRequest="24" HeightRequest="24"
+                   VerticalOptions="Center"
+                   IsVisible="{Binding HasData}">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding PlanCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+        </Grid>
 
-        <!-- ÉTAT VIDE (affiché jusqu'à I5) -->
+        <!-- ═══ ÉTAT VIDE ═══════════════════════════════════════════ -->
         <VerticalStackLayout Grid.Row="1"
+                             IsVisible="{Binding IsEmpty}"
                              VerticalOptions="Center"
                              HorizontalOptions="Center"
-                             Spacing="16"
-                             Padding="24,0">
-
+                             Spacing="16" Padding="24,0">
             <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                     StrokeShape="RoundRectangle 20"
                     StrokeThickness="0"
-                    WidthRequest="80"
-                    HeightRequest="80"
+                    WidthRequest="80" HeightRequest="80"
                     HorizontalOptions="Center">
                 <Image Source="agenda_18dp.png"
-                       WidthRequest="36"
-                       HeightRequest="36"
+                       WidthRequest="36" HeightRequest="36"
                        HorizontalOptions="Center"
                        VerticalOptions="Center" />
             </Border>
-
             <Label Text="Rien de prévu,&#x0a;tout est possible."
                    Style="{StaticResource TextH1}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center" />
-
             <Label Text="Les tenues enregistrées n'apparaissent ici que lorsque vous choisissez de les planifier."
                    Style="{StaticResource TextBody}"
                    TextColor="{StaticResource ColorTextSecondary}"
                    HorizontalOptions="Center"
                    HorizontalTextAlignment="Center" />
-
-            <!-- Bouton principal — non câblé  -->
             <Button Text="Planifier une tenue"
                     Style="{StaticResource BtnPrimary}"
-                    IsEnabled="False"
-                    Opacity="0.5" />
-
+                    Command="{Binding PlanCommand}" />
         </VerticalStackLayout>
+
+        <!-- ═══ CALENDRIER + LISTE DU JOUR ═════════════════════════════ -->
+        <ScrollView Grid.Row="1" IsVisible="{Binding HasData}">
+            <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+                <!-- Navigation mois -->
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Image Grid.Column="0"
+                           Source="chevron_left_24dp.png"
+                           WidthRequest="24" HeightRequest="24"
+                           VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PrevMonthCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Label Grid.Column="1"
+                           Text="{Binding MonthLabel}"
+                           Style="{StaticResource TextSectionTitle}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                    <Image Grid.Column="2"
+                           Source="chevron_right_24dp.png"
+                           WidthRequest="24" HeightRequest="24"
+                           VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding NextMonthCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Grid>
+
+                <!-- En-têtes des jours de la semaine (L M M J V S D) -->
+                <Grid ColumnDefinitions="*,*,*,*,*,*,*">
+                    <Label Grid.Column="0" Text="L" Style="{StaticResource TextCaption}" HorizontalOptions="Center" />
+                    <Label Grid.Column="1" Text="M" Style="{StaticResource TextCaption}" HorizontalOptions="Center" />
+                    <Label Grid.Column="2" Text="M" Style="{StaticResource TextCaption}" HorizontalOptions="Center" />
+                    <Label Grid.Column="3" Text="J" Style="{StaticResource TextCaption}" HorizontalOptions="Center" />
+                    <Label Grid.Column="4" Text="V" Style="{StaticResource TextCaption}" HorizontalOptions="Center" />
+                    <Label Grid.Column="5" Text="S" Style="{StaticResource TextCaption}" HorizontalOptions="Center" />
+                    <Label Grid.Column="6" Text="D" Style="{StaticResource TextCaption}" HorizontalOptions="Center" />
+                </Grid>
+
+                <!-- Grille des 42 jours -->
+                <CollectionView ItemsSource="{Binding Days}"
+                                HeightRequest="260">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="7"
+                                         HorizontalItemSpacing="2"
+                                         VerticalItemSpacing="4" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CalendarDay">
+                            <Grid HeightRequest="38">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AgendaViewModel}},
+                                            Path=SelectDayCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+
+                                <!-- Fond : terracotta si sélectionné -->
+                                <Border StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 8"
+                                        WidthRequest="34" HeightRequest="34"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="{Binding IsSelected,
+                                            Converter={StaticResource SelectedDayColorConverter}}">
+                                    <Label Text="{Binding DayNumber}"
+                                           FontFamily="{StaticResource FontInter}"
+                                           FontSize="13"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           TextColor="{Binding IsSelected,
+                                               Converter={StaticResource SelectedDayTextColorConverter}}"
+                                           Opacity="{Binding IsCurrentMonth,
+                                               Converter={StaticResource CurrentMonthOpacityConverter}}" />
+                                </Border>
+
+                                <!-- Point indicateur de planification -->
+                                <BoxView WidthRequest="4" HeightRequest="4"
+                                         CornerRadius="2"
+                                         Color="{StaticResource ColorPrimary}"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="End"
+                                         Margin="0,0,0,2"
+                                         IsVisible="{Binding HasSchedule}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
+
+                <!-- Liste du jour sélectionné -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="{Binding SelectedDateLabel}"
+                           Style="{StaticResource TextSectionTitle}" />
+                    <Label Grid.Column="1"
+                           Text="{Binding SchedulesCountLabel}"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           VerticalOptions="Center"
+                           IsVisible="{Binding HasSchedulesForSelectedDate}" />
+                </Grid>
+
+                <Label Text="Rien de prévu ce jour."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       IsVisible="{Binding HasSchedulesForSelectedDate,
+                           Converter={StaticResource InvertBoolConverter}}" />
+
+                <CollectionView ItemsSource="{Binding SchedulesForSelectedDate}"
+                                IsVisible="{Binding HasSchedulesForSelectedDate}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:OutfitSchedule">
+                            <Border BackgroundColor="{StaticResource ColorSurface}"
+                                    Stroke="{StaticResource BrushBorder}"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="12,10"
+                                    Margin="0,0,0,8">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AgendaViewModel}},
+                                            Path=SelectScheduleCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding TimeLabel}"
+                                           Style="{StaticResource TextBody}"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource ColorPrimary}"
+                                           VerticalOptions="Center"
+                                           WidthRequest="60" />
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                                        <Label Text="{Binding Outfit.DisplayName}"
+                                               Style="{StaticResource TextBody}"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding Outfit.Subtitle}"
+                                               Style="{StaticResource TextCaption}" />
+                                    </VerticalStackLayout>
+                                    <Border Grid.Column="2"
+                                            BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                            StrokeShape="RoundRectangle 8"
+                                            StrokeThickness="0"
+                                            WidthRequest="44" HeightRequest="44">
+                                        <Grid>
+                                            <Image Source="{Binding ThumbnailImagePath,
+                                                       Converter={StaticResource RelativePathToFullConverter}}"
+                                                   Aspect="AspectFill"
+                                                   IsVisible="{Binding ThumbnailImagePath,
+                                                       Converter={StaticResource NotNullConverter}}" />
+                                            <Image Source="shirt_placeholder.png"
+                                                   WidthRequest="22" HeightRequest="22"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding ThumbnailImagePath,
+                                                       Converter={StaticResource IsNullConverter}}" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label IsVisible="{Binding HasError}"
+                       Text="{Binding ErrorMessage}"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorError}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
 
     </Grid>
 </ContentPage>

@@ -8,13 +8,13 @@ using Vesti.ViewModels.Onboarding;
 using Vesti.ViewModels.Profile;
 using Vesti.ViewModels.Wardrobe;
 using Vesti.ViewModels.Outfits;
+using Vesti.ViewModels.Agenda;
 using Vesti.Views.Agenda;
 using Vesti.Views.Home;
 using Vesti.Views.Onboarding;
 using Vesti.Views.Outfits;
 using Vesti.Views.Profile;
 using Vesti.Views.Wardrobe;
-using Vesti.Views.Outfits;
 
 namespace Vesti;
 
@@ -42,12 +42,14 @@ public static class MauiProgram
         builder.Services.AddSingleton<SettingsRepository>();
         builder.Services.AddSingleton<ClothingRepository>();
         builder.Services.AddSingleton<OutfitRepository>();
+        builder.Services.AddSingleton<OutfitScheduleRepository>();
 
         // ── Services ──────────────────────────────────────────────────
         builder.Services.AddSingleton<IImageStore, ImageStore>();
         builder.Services.AddSingleton<ProfileService>();
         builder.Services.AddSingleton<ClothingService>();
         builder.Services.AddSingleton<OutfitService>();
+        builder.Services.AddSingleton<ScheduleService>();
 
         // ── ViewModels ────────────────────────────────────────────────
         builder.Services.AddTransient<OnboardingViewModel>();
@@ -63,6 +65,9 @@ public static class MauiProgram
         builder.Services.AddTransient<OutfitListViewModel>();
         builder.Services.AddTransient<OutfitDetailViewModel>();
         builder.Services.AddTransient<ComposeState>();
+        builder.Services.AddTransient<ScheduleDetailViewModel>();
+        builder.Services.AddTransient<PlanOutfitViewModel>();
+        builder.Services.AddTransient<AgendaViewModel>();
 
 
         // ── Navigation principale ────────────────────────────────────────
@@ -81,10 +86,11 @@ public static class MauiProgram
         builder.Services.AddTransient<ComposeSelectionPage>();
         builder.Services.AddTransient<OutfitListPage>();
         builder.Services.AddTransient<OutfitDetailPage>();
-
+        builder.Services.AddTransient<AgendaPage>();
+        builder.Services.AddTransient<ScheduleDetailPage>();
+        builder.Services.AddTransient<PlanOutfitPage>();
 
         // Pages squelettes des onglets non encore développés
-        builder.Services.AddTransient<AgendaPage>();
         builder.Services.AddTransient<ProfilePage>();
 
 #if DEBUG
@@ -97,6 +103,17 @@ public static class MauiProgram
         var db = app.Services.GetRequiredService<VestiDatabase>();
         Task.Run(() => db.InitialiseAsync()).GetAwaiter().GetResult();
 
+        // câblage du callback de suppression des planifications.
+        // OutfitService et ScheduleService dépendent tous deux l'un de
+        // l'autre indirectement (ScheduleService a besoin de OutfitService
+        // pour charger les tenues ; OutfitService a besoin de prévenir
+        // ScheduleService quand une tenue est supprimée). Pour éviter un
+        // cycle d'injection de dépendances, le lien est fait ici, une fois
+        // que les deux singletons existent.
+        var outfitService = app.Services.GetRequiredService<OutfitService>();
+        var scheduleService = app.Services.GetRequiredService<ScheduleService>();
+        outfitService.OnOutfitDeleted = scheduleService.OnOutfitDeletedAsync;
+        
         return app;
     }
 }

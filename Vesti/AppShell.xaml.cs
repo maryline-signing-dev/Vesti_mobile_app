@@ -34,5 +34,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(Routes.ComposeOccasion, typeof(ComposeOccasionPage));
         Routing.RegisterRoute(Routes.OutfitDetail, typeof(OutfitDetailPage));
 
+        // Agenda 
+        Routing.RegisterRoute(Routes.PlanOutfit, typeof(PlanOutfitPage));
+        Routing.RegisterRoute(Routes.ScheduleDetail, typeof(ScheduleDetailPage));
     }
 }
