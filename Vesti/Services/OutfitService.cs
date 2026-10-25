@@ -57,6 +57,13 @@ public class OutfitService
     public async Task<int> CountAsync()
         => await _outfitRepository.CountAsync();
 
+    /// <summary>Tenues marquées favorites, pièces chargées.</summary>
+    public async Task<List<Outfit>> GetFavoritesAsync()
+    {
+        var all = await GetAllAsync();
+        return all.Where(o => o.IsFavorite).ToList();
+    }
+
     // ── Création ─────────────────────────────────────────────────────────
 
     /// <summary>
@@ -129,6 +136,17 @@ public class OutfitService
         }
 
         return null;
+    }
+
+    /// <summary>Bascule l'état favori d'une tenue et retourne le nouvel état.</summary>
+    public async Task<bool> ToggleFavoriteAsync(int id)
+    {
+        var outfit = await _outfitRepository.GetByIdAsync(id);
+        if (outfit is null) return false;
+
+        outfit.IsFavorite = !outfit.IsFavorite;
+        await _outfitRepository.UpdateAsync(outfit);
+        return outfit.IsFavorite;
     }
 
     // ── Suppression ───────────────────────────────────────────────────────

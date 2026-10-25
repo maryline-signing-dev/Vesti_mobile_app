@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  FavoritesPage.xaml — "Mes favoris"
+  Absente des maquettes fournies (F7 du cadrage) : conçue en cohérence
+  graphique avec le reste de l'application. Regroupe les pièces et les
+  tenues marquées favorites, chacune renvoyant à sa fiche d'origine.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Vesti.Models"
+             x:Class="Vesti.Views.Favorites.FavoritesPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- EN-TÊTE -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="24,20,24,0">
+            <Image Grid.Column="0"
+                   Source="arrow_left_24dp.png"
+                   WidthRequest="24" HeightRequest="24"
+                   VerticalOptions="Center"
+                   Margin="0,0,12,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BackCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Label Grid.Column="1" Text="Mes favoris" Style="{StaticResource TextH1}" VerticalOptions="Center" />
+        </Grid>
+
+        <!-- ZONE CENTRALE -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="24,16,24,32" Spacing="20">
+
+                <!-- État vide -->
+                <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="16" Margin="0,48,0,0">
+                    <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                            StrokeShape="RoundRectangle 20"
+                            StrokeThickness="0"
+                            WidthRequest="80" HeightRequest="80"
+                            HorizontalOptions="Center">
+                        <Image Source="heart_18dp.png"
+                               WidthRequest="32" HeightRequest="32"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+                    <Label Text="Aucun favori pour l'instant"
+                           Style="{StaticResource TextSectionTitle}"
+                           HorizontalOptions="Center" />
+                    <Label Text="Touchez le cœur sur une pièce ou une tenue pour la retrouver ici."
+                           Style="{StaticResource TextBody}"
+                           TextColor="{StaticResource ColorTextSecondary}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+
+                <!-- Pièces favorites -->
+                <VerticalStackLayout Spacing="12" IsVisible="{Binding HasItems}">
+                    <Label Text="Pièces" Style="{StaticResource TextSectionTitle}" />
+                    <CollectionView ItemsSource="{Binding FavoriteItems}">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="2"
+                                             HorizontalItemSpacing="12" VerticalItemSpacing="12" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:ClothingItem">
+                                <Border BackgroundColor="{StaticResource ColorSurface}"
+                                        Stroke="{StaticResource BrushBorder}"
+                                        StrokeShape="RoundRectangle 12">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                Path=BindingContext.SelectItemCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <VerticalStackLayout>
+                                        <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                                StrokeShape="RoundRectangle 12,12,0,0"
+                                                StrokeThickness="0"
+                                                HeightRequest="110"
+                     >
+                                            <Grid>
+                                                <Image Source="{Binding ImagePath,
+                                                           Converter={StaticResource RelativePathToFullConverter}}"
+                                                       Aspect="AspectFill"
+                                                       IsVisible="{Binding ImagePath,
+                                                           Converter={StaticResource NotNullConverter}}" />
+                                                <Image Source="shirt_placeholder.png"
+                                                       WidthRequest="40" HeightRequest="40"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"
+                                                       IsVisible="{Binding ImagePath,
+                                                           Converter={StaticResource IsNullConverter}}" />
+                                            </Grid>
+                                        </Border>
+                                        <Label Text="{Binding Name}"
+                                               Style="{StaticResource TextBody}"
+                                               FontAttributes="Bold"
+                                               Padding="10,8,10,10"
+                                               LineBreakMode="TailTruncation" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <!-- Tenues favorites -->
+                <VerticalStackLayout Spacing="12" IsVisible="{Binding HasOutfits}">
+                    <Label Text="Tenues" Style="{StaticResource TextSectionTitle}" />
+                    <CollectionView ItemsSource="{Binding FavoriteOutfits}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Outfit">
+                                <Border BackgroundColor="{StaticResource ColorSurface}"
+                                        Stroke="{StaticResource BrushBorder}"
+                                        StrokeShape="RoundRectangle 12"
+                                        Padding="12,10"
+                                        Margin="0,0,0,10">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                Path=BindingContext.SelectOutfitCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                                StrokeShape="RoundRectangle 10"
+                                                StrokeThickness="0"
+                                                WidthRequest="56" HeightRequest="56"
+                                                Margin="0,0,12,0">
+                                            <Image Source="shirt_placeholder.png"
+                                                   WidthRequest="28" HeightRequest="28"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center" />
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                            <Label Text="{Binding DisplayName}"
+                                                   Style="{StaticResource TextBody}"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Subtitle}"
+                                                   Style="{StaticResource TextCaption}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <Label IsVisible="{Binding HasError}"
+                       Text="{Binding ErrorMessage}"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorError}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

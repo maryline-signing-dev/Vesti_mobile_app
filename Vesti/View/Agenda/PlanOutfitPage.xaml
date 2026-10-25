@@ -38,10 +38,17 @@
                     HeightRequest="140"
                     IsVisible="{Binding HasOutfit}">
                 <Grid>
+                    <Image Source="{Binding Outfit.ThumbnailPath1,
+                               Converter={StaticResource RelativePathToFullConverter}}"
+                           Aspect="AspectFill"
+                           IsVisible="{Binding Outfit.ThumbnailPath1,
+                               Converter={StaticResource NotNullConverter}}" />
                     <Image Source="shirt_placeholder.png"
                            WidthRequest="48" HeightRequest="48"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center"
+                           IsVisible="{Binding Outfit.ThumbnailPath1,
+                               Converter={StaticResource IsNullConverter}}" />
                 </Grid>
             </Border>
 

@@ -51,6 +51,34 @@
                                VerticalOptions="Center"
                                IsVisible="{Binding HasPhoto,
                                    Converter={StaticResource InvertBoolConverter}}" />
+                        
+                        <!-- favori — fond sombre semi-transparent → icône blanche -->
+                        <Border BackgroundColor="#CC000000"
+                                StrokeShape="RoundRectangle 100"
+                                StrokeThickness="0"
+                                WidthRequest="40" HeightRequest="40"
+                                HorizontalOptions="End"
+                                VerticalOptions="Start"
+                                Margin="12">
+                            <Grid>
+                                <!-- Non favori : cœur contour -->
+                                <Image Source="heart_18dp_white.png"
+                                       WidthRequest="20" HeightRequest="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding IsFavorite,
+                                           Converter={StaticResource InvertBoolConverter}}" />
+                                <!-- Favori : cœur plein -->
+                                <Image Source="heart_filled_18dp_white.png"
+                                       WidthRequest="20" HeightRequest="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="{Binding IsFavorite}" />
+                            </Grid>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
+                            </Border.GestureRecognizers>
+                        </Border>
                     </Grid>
                 </Border>
 
@@ -80,7 +108,7 @@
 
                 <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
 
-                <!-- Marque uniquement : Saison et Style retirés -->
+                <!-- Marque uniquement -->
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0" Text="Marque" Style="{StaticResource TextBody}" />
                     <Label Grid.Column="1"

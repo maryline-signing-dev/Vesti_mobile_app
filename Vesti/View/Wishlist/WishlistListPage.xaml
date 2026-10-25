@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  WishlistListPage.xaml — "Ma wishlist"
+  Conforme aux maquettes "Wishlist Vide" et "Wishlist : Avec pièces".
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Vesti.Models"
+             x:Class="Vesti.Views.Wishlist.WishlistListPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- EN-TÊTE -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*" Padding="24,20,24,0">
+            <Image Grid.Column="0"
+                   Source="arrow_left_24dp.png"
+                   WidthRequest="24" HeightRequest="24"
+                   VerticalOptions="Center"
+                   Margin="0,0,12,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackTapped" />
+                </Image.GestureRecognizers>
+            </Image>
+            <VerticalStackLayout Grid.Column="1">
+                <Label Text="Ma wishlist" Style="{StaticResource TextH1}" />
+                <Label Text="Vos envies, à part du dressing"
+                       Style="{StaticResource TextCaption}"
+                       Margin="0,2,0,0"
+                       IsVisible="{Binding IsEmpty}" />
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- RECHERCHE (uniquement si des éléments existent) -->
+        <VerticalStackLayout Grid.Row="1" Padding="24,12,24,0"
+                             IsVisible="{Binding HasItems}">
+            <Border StrokeShape="RoundRectangle 12"
+                    Stroke="{StaticResource BrushBorder}"
+                    BackgroundColor="{StaticResource ColorSurface}"
+                    Padding="12,0" HeightRequest="44">
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                    <Image Grid.Column="0" Source="search_18dp.png"
+                           WidthRequest="18" HeightRequest="18"
+                           VerticalOptions="Center" />
+                    <Entry Grid.Column="1"
+                           Text="{Binding SearchText}"
+                           Placeholder="Rechercher une envie"
+                           Style="{StaticResource FieldBase}"
+                           HeightRequest="44" />
+                    <Image Grid.Column="2" Source="x_18dp.png"
+                           WidthRequest="18" HeightRequest="18"
+                           VerticalOptions="Center"
+                           IsVisible="{Binding IsSearchActive}">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClearSearchCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+
+        <!-- ZONE CENTRALE -->
+        <Grid Grid.Row="2">
+
+            <!-- État vide -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16" Padding="24,0">
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="80" HeightRequest="80"
+                        HorizontalOptions="Center">
+                    <Image Source="heart_18dp.png"
+                           WidthRequest="32" HeightRequest="32"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+                <Label Text="Gardez vos envies&#x0a;sous la main."
+                       Style="{StaticResource TextH1}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Enregistrez les pièces que vous aimeriez avoir. Elles ne rejoindront le dressing qu'une fois acquises."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Button Text="Ajouter une envie"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding AddCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Liste -->
+            <CollectionView ItemsSource="{Binding Items}"
+                            IsVisible="{Binding HasItems}"
+                            Margin="24,12,24,0">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:WishlistItem">
+                        <Border BackgroundColor="{StaticResource ColorSurface}"
+                                Stroke="{StaticResource BrushBorder}"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="12,10"
+                                Margin="0,0,0,10">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                        Path=BindingContext.SelectItemCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{StaticResource ColorPrimaryLight}"
+                                        StrokeShape="RoundRectangle 10"
+                                        StrokeThickness="0"
+                                        WidthRequest="56" HeightRequest="56">
+                                    <Grid>
+                                        <Image Source="{Binding ImagePath,
+                                                   Converter={StaticResource RelativePathToFullConverter}}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource NotNullConverter}}" />
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="26" HeightRequest="26"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource IsNullConverter}}" />
+                                    </Grid>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding Name}"
+                                           Style="{StaticResource TextBody}"
+                                           FontAttributes="Bold" />
+                                    <Label Text="{Binding Subtitle}"
+                                           Style="{StaticResource TextCaption}" />
+                                    <Label Text="{Binding PriceLabel}"
+                                           Style="{StaticResource TextCaption}"
+                                           TextColor="{StaticResource ColorPrimary}"
+                                           IsVisible="{Binding PriceLabel,
+                                               Converter={StaticResource NotNullConverter}}" />
+                                </VerticalStackLayout>
+                                <Label Grid.Column="2"
+                                       Text="{Binding StatusLabel}"
+                                       Style="{StaticResource TextCaption}"
+                                       TextColor="{StaticResource ColorTextSecondary}"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start"
+                   Margin="24,16,24,0" />
+        </Grid>
+
+        <!-- BOUTON AJOUTER (si liste non vide) -->
+        <VerticalStackLayout Grid.Row="3" Padding="24,12,24,24"
+                             IsVisible="{Binding HasItems}">
+            <Button Text="+ Ajouter une envie"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding AddCommand}" />
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

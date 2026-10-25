@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  OutfitListPage.xaml — "Mes tenues"
-  Accessible depuis WardrobePage et la barre de navigation.
-  États : vide / liste de tenues.
+  OutfitListPage.xaml 
 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -73,37 +71,68 @@
 
                             <Grid RowDefinitions="Auto,Auto">
 
-                                <!-- Collage de photos des pièces -->
+
+                                <!-- Collage des 3 premières pièces  -->
                                 <Grid Grid.Row="0"
                                       HeightRequest="140"
                                       ColumnDefinitions="*,*,*">
-                                    <!-- Les 3 premières pièces affichées -->
+
                                     <Border Grid.Column="0"
                                             BackgroundColor="{StaticResource ColorPrimaryLight}"
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 12,0,0,0">
-                                        <Image Source="shirt_placeholder.png"
-                                               WidthRequest="36" HeightRequest="36"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
+                                        <Grid>
+                                            <Image Source="{Binding ThumbnailPath1,
+                                                       Converter={StaticResource RelativePathToFullConverter}}"
+                                                   Aspect="AspectFill"
+                                                   IsVisible="{Binding ThumbnailPath1,
+                                                       Converter={StaticResource NotNullConverter}}" />
+                                            <Image Source="shirt_placeholder.png"
+                                                   WidthRequest="30" HeightRequest="30"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding ThumbnailPath1,
+                                                       Converter={StaticResource IsNullConverter}}" />
+                                        </Grid>
                                     </Border>
+
                                     <Border Grid.Column="1"
                                             BackgroundColor="{StaticResource ColorPrimaryLight}"
                                             StrokeThickness="0">
-                                        <Image Source="shirt_placeholder.png"
-                                               WidthRequest="36" HeightRequest="36"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
+                                        <Grid>
+                                            <Image Source="{Binding ThumbnailPath2,
+                                                       Converter={StaticResource RelativePathToFullConverter}}"
+                                                   Aspect="AspectFill"
+                                                   IsVisible="{Binding ThumbnailPath2,
+                                                       Converter={StaticResource NotNullConverter}}" />
+                                            <Image Source="shirt_placeholder.png"
+                                                   WidthRequest="30" HeightRequest="30"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding ThumbnailPath2,
+                                                       Converter={StaticResource IsNullConverter}}" />
+                                        </Grid>
                                     </Border>
+
                                     <Border Grid.Column="2"
                                             BackgroundColor="{StaticResource ColorPrimaryLight}"
                                             StrokeThickness="0"
                                             StrokeShape="RoundRectangle 0,12,0,0">
-                                        <Image Source="shirt_placeholder.png"
-                                               WidthRequest="36" HeightRequest="36"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
+                                        <Grid>
+                                            <Image Source="{Binding ThumbnailPath3,
+                                                       Converter={StaticResource RelativePathToFullConverter}}"
+                                                   Aspect="AspectFill"
+                                                   IsVisible="{Binding ThumbnailPath3,
+                                                       Converter={StaticResource NotNullConverter}}" />
+                                            <Image Source="shirt_placeholder.png"
+                                                   WidthRequest="30" HeightRequest="30"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding ThumbnailPath3,
+                                                       Converter={StaticResource IsNullConverter}}" />
+                                        </Grid>
                                     </Border>
+
                                 </Grid>
 
                                 <!-- Nom + sous-titre -->

@@ -70,6 +70,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="View\Favorites\FavoritesPage.xaml.cs">
+	    <DependentUpon>FavoritesPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\Home\HomePage.xaml.cs">
 	    <DependentUpon>HomePage.xaml</DependentUpon>
 	  </Compile>
@@ -79,6 +82,15 @@
 	  <Compile Update="View\Profile\CreateProfilePage.xaml.cs">
 	    <DependentUpon>CreateProfilePage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\Wishlist\AddWishtlistItemPage.xaml.cs">
+	    <DependentUpon>AddWishtlistItemPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Wishlist\WishlistListPage.xaml.cs">
+	    <DependentUpon>WishlistListPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="View\Wishlist\WishlistDetailPage.xaml.cs">
+	    <DependentUpon>WishlistDetailPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -86,6 +98,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\Agenda\ScheduleDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Favorites\FavoritesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\Home\HomePage.xaml">
@@ -107,6 +122,15 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\Profile\CreateProfilePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Wishlist\AddWishtlistItemPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Wishlist\WishlistListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\Wishlist\WishlistDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

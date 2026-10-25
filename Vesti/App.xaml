@@ -17,6 +17,7 @@
             <conv:EqualToZeroConverter            x:Key="EqualToZeroConverter" />
             <conv:EqualToOneConverter             x:Key="EqualToOneConverter" />
             <conv:EqualToTwoConverter             x:Key="EqualToTwoConverter" />
+            <conv:GreaterThanZeroConverter        x:Key="GreaterThanZeroConverter" />
             <conv:FilterChipColorConverter        x:Key="FilterChipColorConverter" />
             <conv:FilterChipTextColorConverter    x:Key="FilterChipTextColorConverter" />
             <conv:SearchLabelConverter            x:Key="SearchLabelConverter" />

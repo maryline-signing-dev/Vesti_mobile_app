@@ -33,11 +33,6 @@ public class AgendaViewModel : BaseViewModel
         PrevMonthCommand = new Command(async () => await ChangeMonthAsync(-1));
         NextMonthCommand = new Command(async () => await ChangeMonthAsync(1));
         SelectDayCommand = new Command<CalendarDay>(async d => await SelectDayAsync(d));
-        PlanCommand = new Command(async () =>
-        {
-            AgendaPlanState.IsSelectingForSchedule = true;
-            await Shell.Current.GoToAsync(Routes.OutfitList);
-        });
         SelectScheduleCommand = new Command<OutfitSchedule>(async s =>
             await Shell.Current.GoToAsync($"{Routes.ScheduleDetail}?id={s.Id}"));
     }

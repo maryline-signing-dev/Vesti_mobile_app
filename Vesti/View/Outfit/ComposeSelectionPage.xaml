@@ -120,12 +120,7 @@
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
 
-                            <!-- Coche de sélection (coin supérieur droit)
-                                 CORRIGÉ : fond ColorPrimary (terracotta foncé) nécessite
-                                 une icône CLAIRE pour rester visible. check_24dp.png est
-                                 exporté en foncé (#252525) pour les fonds clairs — ici on
-                                 utilise check_24dp_white.png (variante blanche à exporter,
-                                 voir README_Fixes.md). -->
+                            <!-- Coche de sélection. -->
                             <Border BackgroundColor="{StaticResource ColorPrimary}"
                                     StrokeShape="RoundRectangle 100"
                                     StrokeThickness="0"

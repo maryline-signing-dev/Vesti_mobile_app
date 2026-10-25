@@ -18,17 +18,12 @@ public class OutfitDetailViewModel : BaseViewModel
         BackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
         DeleteCommand = new Command(async () => await DeleteAsync());
 
-        // I5 : navigue vers le formulaire de planification réel
+        // navigue vers le formulaire de planification réel
         AddToAgendaCommand = new Command(async () =>
             await Shell.Current.GoToAsync($"{Routes.PlanOutfit}?outfitId={_outfitId}"));
 
-        GoToOutfitListCommand = new Command(async () =>
-        {
-            await Shell.Current.GoToAsync(Routes.TabWardrobe);
-            await Shell.Current.GoToAsync(Routes.OutfitList);
-        });
+        ToggleFavoriteCommand = new Command(async () => await ToggleFavoriteAsync());
     }
-
     public string OutfitIdText
     {
         set
@@ -52,6 +47,7 @@ public class OutfitDetailViewModel : BaseViewModel
                 OnPropertyChanged(nameof(HasOutfit));
                 OnPropertyChanged(nameof(HasOccasion));
                 OnPropertyChanged(nameof(OccasionText));
+                OnPropertyChanged(nameof(IsFavorite));
             }
         }
     }
@@ -59,11 +55,13 @@ public class OutfitDetailViewModel : BaseViewModel
     public bool HasOutfit => Outfit is not null;
     public bool HasOccasion => !string.IsNullOrWhiteSpace(Outfit?.Occasion);
     public string OccasionText => Outfit?.Occasion ?? "Sans occasion";
+    public bool IsFavorite => Outfit?.IsFavorite == true;
 
     public ICommand BackCommand { get; }
     public ICommand DeleteCommand { get; }
     public ICommand AddToAgendaCommand { get; }
     public ICommand GoToOutfitListCommand { get; }
+    public ICommand ToggleFavoriteCommand { get; }
 
     public async Task LoadAsync()
     {
@@ -78,6 +76,14 @@ public class OutfitDetailViewModel : BaseViewModel
             ErrorMessage = "Impossible de charger la tenue.";
             System.Diagnostics.Debug.WriteLine($"[OutfitDetailViewModel] {ex}");
         }
+    }
+
+    private async Task ToggleFavoriteAsync()
+    {
+        if (Outfit is null) return;
+        var newState = await _outfitService.ToggleFavoriteAsync(Outfit.Id);
+        Outfit.IsFavorite = newState;
+        OnPropertyChanged(nameof(IsFavorite));
     }
 
     private async Task DeleteAsync()

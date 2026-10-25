@@ -4,6 +4,8 @@ using Vesti.Views.Home;
 using Vesti.Views.Outfits;
 using Vesti.Views.Profile;
 using Vesti.Views.Wardrobe;
+using Vesti.Views.Wishlist;
+using Vesti.Views.Favorites;
 using Vesti.Infrastructure;
 
 namespace Vesti;
@@ -28,14 +30,20 @@ public partial class AppShell : Shell
 
 
         // Tenues 
-        Routing.RegisterRoute(Routes.OutfitList, typeof(OutfitListPage));
         Routing.RegisterRoute(Routes.ComposeSelection, typeof(ComposeSelectionPage));
         Routing.RegisterRoute(Routes.ComposeComposition, typeof(ComposeCompositionPage));
         Routing.RegisterRoute(Routes.ComposeOccasion, typeof(ComposeOccasionPage));
         Routing.RegisterRoute(Routes.OutfitDetail, typeof(OutfitDetailPage));
+        Routing.RegisterRoute(Routes.OutfitList, typeof(OutfitListPage));
 
         // Agenda 
         Routing.RegisterRoute(Routes.PlanOutfit, typeof(PlanOutfitPage));
         Routing.RegisterRoute(Routes.ScheduleDetail, typeof(ScheduleDetailPage));
+
+        //Whistlist et Favoris
+        Routing.RegisterRoute(Routes.WishlistList, typeof(WishlistListPage));
+        Routing.RegisterRoute(Routes.AddWishlist, typeof(AddWishlistItemPage));
+        Routing.RegisterRoute(Routes.WishlistDetail, typeof(WishlistDetailPage));
+        Routing.RegisterRoute(Routes.Favorites, typeof(FavoritesPage));
     }
 }

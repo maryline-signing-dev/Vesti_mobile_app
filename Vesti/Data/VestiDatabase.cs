@@ -34,6 +34,7 @@ public class VestiDatabase
         await _db.CreateTableAsync<Outfit>();
         await _db.CreateTableAsync<OutfitItem>();
         await _db.CreateTableAsync<OutfitSchedule>();
+        await _db.CreateTableAsync<WishlistItem>();
 
     }
 }

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Wishlist.AddWishlistItemPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0"
+                       Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CancelCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" Text="Ajouter une envie"
+                       Style="{StaticResource TextH1}" VerticalOptions="Center" />
+            </Grid>
+
+            <!-- Nom -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Nom de la pièce" Style="{StaticResource TextCaption}" />
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource BrushBorder}"
+                        BackgroundColor="{StaticResource ColorSurface}"
+                        Padding="12,0" HeightRequest="48">
+                    <Entry Text="{Binding Name}"
+                           Placeholder="Blazer noir"
+                           Style="{StaticResource FieldBase}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Catégorie + Couleur -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                    <Label Text="Catégorie" Style="{StaticResource TextCaption}" />
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BrushBorder}"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Padding="12,0" HeightRequest="48">
+                        <Picker ItemsSource="{Binding Categories}"
+                                SelectedItem="{Binding Category}"
+                                Title="Choisir"
+                                TitleColor="{StaticResource ColorTextSecondary}"
+                                TextColor="{StaticResource ColorTextPrimary}"
+                                FontSize="14" VerticalOptions="Center" />
+                    </Border>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" Spacing="4">
+                    <Label Text="Couleur" Style="{StaticResource TextCaption}" />
+                    <Border StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource BrushBorder}"
+                            BackgroundColor="{StaticResource ColorSurface}"
+                            Padding="12,0" HeightRequest="48">
+                        <Picker ItemsSource="{Binding Colors}"
+                                SelectedItem="{Binding Color}"
+                                Title="Choisir"
+                                TitleColor="{StaticResource ColorTextSecondary}"
+                                TextColor="{StaticResource ColorTextPrimary}"
+                                FontSize="14" VerticalOptions="Center" />
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Prix (facultatif) -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Prix · facultatif (FCFA)" Style="{StaticResource TextCaption}" />
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource BrushBorder}"
+                        BackgroundColor="{StaticResource ColorSurface}"
+                        Padding="12,0" HeightRequest="48">
+                    <Entry Text="{Binding PriceText}"
+                           Placeholder="15000"
+                           Keyboard="Numeric"
+                           Style="{StaticResource FieldBase}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Lien (facultatif) -->
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Lien · facultatif" Style="{StaticResource TextCaption}" />
+                <Border StrokeShape="RoundRectangle 12"
+                        Stroke="{StaticResource BrushBorder}"
+                        BackgroundColor="{StaticResource ColorSurface}"
+                        Padding="12,0" HeightRequest="48">
+                    <Entry Text="{Binding Link}"
+                           Placeholder="https://..."
+                           Keyboard="Url"
+                           Style="{StaticResource FieldBase}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}" />
+
+            <Button Text="Ajouter à ma wishlist"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    Margin="0,8,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

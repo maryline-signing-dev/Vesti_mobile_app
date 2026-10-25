@@ -109,29 +109,35 @@
                             StrokeShape="RoundRectangle 12"
                             Padding="12,14">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="—"
+                            <Label Text="{Binding OutfitCount}"
                                    FontFamily="{StaticResource FontDMSerif}"
                                    FontSize="24"
-                                   TextColor="{StaticResource ColorTextSecondary}" />
-                            <Label Text="tenues"
+                                   TextColor="{StaticResource ColorTextPrimary}" />
+                            <Label Text="{Binding OutfitCountLabel}"
                                    Style="{StaticResource TextCaption}" />
                         </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToOutfitsCommand}" />
+                        </Border.GestureRecognizers>
                     </Border>
 
-                    <!-- Planifiées (données à venir en I5) -->
+                    <!-- Planifiées  -->
                     <Border Grid.Column="2"
                             BackgroundColor="{StaticResource ColorSurface}"
                             Stroke="{StaticResource BrushBorder}"
                             StrokeShape="RoundRectangle 12"
                             Padding="12,14">
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="—"
+                            <Label Text="{Binding ScheduledCount}"
                                    FontFamily="{StaticResource FontDMSerif}"
                                    FontSize="24"
-                                   TextColor="{StaticResource ColorTextSecondary}" />
-                            <Label Text="planifiées"
+                                   TextColor="{StaticResource ColorTextPrimary}" />
+                            <Label Text="{Binding ScheduledCountLabel}"
                                    Style="{StaticResource TextCaption}" />
                         </VerticalStackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToAgendaCommand}" />
+                        </Border.GestureRecognizers>
                     </Border>
 
                 </Grid>
@@ -141,6 +147,7 @@
                     <Label Grid.Column="0"
                            Text="Dernières pièces"
                            Style="{StaticResource TextSectionTitle}" />
+                    
                     <Label Grid.Column="1"
                            Text="Dressing"
                            Style="{StaticResource TextCaption}"
@@ -152,22 +159,23 @@
                     </Label>
                 </Grid>
 
-                <!-- Placeholder "voir le dressing" — les vraies pièces s'affichent en I2+ -->
-                <Border BackgroundColor="{StaticResource ColorSurface}"
-                        Stroke="{StaticResource BrushBorder}"
-                        StrokeShape="RoundRectangle 12"
-                        Padding="20"
-                        HorizontalOptions="Fill">
-                    <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
-                        <Image Source="wardrobe_18dp.png"
-                               WidthRequest="32" HeightRequest="32"
-                               HorizontalOptions="Center" />
-                        <Label Text="Accédez à votre dressing"
-                               Style="{StaticResource TextCaption}"
-                               HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
+                <!-- Dernières tenues -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Text="Dernières tenues"
+                           Style="{StaticResource TextSectionTitle}" />
 
+                    <Label Grid.Column="1"
+                           Text="Mes tenues"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorPrimary}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToOutfitsCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                
                 <!-- Boutons d'action -->
                 <Button Text="+ Ajouter une pièce"
                         Style="{StaticResource BtnPrimary}"
@@ -176,7 +184,11 @@
                 <Button Text="Voir mon dressing"
                         Style="{StaticResource BtnSecondary}"
                         Command="{Binding GoToWardrobeCommand}" />
-
+                
+                <Button Text="Favoris"
+                        Style="{StaticResource BtnSecondary}"
+                        Command="{Binding GoToWishlistCommand}" />
+                
             </VerticalStackLayout>
 
             <!-- Erreur de chargement -->

@@ -10,10 +10,10 @@ namespace Vesti.ViewModels.Wardrobe;
 /// ViewModel de l'onglet Dressing.
 ///
 /// ÉTATS D'ÉCRAN (un seul visible à la fois) :
-///   IsEmpty    : aucune pièce du tout            → invitation à en ajouter une
+///   IsEmpty    : aucune pièce du tout : invitation à en ajouter une
 ///   IsNoResult : des pièces existent, mais ni la recherche ni le filtre
-///                n'en retournent                  → message "aucun résultat"
-///   HasItems   : au moins une pièce                → grille + recherche + filtres
+///                n'en retournent : message "aucun résultat"
+///   HasItems   : au moins une pièce : grille + recherche + filtres
 ///
 /// Le XAML lie directement ces booléens : aucun convertisseur nécessaire.
 /// 
@@ -42,8 +42,14 @@ public class WardrobeViewModel : BaseViewModel
             await Shell.Current.GoToAsync(Routes.ComposeSelection);
         });
 
-        OutfitsCommand = new Command(async () =>
+        WishlistCommand = new Command(async () =>
+        await Shell.Current.GoToAsync(Routes.WishlistList));
+
+        GoToOutfitsCommand = new Command(async () =>
             await Shell.Current.GoToAsync(Routes.OutfitList));
+
+        FavoritesCommand = new Command(async () => 
+        await Shell.Current.GoToAsync(Routes.Favorites));
 
         ClearSearchCommand = new Command(() => SearchText = string.Empty);
     }
@@ -68,18 +74,6 @@ public class WardrobeViewModel : BaseViewModel
     public bool IsNoResult => HasItems && Items.Count == 0;
     public bool HasResults => Items.Count > 0;
     public bool IsSearchActive => !string.IsNullOrEmpty(SearchText);
-
-    /// Titre au-dessus de la grille.
-    public string ListTitle
-    {
-        get
-        {
-            if (!IsSearchActive)
-                return "Toutes mes pièces";
-
-            return Items.Count == 1 ? "1 résultat" : $"{Items.Count} résultats";
-        }
-    }
 
     // ── Recherche ────────────────────────────────────────────────────────
 
@@ -144,8 +138,10 @@ public class WardrobeViewModel : BaseViewModel
 
     public ICommand AddItemCommand { get; }
     public ICommand ComposeCommand { get; }
-    public ICommand OutfitsCommand { get; }
+    public ICommand WishlistCommand { get; }
+    public ICommand FavoritesCommand { get; }
     public ICommand ClearSearchCommand { get; }
+    public ICommand GoToOutfitsCommand { get; }
 
     // ── Chargement ───────────────────────────────────────────────────────
 
@@ -169,7 +165,6 @@ public class WardrobeViewModel : BaseViewModel
             OnPropertyChanged(nameof(HasItems));
             OnPropertyChanged(nameof(IsNoResult));
             OnPropertyChanged(nameof(HasResults));
-            OnPropertyChanged(nameof(ListTitle));
         }
         catch (Exception ex)
         {

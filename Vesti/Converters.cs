@@ -62,6 +62,15 @@ public class EqualToTwoConverter : IValueConverter
         => throw new NotImplementedException();
 }
 
+/// <summary>: vrai si l'entier est strictement positif</summary>
+public class GreaterThanZeroConverter : IValueConverter
+{
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => value is int i && i > 0;
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}
+
 /// <summary>
 /// Couleur de fond d'une puce de filtre.
 /// Paramètre = valeur du filtre de la puce.

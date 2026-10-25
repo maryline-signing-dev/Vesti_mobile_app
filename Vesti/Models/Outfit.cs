@@ -2,15 +2,6 @@
 
 namespace Vesti.Models;
 
-/// <summary>
-/// Une tenue = association nommée de plusieurs pièces.
-///
-/// RÈGLES MÉTIER :
-///   - Une tenue doit contenir au moins une pièce.
-///   - Une tenue peut exister sans occasion (occasion = null).
-///   - Une tenue n'est pas planifiée ici : la planification est en I5.
-///   - Supprimer une tenue ne supprime pas les pièces.
-/// </summary>
 [Table("Outfit")]
 public class Outfit
 {
@@ -50,4 +41,12 @@ public class Outfit
             return string.Join(" · ", parts);
         }
     }
+    [Ignore]
+    public string? ThumbnailPath1 => Items.Count > 0 ? Items[0].ImagePath : null;
+
+    [Ignore]
+    public string? ThumbnailPath2 => Items.Count > 1 ? Items[1].ImagePath : null;
+
+    [Ignore]
+    public string? ThumbnailPath3 => Items.Count > 2 ? Items[2].ImagePath : null;
 }

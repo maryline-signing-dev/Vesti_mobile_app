@@ -29,6 +29,7 @@ public class ItemDetailViewModel : BaseViewModel
         BackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
         EditCommand = new Command(async () => await EditAsync());
         DeleteCommand = new Command(async () => await DeleteAsync());
+        ToggleFavoriteCommand = new Command(async () => await ToggleFavoriteAsync());
     }
 
     public string ItemIdText
@@ -54,11 +55,10 @@ public class ItemDetailViewModel : BaseViewModel
                 OnPropertyChanged(nameof(HasItem));
                 OnPropertyChanged(nameof(HasColor));
                 OnPropertyChanged(nameof(HasDescription));
-                OnPropertyChanged(nameof(SeasonText));
-                OnPropertyChanged(nameof(StyleText));
                 OnPropertyChanged(nameof(BrandText));
                 OnPropertyChanged(nameof(HasPhoto));
                 OnPropertyChanged(nameof(FullImagePath));
+                OnPropertyChanged(nameof(IsFavorite));
             }
         }
     }
@@ -70,10 +70,8 @@ public class ItemDetailViewModel : BaseViewModel
     //  photo
     public bool HasPhoto => _imageStore.GetFullPath(Item?.ImagePath) is not null;
     public string? FullImagePath => _imageStore.GetFullPath(Item?.ImagePath);
-
-    public string SeasonText => OrDefault(Item?.Season, "Non renseignée");
-    public string StyleText => OrDefault(Item?.Style, "Non renseigné");
     public string BrandText => OrDefault(Item?.Brand, "Non renseignée");
+    public bool IsFavorite => Item?.IsFavorite == true;
 
     private static string OrDefault(string? value, string fallback)
         => string.IsNullOrWhiteSpace(value) ? fallback : value;
@@ -81,6 +79,7 @@ public class ItemDetailViewModel : BaseViewModel
     public ICommand BackCommand { get; }
     public ICommand EditCommand { get; }
     public ICommand DeleteCommand { get; }
+    public ICommand ToggleFavoriteCommand { get; }
 
     public async Task LoadAsync()
     {
@@ -96,6 +95,14 @@ public class ItemDetailViewModel : BaseViewModel
             ErrorMessage = "Impossible de charger la pièce.";
             System.Diagnostics.Debug.WriteLine($"[ItemDetailViewModel] {ex}");
         }
+    }
+
+    private async Task ToggleFavoriteAsync()
+    {
+        if (Item is null) return;
+        var newState = await _clothingService.ToggleFavoriteAsync(Item.Id);
+        Item.IsFavorite = newState;
+        OnPropertyChanged(nameof(IsFavorite));
     }
 
     private async Task EditAsync()

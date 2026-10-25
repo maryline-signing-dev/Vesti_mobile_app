@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
   ComposeCompositionPage.xaml — Étape 2 : Votre composition
+  Conforme à la maquette "Composer : Composition".
   Affiche l'aperçu des pièces, permet de retirer une pièce,
   et de nommer la tenue.
 -->
@@ -47,16 +48,25 @@
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:ClothingItem">
-                                <Border BackgroundColor="{StaticResource ColorSurface}"
+                                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 12"
                                         WidthRequest="110"
                                         HeightRequest="120"
                                         Margin="0,8,0,8">
-                                    <Image Source="shirt_placeholder.png"
-                                           WidthRequest="48" HeightRequest="48"
-                                           HorizontalOptions="Center"
-                                           VerticalOptions="Center" />
+                                    <Grid>
+                                        <Image Source="{Binding ImagePath,
+                                                   Converter={StaticResource RelativePathToFullConverter}}"
+                                               Aspect="AspectFill"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource NotNullConverter}}" />
+                                        <Image Source="shirt_placeholder.png"
+                                               WidthRequest="40" HeightRequest="40"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               IsVisible="{Binding ImagePath,
+                                                   Converter={StaticResource IsNullConverter}}" />
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -107,10 +117,19 @@
                                             StrokeShape="RoundRectangle 8"
                                             StrokeThickness="0"
                                             WidthRequest="44" HeightRequest="44">
-                                        <Image Source="shirt_placeholder.png"
-                                               WidthRequest="24" HeightRequest="24"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center" />
+                                        <Grid>
+                                            <Image Source="{Binding ImagePath,
+                                                       Converter={StaticResource RelativePathToFullConverter}}"
+                                                   Aspect="AspectFill"
+                                                   IsVisible="{Binding ImagePath,
+                                                       Converter={StaticResource NotNullConverter}}" />
+                                            <Image Source="shirt_placeholder.png"
+                                                   WidthRequest="22" HeightRequest="22"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"
+                                                   IsVisible="{Binding ImagePath,
+                                                       Converter={StaticResource IsNullConverter}}" />
+                                        </Grid>
                                     </Border>
                                     <VerticalStackLayout Grid.Column="1"
                                                          VerticalOptions="Center"

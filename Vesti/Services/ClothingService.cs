@@ -48,6 +48,13 @@ public class ClothingService
     public async Task<List<ClothingItem>> GetRecentAsync(int count = 4)
         => await _repository.GetRecentAsync(count);
 
+    /// <summary>Pièces marquées favorites.</summary>
+    public async Task<List<ClothingItem>> GetFavoritesAsync()
+        => (await _repository.QueryAsync(null, null))
+            .Where(i => i.IsFavorite)
+            .ToList();
+
+
     // ── Écriture ─────────────────────────────────────────────────────────
 
 
@@ -86,6 +93,17 @@ public class ClothingService
     }
 
 
+    /// <summary>Bascule l'état favori d'une pièce et retourne le nouvel état.</summary>
+    public async Task<bool> ToggleFavoriteAsync(int id)
+    {
+        var item = await _repository.GetByIdAsync(id);
+        if (item is null) return false;
+
+        item.IsFavorite = !item.IsFavorite;
+        await _repository.UpdateAsync(item);
+        return item.IsFavorite;
+    }
+
     // ── Règles internes  ─────────────────────────────────────
 
     private static void Normalize(ClothingItem item)
@@ -94,8 +112,6 @@ public class ClothingService
         item.Category = item.Category?.Trim() ?? string.Empty;
         item.Color = EmptyToNull(item.Color);
         item.Description = EmptyToNull(item.Description);
-        item.Season = EmptyToNull(item.Season);
-        item.Style = EmptyToNull(item.Style);
         item.Brand = EmptyToNull(item.Brand);
     }
 

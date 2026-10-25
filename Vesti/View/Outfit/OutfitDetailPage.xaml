@@ -29,11 +29,6 @@
                        VerticalOptions="Center" />
             </Grid>
 
-            <!-- Bouton "Mes tenues" — accès direct à la liste -->
-            <Button Text="Mes tenues"
-                    Style="{StaticResource BtnSecondary}"
-                    Command="{Binding GoToOutfitListCommand}" />
-
             <Label IsVisible="{Binding HasError}"
                    Text="{Binding ErrorMessage}"
                    Style="{StaticResource TextBody}"
@@ -42,41 +37,69 @@
             <VerticalStackLayout Spacing="16" IsVisible="{Binding HasOutfit}">
 
                 <!-- Collage de pièces -->
-                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                <Grid>
+                    <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
                         StrokeShape="RoundRectangle 16"
                         StrokeThickness="0"
                         HeightRequest="160">
-                    <CollectionView ItemsSource="{Binding Outfit.Items}"
+                        <CollectionView ItemsSource="{Binding Outfit.Items}"
                                     HeightRequest="160">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:ClothingItem">
-                                <Border BackgroundColor="{StaticResource ColorSurface}"
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:ClothingItem">
+                                    <Border BackgroundColor="{StaticResource ColorSurface}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 12"
                                         WidthRequest="120"
                                         HeightRequest="140"
                                         Margin="8,10,0,10">
-                                    <Grid>
-                                        <Image Source="{Binding ImagePath,
+                                        <Grid>
+                                            <Image Source="{Binding ImagePath,
                                                    Converter={StaticResource RelativePathToFullConverter}}"
                                                Aspect="AspectFill"
                                                IsVisible="{Binding ImagePath,
                                                    Converter={StaticResource NotNullConverter}}" />
-                                        <Image Source="shirt_placeholder.png"
+                                            <Image Source="shirt_placeholder.png"
                                                WidthRequest="48" HeightRequest="48"
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center"
                                                IsVisible="{Binding ImagePath,
                                                    Converter={StaticResource IsNullConverter}}" />
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Border>
+
+                    <!-- favori — fond sombre semi-transparent → icône blanche -->
+                    <Border BackgroundColor="#CC000000"
+                        StrokeShape="RoundRectangle 100"
+                        StrokeThickness="0"
+                        WidthRequest="40" HeightRequest="40"
+                        HorizontalOptions="End"
+                        VerticalOptions="Start"
+                        Margin="12">
+                        <Grid>
+                            <Image Source="heart_18dp_white.png"
+                               WidthRequest="20" HeightRequest="20"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding IsFavorite,
+                                   Converter={StaticResource InvertBoolConverter}}" />
+                            <Image Source="heart_filled_18dp_white.png"
+                               WidthRequest="20" HeightRequest="20"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               IsVisible="{Binding IsFavorite}" />
+                        </Grid>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                </Grid>
 
                 <!-- Nom et occasion -->
                 <VerticalStackLayout Spacing="6">
@@ -113,7 +136,7 @@
                        Style="{StaticResource TextCaption}"
                        TextColor="{StaticResource ColorTextSecondary}" />
 
-                <!-- Ajouter à l'agenda (I5) -->
+                <!-- Ajouter à l'agenda  -->
                 <Border BackgroundColor="{StaticResource ColorSurface}"
                         Stroke="{StaticResource BrushBorder}"
                         StrokeShape="RoundRectangle 12"

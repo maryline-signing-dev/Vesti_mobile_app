@@ -28,7 +28,7 @@ public class AddItemViewModel : BaseViewModel
         SaveCommand = new Command(async () => await SaveAsync());
         BackCommand = new Command(async () => await Shell.Current.GoToAsync(".."));
         ViewWardrobeCommand = new Command(async () =>
-            await Shell.Current.GoToAsync(Routes.TabWardrobe));
+            await Shell.Current.GoToAsync(Routes.WardrobeTab));
         AddAnotherCommand = new Command(Reset);
         PickPhotoCommand = new Command(async () => await PickPhotoAsync());
         CapturePhotoCommand = new Command(async () => await CapturePhotoAsync());

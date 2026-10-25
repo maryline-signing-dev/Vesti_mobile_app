@@ -14,7 +14,19 @@
         <!-- ═══ EN-TÊTE + RECHERCHE ═══════════════════════════════════ -->
         <VerticalStackLayout Grid.Row="0" Padding="24,20,24,0">
 
-            <Label Text="Mon Dressing" Style="{StaticResource TextH1}" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                <Label Grid.Column="0" Text="Mon Dressing" Style="{StaticResource TextH1}" />
+                <!-- accès rapide à la Wishlist -->
+                <Image Grid.Column="1"
+                       Source="heart_18dp.png"
+                       WidthRequest="22" HeightRequest="22"
+                       VerticalOptions="Center">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding WishlistCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+            
             <Label Text="Vos pièces, au même endroit"
                    Style="{StaticResource TextCaption}"
                    Margin="0,2,0,16" />
@@ -102,21 +114,19 @@
         </CollectionView>
 
         <!-- ═══ TITRE DE LA LISTE ═════════════════════════════════════ -->
-        <Grid Grid.Row="2"
-              ColumnDefinitions="*,Auto"
-              Padding="24,12,24,0"
-              IsVisible="{Binding HasItems}">
+        <Grid  Grid.Row="2"
+               ColumnDefinitions="*,Auto"
+               Padding="24,12,24,0">
             <Label Grid.Column="0"
-                   Text="{Binding ListTitle}"
-                   Style="{StaticResource TextSectionTitle}" />
+                           Text="Toutes mes  pièces"
+                           Style="{StaticResource TextSectionTitle}" />
             <Label Grid.Column="1"
-                   Text="Mes tenues"
-                   Style="{StaticResource TextCaption}"
-                   TextColor="{StaticResource ColorPrimary}"
-                   VerticalOptions="End"
-                   IsVisible="{Binding IsSearchActive}">
+                           Text="Mes tenues"
+                           Style="{StaticResource TextCaption}"
+                           TextColor="{StaticResource ColorPrimary}"
+                           VerticalOptions="Center">
                 <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToOutfistListCommand}" />
+                    <TapGestureRecognizer Command="{Binding GoToOutfitsCommand}" />
                 </Label.GestureRecognizers>
             </Label>
         </Grid>
@@ -237,9 +247,13 @@
             <Button Text="+ Ajouter une pièce"
                     Style="{StaticResource BtnPrimary}"
                     Command="{Binding AddItemCommand}" />
-            <Button Text="Composer une tenue"
-                    Style="{StaticResource BtnSecondary}"
-                    Command="{Binding ComposeCommand}" />
+
+            <Button Grid.Column="0" 
+                   Text="Nouvelle tenue"
+                   Style="{StaticResource BtnSecondary}"
+                   Command="{Binding ComposeCommand}" />
+                
+
         </VerticalStackLayout>
 
     </Grid>
