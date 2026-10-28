@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  HelpPage.xaml — "Aide & contact"
+  Contenu MINIMAL et provisoire 
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Profile.HelpPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0" Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24" VerticalOptions="Center" Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" Text="Aide &amp; contact" Style="{StaticResource TextH1}" VerticalOptions="Center" />
+            </Grid>
+
+            <Label Text="Questions fréquentes" Style="{StaticResource TextSectionTitle}" Margin="0,8,0,0" />
+            <Label Text="Vesti fonctionne entièrement sur votre appareil. Vos pièces, vos tenues et votre agenda ne sont jamais envoyés ailleurs."
+                   Style="{StaticResource TextBody}" TextColor="{StaticResource ColorTextSecondary}" />
+            <Label Text="Si vous changez de téléphone, vos données ne sont pas transférées automatiquement : il n'existe pas encore de sauvegarde ou de synchronisation."
+                   Style="{StaticResource TextBody}" TextColor="{StaticResource ColorTextSecondary}" />
+
+            <Label Text="Contact" Style="{StaticResource TextSectionTitle}" Margin="0,16,0,0" />
+            <Label Text="Contenu provisoire — à compléter avec une adresse de contact réelle."
+                   Style="{StaticResource TextCaption}" TextColor="{StaticResource ColorError}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

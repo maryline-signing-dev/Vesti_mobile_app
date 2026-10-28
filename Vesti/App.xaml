@@ -25,6 +25,9 @@
             <conv:SelectedDayColorConverter       x:Key="SelectedDayColorConverter" />
             <conv:SelectedDayTextColorConverter   x:Key="SelectedDayTextColorConverter" />
             <conv:CurrentMonthOpacityConverter    x:Key="CurrentMonthOpacityConverter" />
+            <conv:StatsTitleConverter             x:Key="StatsTitleConverter" />
+            <conv:RatioToWidthConverter           x:Key="RatioToWidthConverter" />
+            <conv:IsEmptyOrNullConverter          x:Key="IsEmptyOrNullConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

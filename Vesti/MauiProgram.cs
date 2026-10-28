@@ -11,6 +11,7 @@ using Vesti.ViewModels.Outfits;
 using Vesti.ViewModels.Agenda;
 using Vesti.ViewModels.Wishlist;
 using Vesti.ViewModels.Favorites;
+using Vesti.ViewModels.Statistics;
 using Vesti.Views.Agenda;
 using Vesti.Views.Home;
 using Vesti.Views.Onboarding;
@@ -19,6 +20,7 @@ using Vesti.Views.Profile;
 using Vesti.Views.Wardrobe;
 using Vesti.Views.Wishlist;
 using Vesti.Views.Favorites;
+using Vesti.Views.Statistics;
 
 namespace Vesti;
 
@@ -48,6 +50,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<OutfitRepository>();
         builder.Services.AddSingleton<OutfitScheduleRepository>();
         builder.Services.AddSingleton<WishlistRepository>();
+        builder.Services.AddSingleton<WearHistoryRepository>();
 
         // ── Services ──────────────────────────────────────────────────
         builder.Services.AddSingleton<IImageStore, ImageStore>();
@@ -57,6 +60,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<ScheduleService>();
         builder.Services.AddSingleton<WishlistService>();
         builder.Services.AddSingleton<FavoritesService>();
+        builder.Services.AddSingleton<DataResetService>();
+        builder.Services.AddSingleton<StatsService>();
+        builder.Services.AddSingleton<WearHistoryService>();
 
         // ── ViewModels ────────────────────────────────────────────────
         builder.Services.AddTransient<OnboardingViewModel>();
@@ -79,6 +85,10 @@ public static class MauiProgram
         builder.Services.AddTransient<WishlistDetailViewModel>();
         builder.Services.AddTransient<WishlistListViewModel>();
         builder.Services.AddTransient<FavoritesViewModel>();
+        builder.Services.AddTransient<ProfilePageViewModel>();
+        builder.Services.AddTransient<EditProfileViewModel>();
+        builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<StatisticsViewModel>();
 
         // ── Navigation principale ────────────────────────────────────────
         builder.Services.AddSingleton<AppShell>();
@@ -103,6 +113,13 @@ public static class MauiProgram
         builder.Services.AddTransient<WishlistDetailPage>();
         builder.Services.AddTransient<WishlistListPage>();
         builder.Services.AddTransient<FavoritesPage>();
+        builder.Services.AddTransient<ProfilePage>();
+        builder.Services.AddTransient<EditProfilePage>();
+        builder.Services.AddTransient<HelpPage>();
+        builder.Services.AddTransient<TermsPage>();
+        builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<PrivacyPage>();
+        builder.Services.AddTransient<StatisticsPage>();
 
         // Pages squelettes des onglets non encore développés
         builder.Services.AddTransient<ProfilePage>();

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- TermsPage.xaml — contenu provisoire, aucun texte officiel fourni dans le cadrage. -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Profile.TermsPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0" Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24" VerticalOptions="Center" Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" Text="Conditions d'utilisation" Style="{StaticResource TextH1}" VerticalOptions="Center" />
+            </Grid>
+            <Label Text="Document provisoire. Ce texte doit être remplacé par les conditions d'utilisation réelles avant toute diffusion publique de l'application."
+                   Style="{StaticResource TextCaption}" TextColor="{StaticResource ColorError}" />
+            <Label Text="Vesti est une application de gestion personnelle de dressing fonctionnant localement sur votre appareil, sans compte ni service distant dans sa version actuelle."
+                   Style="{StaticResource TextBody}" TextColor="{StaticResource ColorTextSecondary}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

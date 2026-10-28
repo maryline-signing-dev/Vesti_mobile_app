@@ -35,6 +35,22 @@ public class VestiDatabase
         await _db.CreateTableAsync<OutfitItem>();
         await _db.CreateTableAsync<OutfitSchedule>();
         await _db.CreateTableAsync<WishlistItem>();
+        await _db.CreateTableAsync<WearHistory>();
+    }
 
+    /// <summary>
+    /// vide toutes les tables (pour l'effacement des données) sans
+    /// supprimer le fichier de base lui-même — le schéma reste en place.
+    /// </summary>
+    public async Task ClearAllTablesAsync()
+    {
+        await _db.DeleteAllAsync<WearHistory>();
+        await _db.DeleteAllAsync<WishlistItem>();
+        await _db.DeleteAllAsync<OutfitSchedule>();
+        await _db.DeleteAllAsync<OutfitItem>();
+        await _db.DeleteAllAsync<Outfit>();
+        await _db.DeleteAllAsync<ClothingItem>();
+        await _db.DeleteAllAsync<AppSetting>();
+        await _db.DeleteAllAsync<LocalProfile>();
     }
 }

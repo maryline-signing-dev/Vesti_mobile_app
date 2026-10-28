@@ -40,4 +40,14 @@ public static class Routes
     // Favoris 
     public const string Favorites = "favorites";
 
+    // Statistiques
+    public const string Statistics = "statistics";
+
+    // Profile
+    public const string EditProfile = "editprofile";
+    public const string Settings = "settings";
+    public const string Help = "help";
+    public const string Terms = "terms";
+    public const string Privacy = "privacy";
+
 }

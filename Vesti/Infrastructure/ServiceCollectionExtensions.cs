@@ -8,6 +8,7 @@ using Vesti.ViewModels.Home;
 using Vesti.ViewModels.Onboarding;
 using Vesti.ViewModels.Outfits;
 using Vesti.ViewModels.Profile;
+using Vesti.ViewModels.Statistics;
 using Vesti.ViewModels.Wardrobe;
 using Vesti.ViewModels.Wishlist;
 using Vesti.Views.Agenda;
@@ -16,6 +17,7 @@ using Vesti.Views.Home;
 using Vesti.Views.Onboarding;
 using Vesti.Views.Outfits;
 using Vesti.Views.Profile;
+using Vesti.Views.Statistics;
 using Vesti.Views.Wardrobe;
 using Vesti.Views.Wishlist;
 
@@ -42,6 +44,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<OutfitRepository>();
         services.AddSingleton<OutfitScheduleRepository>();
         services.AddSingleton<WishlistRepository>();
+        services.AddSingleton<WearHistoryRepository>();
 
         // ── Services métier ───────────────────────────────────────────
         services.AddSingleton<ProfileService>();
@@ -50,6 +53,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ClothingService>();
         services.AddSingleton<ScheduleService>();
         services.AddSingleton<WishlistService>();
+        services.AddSingleton<WearHistoryService>();
+        services.AddSingleton<StatsService>();
+        services.AddSingleton<DataResetService>();
 
         // ── ViewModels ────────────────────────────────────────────────
         services.AddTransient<OnboardingViewModel>();
@@ -71,6 +77,10 @@ public static class ServiceCollectionExtensions
         services.AddTransient<AddWishlistItemViewModel>();
         services.AddTransient<WishlistDetailViewModel>();
         services.AddTransient<FavoritesViewModel>();
+        services.AddTransient<StatisticsViewModel>();             
+        services.AddTransient<ProfilePageViewModel>();            
+        services.AddTransient<EditProfileViewModel>();            
+        services.AddTransient<SettingsViewModel>();
 
         // ── Pages ─────────────────────────────────────────────────────
         services.AddTransient<OnboardingPage>();
@@ -90,9 +100,16 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ScheduleDetailPage>();
         services.AddTransient<WishlistListPage>();              
         services.AddTransient<AddWishlistItemPage>();           
-        services.AddTransient<WishlistDetailPage>();            //
+        services.AddTransient<WishlistDetailPage>();            
         services.AddTransient<FavoritesPage>();
         services.AddTransient<ProfilePage>();
+        services.AddTransient<StatisticsPage>();                 
+        services.AddTransient<ProfilePage>();                    
+        services.AddTransient<EditProfilePage>();                 
+        services.AddTransient<SettingsPage>();                    
+        services.AddTransient<HelpPage>();
+        services.AddTransient<TermsPage>();                       
+        services.AddTransient<PrivacyPage>();
 
         return services;
     }

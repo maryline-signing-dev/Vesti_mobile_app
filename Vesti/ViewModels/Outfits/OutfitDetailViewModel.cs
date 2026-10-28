@@ -9,9 +9,10 @@ namespace Vesti.ViewModels.Outfits;
 public class OutfitDetailViewModel : BaseViewModel
 {
     private readonly OutfitService _outfitService;
+    private readonly WearHistoryService _wearHistoryService;
     private int _outfitId;
 
-    public OutfitDetailViewModel(OutfitService outfitService)
+    public OutfitDetailViewModel(OutfitService outfitService, WearHistoryService warHistoryService)
     {
         _outfitService = outfitService;
 
@@ -21,8 +22,14 @@ public class OutfitDetailViewModel : BaseViewModel
         // navigue vers le formulaire de planification réel
         AddToAgendaCommand = new Command(async () =>
             await Shell.Current.GoToAsync($"{Routes.PlanOutfit}?outfitId={_outfitId}"));
+        GoToOutfitListCommand = new Command(async () =>
+        {
+            await Shell.Current.GoToAsync(Routes.WardrobeTab);
+            await Shell.Current.GoToAsync(Routes.OutfitList);
+        });
 
         ToggleFavoriteCommand = new Command(async () => await ToggleFavoriteAsync());
+        MarkWornCommand = new Command(async () => await MarkWornAsync());
     }
     public string OutfitIdText
     {
@@ -56,12 +63,51 @@ public class OutfitDetailViewModel : BaseViewModel
     public bool HasOccasion => !string.IsNullOrWhiteSpace(Outfit?.Occasion);
     public string OccasionText => Outfit?.Occasion ?? "Sans occasion";
     public bool IsFavorite => Outfit?.IsFavorite == true;
-
+    private string? _wornConfirmation;
+    public string? WornConfirmation
+    {
+        get => _wornConfirmation;
+        private set
+        {
+            if (SetProperty(ref _wornConfirmation, value))
+                OnPropertyChanged(nameof(HasWornConfirmation));
+        }
+    }
+    public bool HasWornConfirmation => !string.IsNullOrEmpty(_wornConfirmation);
     public ICommand BackCommand { get; }
     public ICommand DeleteCommand { get; }
     public ICommand AddToAgendaCommand { get; }
     public ICommand GoToOutfitListCommand { get; }
     public ICommand ToggleFavoriteCommand { get; }
+    public ICommand MarkWornCommand { get; }
+
+
+    private async Task MarkWornAsync()
+    {
+        if (Outfit is null || IsBusy) return;
+
+        var confirmed = await Shell.Current.DisplayAlert(
+            "Marquer comme portée",
+            $"Enregistrer que vous portez « {Outfit.DisplayName} » aujourd'hui ?",
+            "Confirmer", "Annuler");
+
+        if (!confirmed) return;
+
+        IsBusy = true;
+        try
+        {
+            var error = await _wearHistoryService.MarkWornAsync(Outfit.Id);
+            if (error is not null) { ErrorMessage = error; return; }
+
+            WornConfirmation = $"Portée aujourd'hui, {DateTime.Now:d MMMM}.";
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Impossible d'enregistrer cette information.";
+            System.Diagnostics.Debug.WriteLine($"[OutfitDetailViewModel] {ex}");
+        }
+        finally { IsBusy = false; }
+    }
 
     public async Task LoadAsync()
     {

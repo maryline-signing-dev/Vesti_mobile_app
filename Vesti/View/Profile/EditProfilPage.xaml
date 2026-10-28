@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Profile.EditProfilePage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0" Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center" Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CancelCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" Text="Modifier mes informations"
+                       Style="{StaticResource TextH1}" VerticalOptions="Center" />
+            </Grid>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Prénom" Style="{StaticResource TextCaption}" />
+                <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource BrushBorder}"
+                        BackgroundColor="{StaticResource ColorSurface}" Padding="14,0" HeightRequest="48">
+                    <Entry Text="{Binding DisplayName}" Style="{StaticResource FieldBase}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Adresse e-mail" Style="{StaticResource TextCaption}" />
+                <Border StrokeShape="RoundRectangle 12" Stroke="{StaticResource BrushBorder}"
+                        BackgroundColor="{StaticResource ColorSurface}" Padding="14,0" HeightRequest="48">
+                    <Entry Text="{Binding Email}" Keyboard="Email" Style="{StaticResource FieldBase}" />
+                </Border>
+            </VerticalStackLayout>
+
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}" />
+
+            <Button Text="Enregistrer"
+                    Style="{StaticResource BtnPrimary}"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    Margin="0,8,0,0" />
+            <Button Text="Annuler"
+                    Style="{StaticResource BtnSecondary}"
+                    Command="{Binding CancelCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

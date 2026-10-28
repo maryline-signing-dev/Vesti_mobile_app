@@ -29,6 +29,11 @@
                        VerticalOptions="Center" />
             </Grid>
 
+            <!-- Bouton "Mes tenues" — accès direct à la liste -->
+            <Button Text="Mes tenues"
+                    Style="{StaticResource BtnSecondary}"
+                    Command="{Binding GoToOutfitListCommand}" />
+
             <Label IsVisible="{Binding HasError}"
                    Text="{Binding ErrorMessage}"
                    Style="{StaticResource TextBody}"
@@ -135,6 +140,18 @@
                 <Label Text="Pas encore planifiée. Gardez cette tenue pour plus tard ou choisissez une date."
                        Style="{StaticResource TextCaption}"
                        TextColor="{StaticResource ColorTextSecondary}" />
+
+                <!-- Marquer comme portée -->
+                <Button Text="Marquer comme portée"
+                        Style="{StaticResource BtnSecondary}"
+                        Command="{Binding MarkWornCommand}"
+                        IsEnabled="{Binding IsNotBusy}" />
+
+                <Label Text="{Binding WornConfirmation}"
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorSuccess}"
+                       IsVisible="{Binding HasWornConfirmation}"
+                       HorizontalOptions="Center" />
 
                 <!-- Ajouter à l'agenda  -->
                 <Border BackgroundColor="{StaticResource ColorSurface}"

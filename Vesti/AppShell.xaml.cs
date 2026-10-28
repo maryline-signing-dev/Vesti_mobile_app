@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Vesti.Infrastructure;
 using Vesti.Views.Agenda;
+using Vesti.Views.Favorites;
 using Vesti.Views.Home;
 using Vesti.Views.Outfits;
 using Vesti.Views.Profile;
+using Vesti.Views.Statistics;
 using Vesti.Views.Wardrobe;
 using Vesti.Views.Wishlist;
-using Vesti.Views.Favorites;
-using Vesti.Infrastructure;
 
 namespace Vesti;
 
@@ -45,5 +46,15 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(Routes.AddWishlist, typeof(AddWishlistItemPage));
         Routing.RegisterRoute(Routes.WishlistDetail, typeof(WishlistDetailPage));
         Routing.RegisterRoute(Routes.Favorites, typeof(FavoritesPage));
+
+        // Statistiques
+        Routing.RegisterRoute(Routes.Statistics, typeof(StatisticsPage));
+
+        // Profile
+        Routing.RegisterRoute(Routes.EditProfile, typeof(EditProfilePage));
+        Routing.RegisterRoute(Routes.Settings, typeof(SettingsPage));
+        Routing.RegisterRoute(Routes.Help, typeof(HelpPage));
+        Routing.RegisterRoute(Routes.Terms, typeof(TermsPage));
+        Routing.RegisterRoute(Routes.Privacy, typeof(PrivacyPage));
     }
 }

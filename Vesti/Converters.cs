@@ -149,3 +149,39 @@ public class CurrentMonthOpacityConverter : IValueConverter
     public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
         => throw new NotImplementedException();
 }
+
+
+/// <summary> titre de la page Statistiques selon l'état (vide ou non).</summary>
+public class StatsTitleConverter : IValueConverter
+{
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => value is bool b && b ? "Mon dressing en chiffres" : "En un regard";
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}
+
+/// <summary>
+/// convertit un ratio (0.0–1.0) en largeur de pixel pour la barre
+/// de progression des catégories. Référence 342 px (largeur mobile 390 px
+/// moins les marges de 24 px de chaque côté, cf. fondations Vesti 2026).
+/// Approximation volontaire : une vraie barre proportionnelle au conteneur
+/// réel nécessiterait un comportement non trivial en XAML MAUI pur.
+/// </summary>
+public class RatioToWidthConverter : IValueConverter
+{
+    private const double ReferenceWidth = 342;
+
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => value is double ratio ? Math.Max(2, ratio * ReferenceWidth) : 0.0;
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}
+
+/// <summary> : vrai si la chaîne est vide ou nulle (ex. e-mail non renseigné).</summary>
+public class IsEmptyOrNullConverter : IValueConverter
+{
+    public object Convert(object? value, Type t, object? p, CultureInfo c)
+        => string.IsNullOrWhiteSpace(value as string);
+    public object ConvertBack(object? value, Type t, object? p, CultureInfo c)
+        => throw new NotImplementedException();
+}

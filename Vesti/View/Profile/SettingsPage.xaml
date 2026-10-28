@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  SettingsPage.xaml
+  Conforme à la maquette "Profil : Paramètres", avec deux écarts assumés :
+  - Langue et Apparence sont affichées mais non modifiables (une seule
+    valeur possible dans le MVP) — pas de Picker trompeur.
+  - "Rappels de tenues" est visible mais désactivé : la fonctionnalité
+    n'est pas implémentée (cadrage : notifications reportées).
+  - "Modifier le mot de passe" est retiré : il n'y a pas de mot de passe
+    dans une application sans compte distant.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Profile.SettingsPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0" Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center" Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" Text="Paramètres" Style="{StaticResource TextH1}" VerticalOptions="Center" />
+            </Grid>
+
+            <Label Text="Préférences" Style="{StaticResource TextSectionTitle}" Margin="0,8,0,0" />
+
+            <Grid ColumnDefinitions="*,Auto" Padding="0,10">
+                <Label Grid.Column="0" Text="Langue" Style="{StaticResource TextBody}" />
+                <Label Grid.Column="1" Text="{Binding Language}"
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+            </Grid>
+            <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
+
+            <Grid ColumnDefinitions="*,Auto" Padding="0,10">
+                <Label Grid.Column="0" Text="Apparence" Style="{StaticResource TextBody}" />
+                <Label Grid.Column="1" Text="{Binding Appearance}"
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}" />
+            </Grid>
+
+            <Label Text="Notifications" Style="{StaticResource TextSectionTitle}" Margin="0,16,0,0" />
+
+            <Grid ColumnDefinitions="*,Auto" Padding="0,10">
+                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                    <Label Text="Rappels de tenues" Style="{StaticResource TextBody}" />
+                    <Label Text="Bientôt disponible" Style="{StaticResource TextCaption}" />
+                </VerticalStackLayout>
+                <Switch Grid.Column="1" IsToggled="False" IsEnabled="False" />
+            </Grid>
+
+            <Label Text="Compte &amp; confidentialité" Style="{StaticResource TextSectionTitle}" Margin="0,16,0,0" />
+
+            <Grid ColumnDefinitions="*,Auto" Padding="0,10">
+                <Label Grid.Column="0" Text="Conditions d'utilisation" Style="{StaticResource TextBody}" />
+                <Label Grid.Column="1" Text="›" Style="{StaticResource TextBody}" />
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToTermsCommand}" />
+                </Grid.GestureRecognizers>
+            </Grid>
+            <BoxView HeightRequest="1" Color="{StaticResource ColorBorder}" />
+
+            <Grid ColumnDefinitions="*,Auto" Padding="0,10">
+                <Label Grid.Column="0" Text="Politique de confidentialité" Style="{StaticResource TextBody}" />
+                <Label Grid.Column="1" Text="›" Style="{StaticResource TextBody}" />
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToPrivacyCommand}" />
+                </Grid.GestureRecognizers>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

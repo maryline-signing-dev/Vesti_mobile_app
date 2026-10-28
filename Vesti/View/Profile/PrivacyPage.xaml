@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Vesti.Views.Profile.PrivacyPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0" Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24" VerticalOptions="Center" Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" Text="Politique de confidentialité" Style="{StaticResource TextH1}" VerticalOptions="Center" />
+            </Grid>
+            <Label Text="Document provisoire. Ce texte doit être remplacé par une politique de confidentialité conforme avant toute diffusion publique."
+                   Style="{StaticResource TextCaption}" TextColor="{StaticResource ColorError}" />
+            <Label Text="Vos données (pièces, tenues, agenda, wishlist, photos) restent stockées uniquement sur cet appareil, dans l'espace privé de l'application. Rien n'est envoyé à un serveur distant dans la version actuelle de Vesti."
+                   Style="{StaticResource TextBody}" TextColor="{StaticResource ColorTextSecondary}" />
+            <Label Text="Effacer les données depuis Paramètres supprime définitivement tout le contenu stocké localement."
+                   Style="{StaticResource TextBody}" TextColor="{StaticResource ColorTextSecondary}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

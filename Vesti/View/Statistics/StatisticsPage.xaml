@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  StatisticsPage.xaml — "Mon dressing en chiffres" / "En un regard"
+  Conforme aux maquettes "Statistiques Vide" et "Statistiques: Avec données".
+  Le palmarès (tenues les plus/moins portées) n'est pas dans les maquettes
+  mais est requis par le cadrage (EF-07) ; ajouté en section distincte,
+  visible uniquement si au moins une tenue a été marquée comme portée.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Vesti.Services"
+             x:Class="Vesti.Views.Statistics.StatisticsPage"
+             BackgroundColor="{StaticResource ColorBackground}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,16,24,32" Spacing="16">
+
+            <Grid ColumnDefinitions="Auto,*" Margin="0,8,0,0">
+                <Image Grid.Column="0"
+                       Source="arrow_left_24dp.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center"
+                       Margin="0,0,12,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1"
+                       Text="{Binding IsEmpty,
+                           Converter={StaticResource StatsTitleConverter}}"
+                       Style="{StaticResource TextH1}"
+                       VerticalOptions="Center" />
+            </Grid>
+
+            <!-- ═══ ÉTAT VIDE ═══════════════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 VerticalOptions="Center"
+                                 HorizontalOptions="Center"
+                                 Spacing="16" Margin="0,48,0,0">
+                <Border BackgroundColor="{StaticResource ColorPrimaryLight}"
+                        StrokeShape="RoundRectangle 20"
+                        StrokeThickness="0"
+                        WidthRequest="80" HeightRequest="80"
+                        HorizontalOptions="Center">
+                    <Image Source="chart_18dp.png"
+                           WidthRequest="32" HeightRequest="32"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+                <Label Text="Chaque pièce&#x0a;compte."
+                       Style="{StaticResource TextH1}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Ajoutez des vêtements pour découvrir les catégories et les couleurs de votre dressing. Aucune statistique n'est encore disponible."
+                       Style="{StaticResource TextBody}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Button Text="Ajouter ma première pièce"
+                        Style="{StaticResource BtnPrimary}"
+                        Command="{Binding GoToWardrobeCommand}" />
+            </VerticalStackLayout>
+
+            <!-- ═══ ÉTAT AVEC DONNÉES ═══════════════════════════════════ -->
+            <VerticalStackLayout IsVisible="{Binding HasData}" Spacing="20">
+
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                    <Border Grid.Column="0" BackgroundColor="{StaticResource ColorSurface}"
+                            Stroke="{StaticResource BrushBorder}" StrokeShape="RoundRectangle 12"
+                            Padding="12,14">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{Binding PieceCount}" FontFamily="{StaticResource FontDMSerif}" FontSize="24" />
+                            <Label Text="pièces" Style="{StaticResource TextCaption}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" BackgroundColor="{StaticResource ColorSurface}"
+                            Stroke="{StaticResource BrushBorder}" StrokeShape="RoundRectangle 12"
+                            Padding="12,14">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{Binding OutfitCount}" FontFamily="{StaticResource FontDMSerif}" FontSize="24" />
+                            <Label Text="tenues" Style="{StaticResource TextCaption}" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" BackgroundColor="{StaticResource ColorSurface}"
+                            Stroke="{StaticResource BrushBorder}" StrokeShape="RoundRectangle 12"
+                            Padding="12,14">
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="{Binding ScheduledCount}" FontFamily="{StaticResource FontDMSerif}" FontSize="24" />
+                            <Label Text="planifiées" Style="{StaticResource TextCaption}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Répartition par catégorie -->
+                <Label Text="Vos catégories" Style="{StaticResource TextSectionTitle}" />
+                <CollectionView ItemsSource="{Binding Categories}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:CategoryStat">
+                            <VerticalStackLayout Spacing="6" Margin="0,0,0,12">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Text="{Binding Category}" Style="{StaticResource TextBody}" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource TextCaption}"
+                                           TextColor="{StaticResource ColorTextSecondary}">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Count}" />
+                                                <Span Text=" / " />
+                                                <Span Text="{Binding Total}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Grid>
+                                <!-- Barre de progression simple -->
+                                <Grid HeightRequest="4">
+                                    <BoxView BackgroundColor="{StaticResource ColorBorder}" CornerRadius="2" />
+                                    <BoxView BackgroundColor="{StaticResource ColorPrimary}"
+                                             CornerRadius="2"
+                                             HorizontalOptions="Start"
+                                             WidthRequest="{Binding Ratio,
+                                                 Converter={StaticResource RatioToWidthConverter}}" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Voir les pièces" Style="{StaticResource TextCaption}" TextColor="{StaticResource ColorPrimary}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToWardrobeCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Column="1" Text="Mon Dressing  ›" Style="{StaticResource TextCaption}" TextColor="{StaticResource ColorPrimary}" />
+                </Grid>
+
+                <!-- Palmarès des tenues portées -->
+                <VerticalStackLayout Spacing="8" IsVisible="{Binding HasWearData}" Margin="0,8,0,0">
+                    <Label Text="Vos tenues portées" Style="{StaticResource TextSectionTitle}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="Tenue la plus portée" Style="{StaticResource TextBody}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TextBody}"
+                               TextColor="{StaticResource ColorTextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding MostWorn.OutfitName}" />
+                                    <Span Text=" · " />
+                                    <Span Text="{Binding MostWorn.WearCount}" />
+                                    <Span Text=" fois" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding HasDistinctLeastWorn}">
+                        <Label Grid.Column="0" Text="Tenue la moins portée" Style="{StaticResource TextBody}" />
+                        <Label Grid.Column="1"
+                               Style="{StaticResource TextBody}"
+                               TextColor="{StaticResource ColorTextSecondary}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding LeastWorn.OutfitName}" />
+                                    <Span Text=" · " />
+                                    <Span Text="{Binding LeastWorn.WearCount}" />
+                                    <Span Text=" fois" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+                </VerticalStackLayout>
+
+                <Label Text="Marquez une tenue comme portée depuis son détail pour suivre son usage."
+                       Style="{StaticResource TextCaption}"
+                       TextColor="{StaticResource ColorTextSecondary}"
+                       IsVisible="{Binding HasWearData,
+                           Converter={StaticResource InvertBoolConverter}}" />
+
+            </VerticalStackLayout>
+
+            <Label IsVisible="{Binding HasError}"
+                   Text="{Binding ErrorMessage}"
+                   Style="{StaticResource TextCaption}"
+                   TextColor="{StaticResource ColorError}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
